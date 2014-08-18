@@ -1,0 +1,47 @@
+(source gnu)
+(source melpa)
+
+(depends-on "ack-and-a-half")
+(depends-on "auctex")
+(depends-on "auto-complete")
+(depends-on "bind-key")
+(depends-on "cask") ;; Package management
+(depends-on "cmake-mode")
+(depends-on "ctable") ;; Table editor
+(depends-on "dash") ;; List library
+(depends-on "drag-stuff")
+(depends-on "dropdown-list")
+(depends-on "ebib") ;; Bibliography management
+(depends-on "exec-path-from-shell")
+(depends-on "expand-region")
+(depends-on "f") ;; File management
+(depends-on "flx-ido") ;; Fuzzy matching for ido
+(depends-on "flycheck")
+(depends-on "flycheck-cask")
+(depends-on "git-commit-mode")
+(depends-on "git-rebase-mode")
+(depends-on "gitignore-mode")
+(depends-on "htmlize")
+(depends-on "hy-mode")
+(depends-on "idle-highlight-mode")
+(depends-on "ido-vertical-mode")
+(depends-on "magit")
+(depends-on "markdown-mode")
+(depends-on "multiple-cursors")
+(depends-on "nyan-mode") ;; Silly cat mode
+(depends-on "org")
+(depends-on "ox-reveal")
+(depends-on "pallet") ;; Package management
+(depends-on "popup")
+(depends-on "popwin")
+(depends-on "prodigy")
+(depends-on "projectile")
+(depends-on "rainbow-delimiters")
+(depends-on "request") ;; HTTP requests
+(depends-on "s") ;; String management
+(depends-on "smartparens")
+(depends-on "smex") ;; Enhanced M-x
+(depends-on "use-package")
+(depends-on "web-mode")
+(depends-on "yasnippet")
+(depends-on "zenburn-theme")

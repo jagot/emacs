@@ -1,0 +1,369 @@
+#+TITLE: Emacs configuration
+#+AUTHOR: Stefanos Carlström
+#+EMAIL: stefanos.carlstrom@gmail.com
+
+#+PROPERTY: tangle yes
+#+PROPERTY: comments org
+
+* Misc
+  [[http://www.gnu.org/software/emacs/manual/html_mono/cl.html][Common Lisp macros for Emacs lisp]]
+  #+BEGIN_SRC emacs-lisp
+    (require 'cl)
+  #+END_SRC
+** Packages
+   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][~Cask~]]), [[https://github.com/jwiegley/use-package][use-package]]
+   for lazy-loading of packages.
+   #+BEGIN_SRC emacs-lisp
+     (require 'cask "~/.cask/cask.el")
+     (cask-initialize)
+     (require 'use-package)
+   #+END_SRC
+** Org tangle configuration
+   Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
+   #+BEGIN_SRC emacs-lisp
+     (use-package org)
+     (use-package ob-tangle
+       :init
+       (progn
+         (defun tangle-init ()
+           "If the current buffer is 'init.org' the code-blocks are
+          tangled, and the tangled file is compiled."
+           (when (equal (buffer-file-name)
+                        (expand-file-name (concat user-emacs-directory "init.org")))
+             (org-babel-tangle)
+             (byte-compile-file (concat user-emacs-directory "init.el"))))
+         (add-hook 'after-save-hook 'tangle-init)))
+   #+END_SRC
+** Encoding
+   #+BEGIN_SRC emacs-lisp
+     (setq locale-coding-system 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     (set-keyboard-coding-system 'utf-8)
+     (set-selection-coding-system 'utf-8)
+     (prefer-coding-system 'utf-8)
+   #+END_SRC
+** Text editing
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'text-mode-hook 'turn-on-auto-fill)
+     (add-hook 'text-mode-hook 'flyspell-mode)
+     (use-package rainbow-delimiters
+       :init (global-rainbow-delimiters-mode))
+     (show-paren-mode 't)
+   #+END_SRC
+** Spelling
+   #+BEGIN_SRC emacs-lisp
+     (setq-default ispell-program-name "aspell")
+     (setq ispell-dictionary "en_GB-ize")
+   #+END_SRC
+** Ack
+   #+BEGIN_SRC emacs-lisp
+     (require 'ack-and-a-half)
+     ;; Create shorter aliases
+     (defalias 'ack 'ack-and-a-half)
+     (defalias 'ack-same 'ack-and-a-half-same)
+     (defalias 'ack-find-file 'ack-and-a-half-find-file)
+     (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+   #+END_SRC
+** Terminal
+   Borrowed from [[http://www.emacswiki.org/emacs-ja/AnsiTermHints][Emacs wiki]].
+   #+BEGIN_SRC emacs-lisp
+     ;; Use this for remote so I can specify command line arguments
+     (defun remote-term (new-buffer-name cmd &rest switches)
+       (setq term-ansi-buffer-name (concat "*" new-buffer-name "*"))
+       (setq term-ansi-buffer-name (generate-new-buffer-name term-ansi-buffer-name))
+       (setq term-ansi-buffer-name (apply 'make-term term-ansi-buffer-name cmd nil switches))
+       (set-buffer term-ansi-buffer-name)
+       (term-mode)
+       (term-char-mode)
+       ;;(term-set-escape-char ?\C-x)
+       (switch-to-buffer term-ansi-buffer-name))
+
+
+     ;; Kills buffer when terminal quits
+     (defadvice term-sentinel (around my-advice-term-sentinel (proc
+                                                               msg))
+       (if (memq (process-status proc) '(signal exit))
+           (let ((buffer (process-buffer proc)) )
+             ad-do-it
+             (kill-buffer buffer))
+         ad-do-it))
+     (ad-activate 'term-sentinel)
+
+     (global-set-key (kbd "<f1>") (lambda ()
+                                    (interactive)
+                                    (ansi-term "zsh" "localhost")))
+     (global-set-key (kbd "S-<f1>") (lambda ()
+                                      (interactive)
+                                      (remote-term "lth" "ssh" "lth")))
+     (global-set-key (kbd "M-<f1>") (lambda ()
+                                      (interactive)
+                                      (remote-term "home" "ssh" "home")))
+     (add-hook 'term-mode-hook (lambda()
+                                 (setq yas-dont-activate t)))
+   #+END_SRC
+
+* Interface
+** Misc
+   #+BEGIN_SRC emacs-lisp
+     (menu-bar-mode -1)
+     (tool-bar-mode -1)
+     (scroll-bar-mode -1)
+     (setq inhibit-startup-screen 't)
+
+     (setq auto-window-vscroll nil)
+
+     (setq truncate-partial-width-windows nil)
+     (mouse-wheel-mode t)
+     (setq x-select-enable-clipboard t)
+     (setq auto-revert-interval 1)
+     (setq show-trailing-whitespace nil)
+     (put 'narrow-to-region 'disabled nil)
+
+     (setq-default indent-tabs-mode nil)
+
+     (use-package tramp)
+
+     (projectile-global-mode)
+
+     (setq ediff-split-window-function 'split-window-horizontally)
+     (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+     ;; (setq auto-save-list-file-prefix (expand-file-name
+     ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
+     ;; (setq custom-file (expand-file-name "custom.el" emacs.d))
+     ;; (load custom-file)
+   #+END_SRC
+** ido
+   #+BEGIN_SRC emacs-lisp
+     (use-package flx-ido
+                  :init
+                  (progn
+                    (ido-mode 1)
+                    (ido-everywhere 1)
+                    (flx-ido-mode 1)
+                    (setq ido-auto-merge-work-directories-length -1)
+                    ;; disable ido faces to see flx highlights.
+                    (setq ido-use-faces nil)))
+
+     (use-package ido-vertical-mode
+                  :init
+                  (ido-vertical-mode 1))
+   #+END_SRC
+
+** Shortcut keys
+   #+BEGIN_SRC emacs-lisp
+     (use-package bind-key
+       :init
+       (progn
+         (bind-key "C-c m" 'magit-status)
+
+         (bind-key "C-?" 'help-command)
+         (bind-key "M-?" 'mark-paragraph)
+         (bind-key "C-h" 'delete-backward-char)
+         (bind-key "M-h" 'backward-kill-word)
+
+         ;; (bind-key "M-q") '(lambda () (interactive (fill-paragraph 60)))
+
+         (bind-key "M-S-<up>" 'enlarge-window)
+         (bind-key "M-S-<down>" 'shrink-window)
+         (bind-key "M-S-<right>" 'enlarge-window-horizontally)
+         (bind-key "M-S-<left>" 'shrink-window-horizontally)
+
+         (bind-key "C-c SPC w" 'whitespace-mode)
+         (bind-key "C-c SPC c" 'whitespace-cleanup)
+
+         (bind-key "C-c #" 'comment-region)
+
+         (bind-key "<f7>" 'flyspell-buffer)
+         (bind-key (kbd "<C-f7>") 'ispell-change-dictionary))) ;; Does not work on MBP
+   #+END_SRC
+*** Super/subscripts
+    #+BEGIN_SRC emacs-lisp
+      (use-package iso-transl
+        :init
+        (iso-transl-define-keys
+         `(("^0" . ,(vector (decode-char 'ucs #x2070)))
+           ("^4" . ,(vector (decode-char 'ucs #x2074))) ; 1-3 already defined
+           ("^5" . ,(vector (decode-char 'ucs #x2075)))
+           ("^6" . ,(vector (decode-char 'ucs #x2076)))
+           ("^7" . ,(vector (decode-char 'ucs #x2077)))
+           ("^8" . ,(vector (decode-char 'ucs #x2078)))
+           ("^9" . ,(vector (decode-char 'ucs #x2079)))
+           ("^+" . ,(vector (decode-char 'ucs #x207A)))
+           ("^-" . ,(vector (decode-char 'ucs #x207B)))
+           ("^=" . ,(vector (decode-char 'ucs #x207C)))
+           ("^(" . ,(vector (decode-char 'ucs #x207D)))
+           ("^)" . ,(vector (decode-char 'ucs #x207E)))
+           ("_0" . ,(vector (decode-char 'ucs #x2080)))
+           ("_1" . ,(vector (decode-char 'ucs #x2081)))
+           ("_2" . ,(vector (decode-char 'ucs #x2082)))
+           ("_3" . ,(vector (decode-char 'ucs #x2083)))
+           ("_4" . ,(vector (decode-char 'ucs #x2084)))
+           ("_5" . ,(vector (decode-char 'ucs #x2085)))
+           ("_6" . ,(vector (decode-char 'ucs #x2086)))
+           ("_7" . ,(vector (decode-char 'ucs #x2087)))
+           ("_8" . ,(vector (decode-char 'ucs #x2088)))
+           ("_9" . ,(vector (decode-char 'ucs #x2089)))
+           ("_+" . ,(vector (decode-char 'ucs #x208A)))
+           ("_-" . ,(vector (decode-char 'ucs #x208B)))
+           ("_=" . ,(vector (decode-char 'ucs #x208C)))
+           ("_(" . ,(vector (decode-char 'ucs #x208D)))
+           ("_)" . ,(vector (decode-char 'ucs #x208E))))))
+    #+END_SRC
+** OS X-specific configuration
+   #+BEGIN_SRC emacs-lisp
+     (when (memq window-system '(mac ns))
+       (progn
+         (exec-path-from-shell-initialize)
+         (menu-bar-mode 1)
+         (setq ring-bell-function #'ignore)
+         (setq org-babel-python-command "python3")))
+   #+END_SRC
+** Linum mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package linum
+       :init
+       (progn
+         (defcustom linum-disabled-modes-list '(eshell-mode wl-summary-mode compilation-mode org-mode image-mode dired-mode)
+           "* List of modes disabled when global linum mode is on"
+           :type '(repeat (sexp :tag "Major mode"))
+           :tag " Major modes where linum is disabled: "
+           :group 'linum
+           )
+         (defcustom linum-disable-starred-buffers 't
+           "* Disable buffers that have stars in them like *Gnu Emacs*"
+           :type 'boolean
+           :group 'linum)
+
+         (defun linum-on ()
+           "* When linum is running globally, disable line number in modes defined in `linum-disabled-modes-list'. Changed by linum-off. Also turns off numbering in starred modes like *scratch*"
+
+           (unless (or (minibufferp) (member major-mode linum-disabled-modes-list)
+                       (and linum-disable-starred-buffers (string-match "*" (buffer-name)))
+                       )
+             (linum-mode 1)))
+         (setq linum-format "%3d ")
+         (global-linum-mode)))
+   #+END_SRC
+** Theme
+   #+BEGIN_SRC emacs-lisp
+     (load-theme 'zenburn t)     
+   #+END_SRC
+*** Fonts
+     #+BEGIN_SRC emacs-lisp
+       ;;(set-face-attribute 'default nil :family "Anonymous Pro" :height 170)
+       ;;(set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 140)
+
+       ;; (require 'unicode-fonts)
+       ;; (unicode-fonts-setup)
+       ;; (set-default-font "Consolas-12")
+       ;; (set-fontset-font t 'greek "Consolas")
+       ;; (set-fontset-font t 'cyrillic "Consolas")
+       ;; (set-fontset-font t (cons #x2070 #x209F) "Consolas")
+     #+END_SRC
+*** Highlight current line
+    #+BEGIN_SRC emacs-lisp
+      (global-hl-line-mode 1)
+      (setq hl-dark-colour "#4F4F4F")
+      (setq hl-light-colour "#CDD9FF")
+      (set-face-background 'hl-line hl-dark-colour)
+    #+END_SRC
+*** Darkroom
+    Function to quickly toggle between dark/light themes, useful in
+    conjunction with f-lux' darkroom mode.
+    #+BEGIN_SRC emacs-lisp
+      (setq in-darkroom nil)
+
+      (defun toggle-darkroom ()
+        "Enable f-lux' darkroom-friendly colours."
+        (interactive)
+        (if (not in-darkroom)
+            (progn
+              (disable-theme 'zenburn)
+              (set-face-background 'hl-line hl-light-colour)
+              (setq in-darkroom 't))
+          (progn
+            (enable-theme 'zenburn)
+            (set-face-background 'hl-line hl-dark-colour)
+            (setq in-darkroom nil))))
+      (global-set-key (kbd "C-c d") 'toggle-darkroom)
+    #+END_SRC
+* Org
+** Org configuration
+   #+BEGIN_SRC emacs-lisp
+     (setq org-hide-leading-stars 't)
+     (setq org-src-fontify-natively 't)
+     (use-package org-mouse)
+   #+END_SRC
+** Org mode font faces
+   #+BEGIN_SRC emacs-lisp
+     (custom-set-faces
+      '(org-document-title ((t (:weight bold :height 2.0))))
+      '(org-document-info ((t (:height 1.5))))
+      '(org-level-1 ((t (:inherit outline-1 :weight bold :height 2.0))))
+      '(org-level-2 ((t (:inherit outline-1 :weight bold :height 1.5))))
+      '(org-level-3 ((t (:inherit outline-1 :weight bold :height 1.2)))))
+   #+END_SRC
+** Org functions
+   Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
+   #+BEGIN_SRC emacs-lisp
+     (defun org-insert-src-block (src-code-type)
+       "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+       (interactive
+        (let ((src-code-types
+               '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+                 "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+                 "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+                 "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+                 "scheme" "sqlite")))
+          (list (ido-completing-read "Source code type: " src-code-types))))
+       (progn
+         (newline-and-indent)
+         (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+         (newline-and-indent)
+         (insert "#+END_SRC\n")
+         (previous-line 2)
+         (org-edit-src-code)))
+     (bind-key "C-c s" 'org-insert-src-block org-mode-map)
+   #+END_SRC
+* Modes
+** Cmake
+   #+BEGIN_SRC emacs-lisp
+     (use-package cmake-mode
+       :mode (("CMakeLists\\.txt\\'" . cmake-mode)
+              ("\\.cmake\\'" . cmake-mode))
+       :init
+       (progn
+         (defun cmake-rename-buffer ()
+           "Renames a CMakeLists.txt buffer to cmake-<directory name>."
+           (interactive)
+           (when (and (buffer-file-name) (string-match "CMakeLists.txt" (buffer-name)))
+             (setq parent-dir (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name)))))
+             (setq new-buffer-name (concat "cmake-" parent-dir))
+             (rename-buffer new-buffer-name t)))
+
+         (add-hook 'cmake-mode-hook (function cmake-rename-buffer))
+
+         (add-hook 'cmake-mode-hook
+                   '(lambda()
+                      (local-set-key (kbd "C-c q") 'cmake-quick-document)
+                      (defun cmake-quick-document()
+                        (interactive)
+                        (beginning-of-line)
+                        (insert (concat "project(" (read-string "Project name: ") ")\n"))
+                        (insert (concat "cmake_minimum_required(VERSION " (read-string "CMake version: " "2.8") ")\n\n"))
+                        (when (yes-or-no-p "C++ warnings and optimization flags? ")
+                          (insert "set(CMAKE_CXX_FLAGS \"--std=c++11 -Wall -Wextra\")\n")
+                          (insert "if(\"${CMAKE_BUILD_TYPE}\" STREQUAL \"Release\")\n")
+                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O3\")\n")
+                          (insert "else()\n")
+                          (insert "  set(CMAKE_BUILD_TYPE \"Debug\")\n")
+                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O0 -g\")\n")
+                          (insert "  add_definitions(\"-DDEBUG\")\n")
+                          (insert "endif()\n\n")))))))
+   #+END_SRC
+** LaTeX
+   #+BEGIN_SRC emacs-lisp
+     (use-package tex-site)
+   #+END_SRC
+
