@@ -11,7 +11,7 @@
     (require 'cl-lib)
   #+END_SRC
 ** Packages
-   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][=Cask=]]), [[https://github.com/jwiegley/use-package][use-package]]
+   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][./Cask]]), [[https://github.com/jwiegley/use-package][use-package]]
    for lazy-loading of packages.
    #+BEGIN_SRC emacs-lisp
      (require 'cask "~/.cask/cask.el")
@@ -49,6 +49,14 @@
      (use-package rainbow-delimiters
        :init (global-rainbow-delimiters-mode))
      (show-paren-mode 't)
+
+     (use-package smartparens
+       :init
+       (progn
+         (smartparens-global-mode)
+         (sp-local-pair 'hy-mode "'" nil :actions nil)))
+     ;; Must fix issue with ' being doubled in hy-mode
+     (use-package smartparens-config)
    #+END_SRC
 ** Spelling
    #+BEGIN_SRC emacs-lisp
@@ -255,7 +263,9 @@
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
-     (load-theme 'zenburn t)     
+     (defvar emacs-theme)
+     (setq emacs-theme 'zenburn)
+     (load-theme emacs-theme t)
    #+END_SRC
 *** Fonts
      #+BEGIN_SRC emacs-lisp
@@ -290,11 +300,11 @@
         (interactive)
         (if (not in-darkroom)
             (progn
-              (disable-theme 'zenburn)
+              (disable-theme emacs-theme)
               (set-face-background 'hl-line hl-light-colour)
               (setq in-darkroom 't))
           (progn
-            (enable-theme 'zenburn)
+            (enable-theme emacs-theme)
             (set-face-background 'hl-line hl-dark-colour)
             (setq in-darkroom nil))))
       (global-set-key (kbd "C-c d") 'toggle-darkroom)
@@ -420,6 +430,14 @@
                               (concat "gdb --fullname "
                                       (cppcm-get-exe-path-current-buffer)))))))
     #+END_SRC
+
+** Hy
+   #+BEGIN_SRC emacs-lisp
+     (use-package hy-mode
+       :init
+       (add-hook 'hy-mode-hook
+                 (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
+   #+END_SRC
 
 ** Hex colors
    Borrowed from [[http://www.emacswiki.org/emacs/HexColour][Emacs wiki]].
