@@ -6,12 +6,12 @@
 #+PROPERTY: comments org
 
 * Misc
-  [[http://www.gnu.org/software/emacs/manual/html_mono/cl.html][Common Lisp macros for Emacs lisp]]
+  [[http://www.emacswiki.org/emacs/CommonLispForEmacs][Common Lisp macros for Emacs lisp]].
   #+BEGIN_SRC emacs-lisp
-    (require 'cl)
+    (require 'cl-lib)
   #+END_SRC
 ** Packages
-   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][~Cask~]]), [[https://github.com/jwiegley/use-package][use-package]]
+   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][=Cask=]]), [[https://github.com/jwiegley/use-package][use-package]]
    for lazy-loading of packages.
    #+BEGIN_SRC emacs-lisp
      (require 'cask "~/.cask/cask.el")
@@ -29,7 +29,7 @@
            "If the current buffer is 'init.org' the code-blocks are
           tangled, and the tangled file is compiled."
            (when (equal (buffer-file-name)
-                        (expand-file-name (concat user-emacs-directory "init.org")))
+                        (file-truename (concat user-emacs-directory "init.org")))
              (org-babel-tangle)
              (byte-compile-file (concat user-emacs-directory "init.el"))))
          (add-hook 'after-save-hook 'tangle-init)))
@@ -53,7 +53,7 @@
 ** Spelling
    #+BEGIN_SRC emacs-lisp
      (setq-default ispell-program-name "aspell")
-     (setq ispell-dictionary "en_GB-ize")
+     (setq-default ispell-dictionary "en_GB-ize")
    #+END_SRC
 ** Ack
    #+BEGIN_SRC emacs-lisp
@@ -64,19 +64,28 @@
      (defalias 'ack-find-file 'ack-and-a-half-find-file)
      (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
    #+END_SRC
+** Yasnippet
+   #+BEGIN_SRC emacs-lisp
+     (use-package yasnippet
+       :init
+       (yas-global-mode 1))
+   #+END_SRC
+
 ** Terminal
    Borrowed from [[http://www.emacswiki.org/emacs-ja/AnsiTermHints][Emacs wiki]].
    #+BEGIN_SRC emacs-lisp
      ;; Use this for remote so I can specify command line arguments
      (defun remote-term (new-buffer-name cmd &rest switches)
-       (setq term-ansi-buffer-name (concat "*" new-buffer-name "*"))
-       (setq term-ansi-buffer-name (generate-new-buffer-name term-ansi-buffer-name))
-       (setq term-ansi-buffer-name (apply 'make-term term-ansi-buffer-name cmd nil switches))
+       (let ((term-ansi-buffer-name
+              (apply 'make-term
+                     (generate-new-buffer-name
+                      (concat "*" new-buffer-name "*"))
+                     cmd nil switches)))
        (set-buffer term-ansi-buffer-name)
        (term-mode)
        (term-char-mode)
        ;;(term-set-escape-char ?\C-x)
-       (switch-to-buffer term-ansi-buffer-name))
+       (switch-to-buffer term-ansi-buffer-name)))
 
 
      ;; Kills buffer when terminal quits
@@ -115,7 +124,7 @@
      (setq truncate-partial-width-windows nil)
      (mouse-wheel-mode t)
      (setq x-select-enable-clipboard t)
-     (setq auto-revert-interval 1)
+     (setq-default auto-revert-interval 1)
      (setq show-trailing-whitespace nil)
      (put 'narrow-to-region 'disabled nil)
 
@@ -125,9 +134,6 @@
 
      (projectile-global-mode)
 
-     (setq ediff-split-window-function 'split-window-horizontally)
-     (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
      ;; (setq auto-save-list-file-prefix (expand-file-name
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
      ;; (setq custom-file (expand-file-name "custom.el" emacs.d))
@@ -136,18 +142,18 @@
 ** ido
    #+BEGIN_SRC emacs-lisp
      (use-package flx-ido
-                  :init
-                  (progn
-                    (ido-mode 1)
-                    (ido-everywhere 1)
-                    (flx-ido-mode 1)
-                    (setq ido-auto-merge-work-directories-length -1)
-                    ;; disable ido faces to see flx highlights.
-                    (setq ido-use-faces nil)))
+       :init
+       (progn
+         (ido-mode 1)
+         (ido-everywhere 1)
+         (flx-ido-mode 1)
+         (setq ido-auto-merge-work-directories-length -1)
+         ;; disable ido faces to see flx highlights.
+         (setq ido-use-faces nil)))
 
      (use-package ido-vertical-mode
-                  :init
-                  (ido-vertical-mode 1))
+       :init
+       (ido-vertical-mode 1))
    #+END_SRC
 
 ** Shortcut keys
@@ -217,14 +223,16 @@
          (exec-path-from-shell-initialize)
          (menu-bar-mode 1)
          (setq ring-bell-function #'ignore)
-         (setq org-babel-python-command "python3")))
+         (setq-default org-babel-python-command "python3")))
    #+END_SRC
 ** Linum mode
    #+BEGIN_SRC emacs-lisp
      (use-package linum
        :init
        (progn
-         (defcustom linum-disabled-modes-list '(eshell-mode wl-summary-mode compilation-mode org-mode image-mode dired-mode)
+         (defcustom linum-disabled-modes-list
+           '(eshell-mode wl-summary-mode compilation-mode org-mode
+                         image-mode dired-mode)
            "* List of modes disabled when global linum mode is on"
            :type '(repeat (sexp :tag "Major mode"))
            :tag " Major modes where linum is disabled: "
@@ -236,11 +244,11 @@
            :group 'linum)
 
          (defun linum-on ()
-           "* When linum is running globally, disable line number in modes defined in `linum-disabled-modes-list'. Changed by linum-off. Also turns off numbering in starred modes like *scratch*"
-
+           "* When linum is running globally, disable line number in
+     modes defined in `linum-disabled-modes-list'. Changed by
+     linum-off. Also turns off numbering in starred modes like *scratch*"
            (unless (or (minibufferp) (member major-mode linum-disabled-modes-list)
-                       (and linum-disable-starred-buffers (string-match "*" (buffer-name)))
-                       )
+                       (and linum-disable-starred-buffers (string-match "*" (buffer-name))))
              (linum-mode 1)))
          (setq linum-format "%3d ")
          (global-linum-mode)))
@@ -264,6 +272,8 @@
 *** Highlight current line
     #+BEGIN_SRC emacs-lisp
       (global-hl-line-mode 1)
+      (defvar hl-dark-colour)
+      (defvar hl-light-colour)
       (setq hl-dark-colour "#4F4F4F")
       (setq hl-light-colour "#CDD9FF")
       (set-face-background 'hl-line hl-dark-colour)
@@ -272,6 +282,7 @@
     Function to quickly toggle between dark/light themes, useful in
     conjunction with f-lux' darkroom mode.
     #+BEGIN_SRC emacs-lisp
+      (defvar in-darkroom)
       (setq in-darkroom nil)
 
       (defun toggle-darkroom ()
@@ -338,9 +349,11 @@
            "Renames a CMakeLists.txt buffer to cmake-<directory name>."
            (interactive)
            (when (and (buffer-file-name) (string-match "CMakeLists.txt" (buffer-name)))
-             (setq parent-dir (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name)))))
-             (setq new-buffer-name (concat "cmake-" parent-dir))
-             (rename-buffer new-buffer-name t)))
+             (let ((new-buffer-name (concat "cmake-"
+                                            (file-name-nondirectory
+                                             (directory-file-name
+                                              (file-name-directory (buffer-file-name)))))))
+               (rename-buffer new-buffer-name t))))
 
          (add-hook 'cmake-mode-hook (function cmake-rename-buffer))
 
@@ -365,5 +378,74 @@
 ** LaTeX
    #+BEGIN_SRC emacs-lisp
      (use-package tex-site)
+   #+END_SRC
+** Ediff
+   #+BEGIN_SRC emacs-lisp
+     (setq-default ediff-split-window-function 'split-window-horizontally)
+     (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+   #+END_SRC
+
+* Programming
+** Flycheck
+   #+BEGIN_SRC emacs-lisp
+     (use-package flycheck
+       :init
+       (progn
+         (add-hook 'after-init-hook #'global-flycheck-mode)
+         (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+   #+END_SRC
+
+** C/C++
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'c-mode-common-hook
+               (lambda ()
+                 (bind-key "C-c c" 'compile)))
+     (use-package realgud)
+   #+END_SRC
+
+*** Cmake
+    #+BEGIN_SRC emacs-lisp
+      (use-package cpputils-cmake
+        :init
+        (progn
+          (add-hook 'c-mode-common-hook
+                    (lambda ()
+                      (if (derived-mode-p 'c-mode 'c++-mode)
+                          (cppcm-reload-all))))
+          (setq cppcm-write-flymake-makefile nil)
+          (global-set-key (kbd "C-c g")
+                          '(lambda ()
+                             (interactive)
+                             (gud-gdb
+                              (concat "gdb --fullname "
+                                      (cppcm-get-exe-path-current-buffer)))))))
+    #+END_SRC
+
+** Hex colors
+   Borrowed from [[http://www.emacswiki.org/emacs/HexColour][Emacs wiki]].
+   #+BEGIN_SRC emacs-lisp
+     (defun hexcolour-luminance (color)
+         "Calculate the luminance of a color string (e.g. \"#ffaa00\", \"blue\").
+       This is 0.3 red + 0.59 green + 0.11 blue and always between 0 and 255."
+         (let* ((values (x-color-values color))
+                (r (car values))
+                (g (cadr values))
+                (b (caddr values)))
+           (floor (+ (* .3 r) (* .59 g) (* .11 b)) 256)))
+       (defun hexcolour-add-to-font-lock ()
+         (interactive)
+         (font-lock-add-keywords nil
+          `((,(concat "#[0-9a-fA-F]\\{3\\}[0-9a-fA-F]\\{3\\}?\\|"
+                      (regexp-opt (x-defined-colors) 'words))
+             (0 (let ((colour (match-string-no-properties 0)))
+                  (put-text-property
+                   (match-beginning 0) (match-end 0)
+                   'face `((:foreground ,(if (> 128.0 (hexcolour-luminance colour))
+                                              "white" "black"))
+                           (:background ,colour)))))))))
+
+     (add-hook 'css-mode-hook 'hexcolour-add-to-font-lock)
+     (add-hook 'org-mode-hook 'hexcolour-add-to-font-lock)
+     (add-hook 'emacs-lisp-mode-hook 'hexcolour-add-to-font-lock)
    #+END_SRC
 

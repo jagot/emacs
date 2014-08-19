@@ -7,6 +7,7 @@
 (depends-on "bind-key")
 (depends-on "cask") ;; Package management
 (depends-on "cmake-mode")
+(depends-on "cpputils-cmake")
 (depends-on "ctable") ;; Table editor
 (depends-on "dash") ;; List library
 (depends-on "drag-stuff")
@@ -37,6 +38,7 @@
 (depends-on "prodigy")
 (depends-on "projectile")
 (depends-on "rainbow-delimiters")
+(depends-on "realgud") ;; Debugger frontend
 (depends-on "request") ;; HTTP requests
 (depends-on "s") ;; String management
 (depends-on "smartparens")
