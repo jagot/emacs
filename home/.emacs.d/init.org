@@ -472,6 +472,67 @@
                                       (cppcm-get-exe-path-current-buffer)))))))
     #+END_SRC
 
+*** Header guards
+    #+BEGIN_SRC emacs-lisp
+      (defun traverse-project (dir file)
+        "Return the path of the current file relative to the project root."
+        (let ((stop-dirs
+               (list (expand-file-name "~") ; Stop at $HOME
+                     "/tmp"
+                     "/"
+                     (expand-file-name (concat dir "/../src")) ; Stop if current directory is named src
+                     (expand-file-name (concat dir "/../libs")) ; or libs
+                     (expand-file-name (concat dir "/../include")))) ; or include
+              (ndir (directory-file-name (expand-file-name dir))))
+          (let ((relname (file-relative-name file ndir)))
+            (if (cl-find ndir stop-dirs :test #'equal)
+                relname
+              (if (file-accessible-directory-p (expand-file-name (concat ndir "/.git"))) ; If there is a .git directory, stop
+                  relname
+                (traverse-project (concat ndir "/..") file))))))
+
+      (defun get-header-guard ()
+        "Return the header guard symbol to be used for the current file."
+        (let* ((file (buffer-file-name))
+               (path (traverse-project (file-name-directory file) file)))
+          (upcase (cl-substitute
+                   ?_ ?. (cl-substitute
+                          ?_ ?/ (if (string= (substring path 0 1) "/")
+                                    (substring path 1)
+                                  path))))))
+
+      (defun insert-header-guard ()
+        (interactive)
+        (let ((l (length (buffer-name))))
+          (when (or (equal (substring (buffer-name) (- l 2)  l) ".h")
+                    (equal (substring (buffer-name) (- l 4)  l) ".cuh"))
+            (when (not (file-exists-p (buffer-file-name)))
+              (let ((header-guard (get-header-guard)))
+                (insert (concat "//  @ Project : " (projectile-project-name)))
+                (newline)
+                (insert (concat "//  @ File Name : " (buffer-name)))
+                (newline)
+                (insert (concat "//  @ Date : " (format-time-string "%Y-%m-%d")))
+                (newline)
+                (insert (concat "//  @ Author : Stefanos Carlström"))
+                (newline)
+                (insert "//")
+                (newline)
+                (insert "//")
+                (newline)
+                (insert (concat "#ifndef " header-guard))
+                (newline)
+                (newline)
+                (insert (concat "#define " header-guard))
+                (newline)(newline)
+                (newline)(newline)
+                (insert (concat "#endif //" header-guard))
+                (previous-line)
+                (previous-line))))))
+
+      (add-hook 'c-mode-common-hook 'insert-header-guard)
+    #+END_SRC
+
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
