@@ -435,6 +435,10 @@
      (setq-default ediff-split-window-function 'split-window-horizontally)
      (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
    #+END_SRC
+** Lilypond
+   #+BEGIN_SRC emacs-lisp
+     (use-package lilypond-mode)
+   #+END_SRC
 
 * Programming
 ** Auto complete
@@ -544,6 +548,13 @@
       (add-hook 'c-mode-common-hook 'insert-header-guard)
     #+END_SRC
 
+*** Cuda
+    #+BEGIN_SRC emacs-lisp
+      (use-package cuda-mode
+        :mode (("\\.cu\\'" . cuda-mode)
+               ("\\.cuh\\'" . cuda-mode)))
+    #+END_SRC
+
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
@@ -592,6 +603,24 @@
      (add-hook 'emacs-lisp-mode-hook 'hexcolour-add-to-font-lock)
    #+END_SRC
 
+** Python
+   #+BEGIN_SRC emacs-lisp
+     (setq python-shell-interpreter "ipython")
+   #+END_SRC
+
+** Ruby
+   #+BEGIN_SRC emacs-lisp
+     (rvm-use-default)
+   #+END_SRC
+
+** Web development
+*** Web mode
+    #+BEGIN_SRC emacs-lisp
+      (use-package web-mode
+        :mode "\\.erb\\'"
+        :init
+        (add-hook 'web-mode-hook 'turn-off-smartparens-mode))
+    #+END_SRC
 * Helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-config
