@@ -533,6 +533,7 @@
    #+END_SRC
 
 ** Flycheck
+   [[https://github.com/flycheck/flycheck][Flycheck]]
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck
        :init
@@ -542,6 +543,7 @@
    #+END_SRC
 
 ** C/C++
+   [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
      (add-hook 'c-mode-common-hook
                (lambda ()
@@ -550,6 +552,7 @@
    #+END_SRC
 
 *** Cmake
+    [[https://github.com/redguardtoo/cpputils-cmake][cpputils-cmake]]
     #+BEGIN_SRC emacs-lisp
       (use-package cpputils-cmake
         :init
