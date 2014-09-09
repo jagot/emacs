@@ -85,6 +85,11 @@
      (defalias 'ack-find-file 'ack-and-a-half-find-file)
      (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
    #+END_SRC
+** Ag
+   #+BEGIN_SRC emacs-lisp
+     (use-package ag)
+     (setq ag-highlight-search t)
+   #+END_SRC
 ** Yasnippet
    #+BEGIN_SRC emacs-lisp
      (use-package yasnippet
@@ -503,3 +508,39 @@
      (add-hook 'emacs-lisp-mode-hook 'hexcolour-add-to-font-lock)
    #+END_SRC
 
+* Helm
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-config
+      :bind ("C-c h" . helm-mini))
+    (use-package helm-ag
+      :bind ("C-c a" . helm-do-ag))
+  #+END_SRC
+* BibTeX
+  #+BEGIN_SRC emacs-lisp
+    (setq bibtex-autokey-name-case-convert-function 'capitalize
+          bibtex-autokey-year-length 4
+          bibtex-autokey-year-title-separator ""
+          bibtex-autokey-titleword-length 0
+          bibtex-autokey-titleword-separator "")
+
+  #+END_SRC
+
+** Ebib
+   #+BEGIN_SRC emacs-lisp
+     (use-package ebib
+       :bind ("C-c e" . ebib)
+       :init (progn
+               (setq ebib-preload-bib-files '("~/Dropbox/References/references.bib"))
+               (org-add-link-type "ebib" 'ebib-open-org-link)))
+   #+END_SRC
+** Helm Bibtex
+  #+BEGIN_SRC emacs-lisp
+    ;;(use-package ebib)
+    (use-package helm-bibtex)
+    (setq helm-bibtex-bibliography "~/Dropbox/References/references.bib")
+    (setq helm-bibtex-library-path "~/Dropbox/References/")
+    (setq helm-bibtex-pdf-symbol "P")
+    (setq helm-bibtex-pdf-open-function
+          (lambda (fpath) (shell-command-to-string
+                           (concat "open " fpath " &"))))
+  #+END_SRC
