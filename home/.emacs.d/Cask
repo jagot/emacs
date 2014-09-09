@@ -5,18 +5,19 @@
 (depends-on "auctex")
 (depends-on "auto-complete")
 (depends-on "bind-key")
-(depends-on "cask") ;; Package management
+(depends-on "cask")
 (depends-on "cmake-mode")
 (depends-on "cpputils-cmake")
-(depends-on "ctable") ;; Table editor
-(depends-on "dash") ;; List library
+(depends-on "ctable")
+(depends-on "dash")
 (depends-on "drag-stuff")
 (depends-on "dropdown-list")
-(depends-on "ebib") ;; Bibliography management
+(depends-on "ebib")
+(depends-on "epl")
 (depends-on "exec-path-from-shell")
 (depends-on "expand-region")
-(depends-on "f") ;; File management
-(depends-on "flx-ido") ;; Fuzzy matching for ido
+(depends-on "f")
+(depends-on "flx-ido")
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
 (depends-on "git-commit-mode")
@@ -29,20 +30,20 @@
 (depends-on "magit")
 (depends-on "markdown-mode")
 (depends-on "multiple-cursors")
-(depends-on "nyan-mode") ;; Silly cat mode
 (depends-on "org")
 (depends-on "ox-reveal")
-(depends-on "pallet") ;; Package management
+(depends-on "pallet")
 (depends-on "popup")
 (depends-on "popwin")
 (depends-on "prodigy")
 (depends-on "projectile")
 (depends-on "rainbow-delimiters")
-(depends-on "realgud") ;; Debugger frontend
-(depends-on "request") ;; HTTP requests
-(depends-on "s") ;; String management
+(depends-on "realgud")
+(depends-on "request")
+(depends-on "s")
+(depends-on "smart-mode-line")
 (depends-on "smartparens")
-(depends-on "smex") ;; Enhanced M-x
+(depends-on "smex")
 (depends-on "use-package")
 (depends-on "web-mode")
 (depends-on "yasnippet")
