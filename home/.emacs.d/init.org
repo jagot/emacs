@@ -388,6 +388,86 @@
          (org-edit-src-code)))
      (bind-key "C-c s" 'org-insert-src-block org-mode-map)
    #+END_SRC
+** Org Babel
+   #+BEGIN_SRC emacs-lisp
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((python . t)
+        (emacs-lisp . t)
+        (C . t)
+        (sh . t)
+        (ruby . t)
+        (clojure . t)))
+     (setq org-confirm-babel-evaluate nil)
+     (use-package ob-clojure)
+     (setq org-babel-clojure-backend 'cider)
+   #+END_SRC
+** Org LaTeX export
+   #+BEGIN_SRC emacs-lisp
+     (setq org-latex-listings t)
+
+     ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
+     (setq org-export-latex-packages-alist
+           '(("" "graphicx" t)
+             ("" "longtable" nil)
+             ("" "float" nil)))
+
+     ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+     ;; but adapted to use latexmk 4.20 or higher.
+     (defun my-auto-tex-cmd (backend)
+       "When exporting from .org with latex, automatically run latex,
+     pdflatex, or xelatex as appropriate, using latexmk."
+       (let ((texcmd)))
+       ;; default command: pdflatex
+       (setq texcmd "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f")
+       ;; oldstyle latex via dvi
+       (if (string-match "LATEX_CMD: dvilatex" (buffer-string))
+           (setq texcmd "latexmk -dvi -pdfps %f"))
+       ;; xelatex -> .pdf
+       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+           (setq texcmd "latexmk -pdflatex='xelatex -shell-escape' -pdf %f"))
+       ;; lualatex -> .pdf
+       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
+           (setq texcmd "latexmk -pdflatex='lualatex -shell-escape' -pdf %f"))
+       ;; LaTeX compilation command
+       (setq org-latex-pdf-process (list texcmd))
+
+       ;; default packages for ordinary latex or pdflatex export
+       (setq org-latex-default-packages-alist
+             '(("AUTO" "inputenc" t)
+               ("T1" "fontenc" t)
+               ("" "fixltx2e" nil)
+               ("" "wrapfig" nil)
+               ("" "soul" t)
+               ("" "hyperref" nil)))
+
+       ;; Packages to include when xelatex is used
+       ;; (see https://github.com/kjhealy/latex-custom-kjh for the
+       ;; non-standard ones.)
+       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+           (setq org-latex-default-packages-alist
+                 '(("" "url" t)
+                   ("" "rotating" t)
+                   ("babel" "csquotes" t)
+                   ("" "listings" nil)
+                   ("" "soul" t))))
+       (if (not (string-match "startup: beamer" (buffer-string)))
+           (setq org-latex-default-packages-alist
+                 (append '(("svgnames" "xcolor" t)
+                           ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
+                         org-latex-default-packages-alist)))
+       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
+           (setq org-latex-default-packages-alist
+                 '(("" "url" t)
+                   ("" "rotating" t)
+                   ("babel" "csquotes" t)
+                   ("" "listings" nil)
+                   ("svgnames" "xcolor" t)
+                   ("" "soul" t)
+                   ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
+     (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
+   #+END_SRC
+
 * Modes
 ** Cmake
    #+BEGIN_SRC emacs-lisp
