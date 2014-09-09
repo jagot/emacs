@@ -437,6 +437,17 @@
    #+END_SRC
 
 * Programming
+** Auto complete
+   #+BEGIN_SRC emacs-lisp
+     (use-package auto-complete
+       :init
+       (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict"))
+     (use-package auto-complete-config
+       :init
+       (ac-config-default))
+     (use-package auto-complete-clang)
+   #+END_SRC
+
 ** Flycheck
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck

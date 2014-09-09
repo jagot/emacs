@@ -3,6 +3,7 @@
 
 .cask/
 auto-save-list/
+ac-comphist.dat
 
 init.el
 init.html
