@@ -4,12 +4,23 @@
 
 #+PROPERTY: tangle yes
 #+PROPERTY: comments org
+* Introduction
+** References
+   - [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua's config]]
+   - [[https://github.com/grettke/home][Grant Rettke's config]]
+   - [[https://github.com/larstvei/dot-emacs][Lars Tveito's config]]
 
 * Misc
   [[http://www.emacswiki.org/emacs/CommonLispForEmacs][Common Lisp macros for Emacs lisp]].
   #+BEGIN_SRC emacs-lisp
     (require 'cl-lib)
   #+END_SRC
+** Startup
+   #+BEGIN_SRC emacs-lisp
+     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+     (load custom-file)
+   #+END_SRC
+
 ** Packages
    [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][./Cask]]), [[https://github.com/jwiegley/use-package][use-package]]
    for lazy-loading of packages.
@@ -28,10 +39,11 @@
          (defun tangle-init ()
            "If the current buffer is 'init.org' the code-blocks are
           tangled, and the tangled file is compiled."
-           (when (equal (buffer-file-name)
-                        (file-truename (concat user-emacs-directory "init.org")))
-             (org-babel-tangle)
-             (byte-compile-file (concat user-emacs-directory "init.el"))))
+           (let ((init-file (concat user-emacs-directory "init.org")))
+             (when (member (buffer-file-name) (list (file-truename init-file)
+                                                    (expand-file-name init-file)))
+               (org-babel-tangle)
+               (byte-compile-file (concat user-emacs-directory "init.el")))))
          (add-hook 'after-save-hook 'tangle-init)))
    #+END_SRC
 ** Encoding
@@ -55,7 +67,6 @@
        (progn
          (smartparens-global-mode)
          (sp-local-pair 'hy-mode "'" nil :actions nil)))
-     ;; Must fix issue with ' being doubled in hy-mode
      (use-package smartparens-config)
    #+END_SRC
 ** Spelling
@@ -144,8 +155,6 @@
 
      ;; (setq auto-save-list-file-prefix (expand-file-name
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
-     ;; (setq custom-file (expand-file-name "custom.el" emacs.d))
-     ;; (load custom-file)
    #+END_SRC
 ** ido
    #+BEGIN_SRC emacs-lisp
@@ -315,15 +324,6 @@
      (setq org-hide-leading-stars 't)
      (setq org-src-fontify-natively 't)
      (use-package org-mouse)
-   #+END_SRC
-** Org mode font faces
-   #+BEGIN_SRC emacs-lisp
-     (custom-set-faces
-      '(org-document-title ((t (:weight bold :height 2.0))))
-      '(org-document-info ((t (:height 1.5))))
-      '(org-level-1 ((t (:inherit outline-1 :weight bold :height 2.0))))
-      '(org-level-2 ((t (:inherit outline-1 :weight bold :height 1.5))))
-      '(org-level-3 ((t (:inherit outline-1 :weight bold :height 1.2)))))
    #+END_SRC
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
