@@ -7,6 +7,8 @@
 (depends-on "auto-complete")
 (depends-on "bind-key")
 (depends-on "cask")
+(depends-on "cider")
+(depends-on "clojure-mode")
 (depends-on "cmake-mode")
 (depends-on "cpputils-cmake")
 (depends-on "ctable")

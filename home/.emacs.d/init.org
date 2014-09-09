@@ -472,13 +472,25 @@
                                       (cppcm-get-exe-path-current-buffer)))))))
     #+END_SRC
 
-** Hy
+** Lisps
    #+BEGIN_SRC emacs-lisp
-     (use-package hy-mode
-       :init
-       (add-hook 'hy-mode-hook
-                 (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
+     (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
    #+END_SRC
+*** Clojure
+    #+BEGIN_SRC emacs-lisp
+      (use-package clojure-mode)
+      (use-package cider
+        :init
+        (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode))
+    #+END_SRC
+
+*** Hy
+    #+BEGIN_SRC emacs-lisp
+      (use-package hy-mode
+        :init
+        (add-hook 'hy-mode-hook
+                  (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
+    #+END_SRC
 
 ** Hex colors
    Borrowed from [[http://www.emacswiki.org/emacs/HexColour][Emacs wiki]].
