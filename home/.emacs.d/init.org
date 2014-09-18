@@ -14,6 +14,8 @@
   [[http://www.emacswiki.org/emacs/CommonLispForEmacs][Common Lisp macros for Emacs lisp]].
   #+BEGIN_SRC emacs-lisp
     (require 'cl-lib)
+
+    (server-start)
   #+END_SRC
 ** Startup
    #+BEGIN_SRC emacs-lisp
@@ -80,15 +82,6 @@
    #+BEGIN_SRC emacs-lisp
      (setq-default ispell-program-name "aspell")
      (setq-default ispell-dictionary "en_GB-ize")
-   #+END_SRC
-** Ack
-   #+BEGIN_SRC emacs-lisp
-     (require 'ack-and-a-half)
-     ;; Create shorter aliases
-     (defalias 'ack 'ack-and-a-half)
-     (defalias 'ack-same 'ack-and-a-half-same)
-     (defalias 'ack-find-file 'ack-and-a-half-find-file)
-     (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
    #+END_SRC
 ** Ag
    #+BEGIN_SRC emacs-lisp
