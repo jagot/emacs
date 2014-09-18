@@ -216,6 +216,8 @@
          (bind-key "M-?" 'mark-paragraph)
          (bind-key "C-h" 'delete-backward-char)
          (bind-key "M-h" 'backward-kill-word)
+         (bind-key "C-j" 'newline)
+         (bind-key "C-z" 'undo)
 
          (bind-key "C-x C-b" 'ibuffer)
 
@@ -230,6 +232,8 @@
          (bind-key "C-c SPC c" 'whitespace-cleanup)
 
          (bind-key "C-c #" 'comment-region)
+
+         (bind-key "C-x C-M-e" 'lisp-eval-region)
 
          (bind-key "<f7>" 'flyspell-buffer)
          (bind-key (kbd "<C-f7>") 'ispell-change-dictionary))) ;; Does not work on MBP
