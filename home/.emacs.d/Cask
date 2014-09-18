@@ -8,6 +8,7 @@
 (depends-on "auto-complete")
 (depends-on "auto-complete-clang")
 (depends-on "bind-key")
+(depends-on "calfw")
 (depends-on "cask")
 (depends-on "cider")
 (depends-on "clojure-mode")

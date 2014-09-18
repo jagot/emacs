@@ -756,3 +756,30 @@
           (lambda (fpath) (shell-command-to-string
                            (concat "open " fpath " &"))))
   #+END_SRC
+* Calendar
+  #+BEGIN_SRC emacs-lisp
+    (use-package calfw
+      :init
+      (progn
+        (use-package calfw-ical)
+        (use-package calfw-org)
+        (setq cfw:fchar-junction ?╬
+              cfw:fchar-vertical-line ?║
+              cfw:fchar-horizontal-line ?═
+              cfw:fchar-left-junction ?╠
+              cfw:fchar-right-junction ?╣
+              cfw:fchar-top-junction ?╦
+              cfw:fchar-top-left-corner ?╔
+              cfw:fchar-top-right-corner ?╗)
+        (setq calendar-week-start-day 1)
+        (setq calendar-sources (list
+                                (cfw:org-create-source "Blue")))
+        (let ((calendar-file (concat user-emacs-directory "calendar.el")))
+          (if (f-exists? calendar-file)
+              (load calendar-file)))
+        (defun my-open-calendar ()
+          (interactive)
+          (cfw:open-calendar-buffer
+           :contents-sources calendar-sources)))
+      :bind (("C-x q" . my-open-calendar)))
+  #+END_SRC
