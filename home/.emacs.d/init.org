@@ -135,6 +135,11 @@
                                  (setq yas-dont-activate t)))
    #+END_SRC
 
+** Web server
+   #+BEGIN_SRC emacs-lisp
+     (use-package web-server)
+   #+END_SRC
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp

@@ -65,5 +65,6 @@
 (depends-on "smex")
 (depends-on "use-package")
 (depends-on "web-mode")
+(depends-on "web-server")
 (depends-on "yasnippet")
 (depends-on "zenburn-theme")
