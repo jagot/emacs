@@ -474,6 +474,8 @@
                    ("" "soul" t)
                    ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
      (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
+
+     (use-package ox-bibtex)
    #+END_SRC
 
 * Modes

@@ -1,5 +1,6 @@
 (source gnu)
 (source melpa)
+(source org)
 
 (depends-on "ac-cider")
 (depends-on "ack-and-a-half")
@@ -44,6 +45,7 @@
 (depends-on "markdown-mode")
 (depends-on "multiple-cursors")
 (depends-on "org")
+(depends-on "org-plus-contrib")
 (depends-on "ox-reveal")
 (depends-on "pallet")
 (depends-on "popup")
