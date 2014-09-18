@@ -56,21 +56,26 @@
      (prefer-coding-system 'utf-8)
    #+END_SRC
 ** Text editing
-   [[https://github.com/Fuco1/smartparens][smartparens]]
    #+BEGIN_SRC emacs-lisp
      (add-hook 'text-mode-hook 'turn-on-auto-fill)
      (add-hook 'text-mode-hook 'flyspell-mode)
      (use-package rainbow-delimiters
        :init (global-rainbow-delimiters-mode))
-     (show-paren-mode 't)
-
+   #+END_SRC
+** Smartparens
+   [[https://github.com/Fuco1/smartparens][smartparens]]
+   #+BEGIN_SRC emacs-lisp
      (use-package smartparens
        :init
        (progn
          (smartparens-global-mode)
-         (sp-local-pair 'hy-mode "'" nil :actions nil)))
+         (sp-local-pair 'hy-mode "'" nil :actions nil)
+         (show-smartparens-global-mode t))
+       :bind (("C-M-S-p" . sp-add-to-previous-sexp)
+              ("C-M-S-n" . sp-add-to-next-sexp)))
      (use-package smartparens-config)
    #+END_SRC
+
 ** Spelling
    #+BEGIN_SRC emacs-lisp
      (setq-default ispell-program-name "aspell")
@@ -162,12 +167,18 @@
 
      (setq vc-follow-symlinks nil)
 
-     (sml/setup)
-     (sml/apply-theme 'respectful)
-
      ;; (setq auto-save-list-file-prefix (expand-file-name
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
    #+END_SRC
+** Mode line
+   #+BEGIN_SRC emacs-lisp
+     (sml/setup)
+     (sml/apply-theme 'respectful)
+     (setq display-time-day-and-date 1)
+     (setq display-time-24hr-format 1)
+     (display-time-mode 1)
+   #+END_SRC
+
 ** ido
    #+BEGIN_SRC emacs-lisp
      (use-package flx-ido
@@ -641,6 +652,7 @@
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
+     (add-hook 'inferior-lisp-mode-hook (lambda () (rainbow-delimiters-mode 0)))
    #+END_SRC
 *** Clojure
     #+BEGIN_SRC emacs-lisp
