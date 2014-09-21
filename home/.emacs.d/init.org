@@ -367,6 +367,13 @@
               ("C-<" . mc/mark-previous-like-this)
               ("C-c C-<" . mc/mark-all-like-this)))
    #+END_SRC
+* Helm
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-config
+      :bind ("C-c h" . helm-mini))
+    (use-package helm-ag
+      :bind ("C-c a" . helm-do-ag))
+  #+END_SRC
 
 * Org
 ** Org configuration
@@ -536,17 +543,14 @@
    #+END_SRC
 
 * Programming
-** Auto complete
+** Company
    #+BEGIN_SRC emacs-lisp
-     (use-package auto-complete
-       :init
-       (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict"))
-     (use-package auto-complete-config
-       :init
-       (ac-config-default))
-     (use-package auto-complete-clang)
+     (use-package company
+       :init (add-hook 'after-init-hook 'global-company-mode)
+       :bind (("<C-tab>" . company-complete)))
+     (use-package helm-company
+       :bind (("C-:" . helm-company)))
    #+END_SRC
-
 ** Flycheck
    [[https://github.com/flycheck/flycheck][Flycheck]]
    #+BEGIN_SRC emacs-lisp
@@ -720,13 +724,6 @@
         :init
         (add-hook 'web-mode-hook 'turn-off-smartparens-mode))
     #+END_SRC
-* Helm
-  #+BEGIN_SRC emacs-lisp
-    (use-package helm-config
-      :bind ("C-c h" . helm-mini))
-    (use-package helm-ag
-      :bind ("C-c a" . helm-do-ag))
-  #+END_SRC
 * BibTeX
   #+BEGIN_SRC emacs-lisp
     (setq bibtex-autokey-name-case-convert-function 'capitalize
