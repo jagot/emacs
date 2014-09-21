@@ -352,11 +352,11 @@
       (defun toggle-darkroom ()
         "Enable f-lux' darkroom-friendly colours."
         (interactive)
-        (if (not in-darkroom)
-            (progn
-              (disable-theme emacs-theme)
-              (set-face-background 'hl-line hl-light-colour)
-              (setq in-darkroom 't))
+        (unless in-darkroom
+          (progn
+            (disable-theme emacs-theme)
+            (set-face-background 'hl-line hl-light-colour)
+            (setq in-darkroom 't))
           (progn
             (enable-theme emacs-theme)
             (set-face-background 'hl-line hl-dark-colour)
@@ -408,7 +408,7 @@
          (insert (format "#+BEGIN_SRC %s\n" src-code-type))
          (newline-and-indent)
          (insert "#+END_SRC\n")
-         (previous-line 2)
+         (forward-line -2)
          (org-edit-src-code)))
      (bind-key "C-c s" 'org-insert-src-block org-mode-map)
    #+END_SRC
@@ -476,11 +476,11 @@
                    ("babel" "csquotes" t)
                    ("" "listings" nil)
                    ("" "soul" t))))
-       (if (not (string-match "startup: beamer" (buffer-string)))
-           (setq org-latex-default-packages-alist
-                 (append '(("svgnames" "xcolor" t)
-                           ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
-                         org-latex-default-packages-alist)))
+       (unless (string-match "startup: beamer" (buffer-string))
+         (setq org-latex-default-packages-alist
+               (append '(("svgnames" "xcolor" t)
+                         ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
+                       org-latex-default-packages-alist)))
        (if (string-match "LATEX_CMD: lualatex" (buffer-string))
            (setq org-latex-default-packages-alist
                  '(("" "url" t)
@@ -653,8 +653,7 @@
                 (newline)(newline)
                 (newline)(newline)
                 (insert (concat "#endif //" header-guard))
-                (previous-line)
-                (previous-line))))))
+                (forward-line -2))))))
 
       (add-hook 'c-mode-common-hook 'insert-header-guard)
     #+END_SRC
