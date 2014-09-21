@@ -15,7 +15,8 @@
   #+BEGIN_SRC emacs-lisp
     (require 'cl-lib)
 
-    (server-start)
+    (load "server")
+    (unless (server-running-p) (server-start))
   #+END_SRC
 ** Startup
    #+BEGIN_SRC emacs-lisp
@@ -85,8 +86,8 @@
    #+END_SRC
 ** Ag
    #+BEGIN_SRC emacs-lisp
-     (use-package ag)
-     (setq ag-highlight-search t)
+     (use-package ag
+       :init (setq ag-highlight-search t))
    #+END_SRC
 ** Yasnippet
    #+BEGIN_SRC emacs-lisp
@@ -137,7 +138,8 @@
 
 ** Web server
    #+BEGIN_SRC emacs-lisp
-     (use-package web-server)
+     (use-package web-server
+       :defer t)
    #+END_SRC
 
 * Interface
@@ -170,8 +172,10 @@
    #+END_SRC
 ** Mode line
    #+BEGIN_SRC emacs-lisp
-     (sml/setup)
-     (sml/apply-theme 'respectful)
+     (use-package smart-mode-line
+       :init (progn
+               (sml/setup)
+               (sml/apply-theme 'respectful)))
      (setq display-time-day-and-date 1)
      (setq display-time-24hr-format 1)
      (display-time-mode 1)
@@ -286,7 +290,7 @@
 ** Linum mode
    #+BEGIN_SRC emacs-lisp
      (use-package linum
-       :init
+       :idle
        (progn
          (defcustom linum-disabled-modes-list
            '(eshell-mode wl-summary-mode compilation-mode org-mode
@@ -419,8 +423,9 @@
         (ruby . t)
         (clojure . t)))
      (setq org-confirm-babel-evaluate nil)
-     (use-package ob-clojure)
-     (setq org-babel-clojure-backend 'cider)
+     (use-package ob-clojure
+       :defer t
+       :init (setq org-babel-clojure-backend 'cider))
    #+END_SRC
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
@@ -530,7 +535,8 @@
    #+END_SRC
 ** LaTeX
    #+BEGIN_SRC emacs-lisp
-     (use-package tex-site)
+     (use-package tex-site
+       :defer t)
    #+END_SRC
 ** Ediff
    #+BEGIN_SRC emacs-lisp
@@ -539,7 +545,8 @@
    #+END_SRC
 ** Lilypond
    #+BEGIN_SRC emacs-lisp
-     (use-package lilypond-mode)
+     (use-package lilypond-mode
+       :mode "\\.ly\\'")
    #+END_SRC
 
 * Programming
@@ -567,7 +574,15 @@
      (add-hook 'c-mode-common-hook
                (lambda ()
                  (bind-key "C-c c" 'compile)))
-     (use-package realgud)
+     (defun start-debugger ()
+       (interactive)
+       (if (null cppcm-src-dir)
+           (realgud:gdb)
+         (realgud:gdb
+          (let ((exe-path (cppcm-get-exe-path-current-buffer)))
+            (concat "gdb --fullname " exe-path)))))
+     (use-package realgud
+       :bind (("C-c g" . start-debugger)))
    #+END_SRC
 
 *** Cmake
@@ -580,13 +595,7 @@
                     (lambda ()
                       (if (derived-mode-p 'c-mode 'c++-mode)
                           (cppcm-reload-all))))
-          (setq cppcm-write-flymake-makefile nil)
-          (global-set-key (kbd "C-c g")
-                          '(lambda ()
-                             (interactive)
-                             (gud-gdb
-                              (concat "gdb --fullname "
-                                      (cppcm-get-exe-path-current-buffer)))))))
+          (setq cppcm-write-flymake-makefile nil)))
     #+END_SRC
 
 *** Header guards
@@ -664,15 +673,17 @@
    #+END_SRC
 *** Clojure
     #+BEGIN_SRC emacs-lisp
-      (use-package clojure-mode)
-      (use-package cider
-        :init
-        (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode))
+      (use-package clojure-mode
+        :mode "\\.clj\\'"
+        :init (use-package cider
+                :init
+                (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)))
     #+END_SRC
 
 *** Hy
     #+BEGIN_SRC emacs-lisp
       (use-package hy-mode
+        :mode "\\.hy\\'"
         :init
         (add-hook 'hy-mode-hook
                   (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
@@ -713,7 +724,12 @@
 
 ** Ruby
    #+BEGIN_SRC emacs-lisp
-     (rvm-use-default)
+     (use-package ruby-mode
+       :mode "\\.rb\\'"
+       :init (progn
+               (use-package inf-ruby
+                 :init (inf-ruby-minor-mode)
+                 (rvm-use-default))))
    #+END_SRC
 
 ** Web development
@@ -745,7 +761,8 @@
 ** Helm Bibtex
   #+BEGIN_SRC emacs-lisp
     ;;(use-package ebib)
-    (use-package helm-bibtex)
+    (use-package helm-bibtex
+      :bind ("C-c b" . helm-bibtex))
     (setq helm-bibtex-bibliography "~/Dropbox/References/references.bib")
     (setq helm-bibtex-library-path "~/Dropbox/References/")
     (setq helm-bibtex-pdf-symbol "P")
