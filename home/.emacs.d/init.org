@@ -138,8 +138,7 @@
 
 ** Web server
    #+BEGIN_SRC emacs-lisp
-     (use-package web-server
-       :defer t)
+     (use-package web-server)
    #+END_SRC
 
 * Interface
@@ -200,7 +199,7 @@
 ** Smex
    #+BEGIN_SRC emacs-lisp
      (use-package smex
-       :init
+       :config
        (smex-initialize)
        :bind
        (("M-x" . smex)
@@ -352,7 +351,7 @@
       (defun toggle-darkroom ()
         "Enable f-lux' darkroom-friendly colours."
         (interactive)
-        (unless in-darkroom
+        (if (not in-darkroom)
           (progn
             (disable-theme emacs-theme)
             (set-face-background 'hl-line hl-light-colour)
@@ -425,7 +424,7 @@
      (setq org-confirm-babel-evaluate nil)
      (use-package ob-clojure
        :defer t
-       :init (setq org-babel-clojure-backend 'cider))
+       :config (setq org-babel-clojure-backend 'cider))
    #+END_SRC
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
@@ -501,7 +500,7 @@
      (use-package cmake-mode
        :mode (("CMakeLists\\.txt\\'" . cmake-mode)
               ("\\.cmake\\'" . cmake-mode))
-       :init
+       :config
        (progn
          (defun cmake-rename-buffer ()
            "Renames a CMakeLists.txt buffer to cmake-<directory name>."
@@ -546,14 +545,14 @@
 ** Lilypond
    #+BEGIN_SRC emacs-lisp
      (use-package lilypond-mode
-       :mode "\\.ly\\'")
+       :mode ("\\.ly\\'" . LilyPond-mode))
    #+END_SRC
 
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp
      (use-package company
-       :init (add-hook 'after-init-hook 'global-company-mode)
+       :config (add-hook 'prog-mode-hook 'global-company-mode)
        :bind (("<C-tab>" . company-complete)))
      (use-package helm-company
        :bind (("C-:" . helm-company)))
@@ -674,7 +673,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package clojure-mode
         :mode "\\.clj\\'"
-        :init (use-package cider
+        :config (use-package cider
                 :init
                 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)))
     #+END_SRC
@@ -683,7 +682,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package hy-mode
         :mode "\\.hy\\'"
-        :init
+        :config
         (add-hook 'hy-mode-hook
                   (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
     #+END_SRC
@@ -725,7 +724,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ruby-mode
        :mode "\\.rb\\'"
-       :init (progn
+       :config (progn
                (use-package inf-ruby
                  :init (inf-ruby-minor-mode)
                  (rvm-use-default))))
@@ -736,7 +735,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
         :mode "\\.erb\\'"
-        :init
+        :config
         (add-hook 'web-mode-hook 'turn-off-smartparens-mode))
     #+END_SRC
 * BibTeX
@@ -753,14 +752,19 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ebib
        :bind ("C-c e" . ebib)
-       :init (progn
+       :config (progn
                (setq ebib-preload-bib-files '("~/Dropbox/References/references.bib"))
                (org-add-link-type "ebib" 'ebib-open-org-link)))
    #+END_SRC
 ** Helm Bibtex
   #+BEGIN_SRC emacs-lisp
-    ;;(use-package ebib)
     (use-package helm-bibtex
+      :config (progn
+              (defun my-helm-bibtex-format-citation-cite (keys)
+                (s-join ", "
+                        (--map (format "cite:%s" it) keys)))
+              (add-to-list 'helm-bibtex-format-citation-functions
+                           '(org-mode . my-helm-bibtex-format-citation-cite)))
       :bind ("C-c b" . helm-bibtex))
     (setq helm-bibtex-bibliography "~/Dropbox/References/references.bib")
     (setq helm-bibtex-library-path "~/Dropbox/References/")
@@ -772,7 +776,7 @@
 * Mail
   #+BEGIN_SRC emacs-lisp
     (use-package mu4e
-      :init
+      :config
       (progn
         (setq
          mu4e-maildir       "~/Maildir"   ;; top-level Maildir
@@ -790,10 +794,11 @@
         (when (fboundp 'imagemagick-register-types)
           (imagemagick-register-types)))
       :bind (("C-x m" . mu4e)))
+  #+END_SRC
 * Calendar
   #+BEGIN_SRC emacs-lisp
     (use-package calfw
-      :init
+      :config
       (progn
         (use-package calfw-ical)
         (use-package calfw-org)
