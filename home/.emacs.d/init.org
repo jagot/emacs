@@ -773,6 +773,28 @@
           (lambda (fpath) (shell-command-to-string
                            (concat "open " fpath " &"))))
   #+END_SRC
+** Doi2Bibtex
+   Borrowed from [[http://blog.anghyflawn.net/2014/04/22/emacs-give-a-doi-get-a-bibtex-entry/][Pavel Iosad]].
+   #+BEGIN_SRC emacs-lisp
+     (defun get-bibtex-from-doi (doi)
+       "Get a BibTeX entry from the DOI"
+       (interactive "MDOI: ")
+       (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
+         (with-current-buffer
+             (url-retrieve-synchronously
+              (format "http://dx.doi.org/%s"
+                      (replace-regexp-in-string "http://dx.doi.org/" "" doi)))
+           (switch-to-buffer (current-buffer))
+           (goto-char (point-max))
+           (setq bibtex-entry
+                 (buffer-substring
+                  (string-match "@" (buffer-string))
+                  (point)))
+           (kill-buffer (current-buffer))))
+       (insert (decode-coding-string bibtex-entry 'utf-8))
+       (bibtex-fill-entry))
+   #+END_SRC
+
 * Mail
   #+BEGIN_SRC emacs-lisp
     (use-package mu4e
