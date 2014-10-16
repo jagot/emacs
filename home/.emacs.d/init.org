@@ -63,7 +63,7 @@
      (add-hook 'text-mode-hook 'turn-on-auto-fill)
      (add-hook 'text-mode-hook 'flyspell-mode)
      (use-package rainbow-delimiters
-       :init (global-rainbow-delimiters-mode))
+       :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
    #+END_SRC
 ** Smartparens
    [[https://github.com/Fuco1/smartparens][smartparens]]
@@ -166,6 +166,8 @@
      (projectile-global-mode)
 
      (setq vc-follow-symlinks nil)
+
+     (setq ring-bell-function #'ignore)
 
      ;; (setq auto-save-list-file-prefix (expand-file-name
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
@@ -283,7 +285,6 @@
                x-select-enable-clipboard t
                ns-use-native-fullscreen nil)
          (menu-bar-mode 1)
-         (setq ring-bell-function #'ignore)
          (setq-default org-babel-python-command "python3")
          (setenv "LC_CTYPE" "UTF-8")))
    #+END_SRC
@@ -790,6 +791,7 @@
         (when (fboundp 'imagemagick-register-types)
           (imagemagick-register-types)))
       :bind (("C-x m" . mu4e)))
+  #+END_SRC
 * Calendar
   #+BEGIN_SRC emacs-lisp
     (use-package calfw
