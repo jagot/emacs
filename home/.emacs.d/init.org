@@ -565,7 +565,8 @@
        :init
        (progn
          (add-hook 'after-init-hook #'global-flycheck-mode)
-         (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+         (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+         (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))))
    #+END_SRC
 
 ** C/C++
