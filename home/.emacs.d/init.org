@@ -31,7 +31,8 @@
      (require 'cask "~/.cask/cask.el")
      (cask-initialize)
      (require 'use-package)
-     (use-package pallet)
+     (use-package pallet
+       :init (pallet-mode))
    #+END_SRC
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
@@ -405,6 +406,7 @@
      (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
 
      (use-package org-mouse)
+     (use-package ox-beamer)
    #+END_SRC
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
@@ -437,7 +439,8 @@
         (C . t)
         (sh . t)
         (ruby . t)
-        (clojure . t)))
+        (clojure . t)
+        (octave . t)))
      (setq org-confirm-babel-evaluate nil)
      (use-package ob-clojure
        :defer t
@@ -535,6 +538,12 @@
    #+END_SRC
 
 * Modes
+  Misc modes
+  #+BEGIN_SRC emacs-lisp
+    (use-package matlab-mode
+      :mode (("\\.m\\'" . matlab-mode)))
+  #+END_SRC
+
 ** Cmake
    #+BEGIN_SRC emacs-lisp
      (use-package cmake-mode

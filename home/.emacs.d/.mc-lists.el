@@ -3,20 +3,39 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-babel-insert-hyphen
+        LaTeX-insert-left-brace
+        TeX-insert-backslash
+        TeX-insert-dollar
+        TeX-insert-sub-or-superscript
         backward-sexp
         c-electric-brace
+        c-electric-colon
         c-electric-delete-forward
+        c-electric-lt-gt
+        c-electric-paren
         c-electric-semi&comma
+        c-electric-slash
+        c-electric-star
+        comment-region
         forward-sexp
         insert-char
         julia-latexsub-or-indent
         kill-region
+        magit-unstage-item
         org-beginning-of-line
         org-delete-char
+        org-end-of-line
+        org-export-dispatch
+        org-preview-latex-fragment
+        org-return-indent
         org-self-insert-command
         org-yank
         outshine-self-insert-command
+        reindent-then-newline-and-indent
         sp--self-insert-command
+        sp-add-to-previous-sexp
+        sp-wrap-cancel
         wdired-capitalize-word
         yas-expand
         ))
