@@ -141,6 +141,18 @@
      (use-package web-server)
    #+END_SRC
 
+** External programs
+   #+BEGIN_SRC emacs-lisp
+     (defvar opener)
+     (setq opener "xdg-open")
+     (when (memq window-system '(mac ns))
+       (setq opener "open"))
+
+     (eval-after-load "dired-aux"
+       '(add-to-list 'dired-compress-file-suffixes
+                     '("\\.zip\\'" ".zip" "unzip")))
+   #+END_SRC
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
