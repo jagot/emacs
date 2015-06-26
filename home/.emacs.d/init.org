@@ -782,16 +782,17 @@
           bibtex-autokey-year-title-separator ""
           bibtex-autokey-titleword-length 0
           bibtex-autokey-titleword-separator "")
-
+    (setq bibliography-directory (expand-file-name "~/Dropbox/References"))
+    (setq bibliography-file (concat bibliography-directory "/references.bib"))
   #+END_SRC
 
-** Ebib
+** COMMENT Ebib
    #+BEGIN_SRC emacs-lisp
      (use-package ebib
        :bind ("C-c e" . ebib)
        :config (progn
-               (setq ebib-preload-bib-files '("~/Dropbox/References/references.bib"))
-               (org-add-link-type "ebib" 'ebib-open-org-link)))
+                 (setq ebib-preload-bib-files '(bibliography-file))
+                 (org-add-link-type "ebib" 'ebib-open-org-link)))
    #+END_SRC
 ** Helm Bibtex
   #+BEGIN_SRC emacs-lisp
@@ -803,15 +804,16 @@
               (add-to-list 'helm-bibtex-format-citation-functions
                            '(org-mode . my-helm-bibtex-format-citation-cite)))
       :bind ("C-c b" . helm-bibtex))
-    (setq helm-bibtex-bibliography "~/Dropbox/References/references.bib")
-    (setq helm-bibtex-library-path "~/Dropbox/References/")
+    (setq helm-bibtex-bibliography bibliography-file)
+    (setq helm-bibtex-library-path bibliography-directory)
     (setq helm-bibtex-pdf-symbol "P")
     (setq helm-bibtex-pdf-open-function
           (lambda (fpath) (shell-command-to-string
-                           (concat "open " fpath " &"))))
+                           (concat opener " " fpath " &"))))
   #+END_SRC
 ** Doi2Bibtex
-   Borrowed from [[http://blog.anghyflawn.net/2014/04/22/emacs-give-a-doi-get-a-bibtex-entry/][Pavel Iosad]].
+   Borrowed from [[http://blog.anghyflawn.net/2014/04/22/emacs-give-a-doi-get-a-bibtex-entry/][Pavel Iosad]]. Should maybe implement something like
+   [[https://gist.github.com/mardukbp/6576418][this]] instead.
    #+BEGIN_SRC emacs-lisp
      (defun get-bibtex-from-doi (doi)
        "Get a BibTeX entry from the DOI"
