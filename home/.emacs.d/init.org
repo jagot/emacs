@@ -495,6 +495,28 @@
 
      (use-package ox-bibtex)
    #+END_SRC
+** Out{org/shine}
+
+   #+BEGIN_SRC emacs-lisp
+     (defvar outline-minor-mode-prefix "\M-#")
+     (use-package outshine
+       :init
+       (progn
+         (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+         (add-hook 'c-mode-common-hook 'outline-minor-mode)))
+   #+END_SRC
+** Org preview LaTeX
+
+   #+BEGIN_SRC emacs-lisp
+     (bind-key "C-x p" 'org-preview-latex-fragment)
+     (bind-key "C-x P" 'org-ctrl-c-ctrl-c)
+     (add-hook 'c-mode-common-hook
+               (lambda ()
+                 (org-preview-latex-fragment)))
+     (add-hook 'cuda-mode-hook
+               (lambda ()
+                 (org-preview-latex-fragment)))
+   #+END_SRC
 
 * Modes
 ** Cmake
