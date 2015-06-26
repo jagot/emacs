@@ -3,12 +3,26 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-sexp
+        c-electric-brace
         c-electric-delete-forward
+        c-electric-semi&comma
+        forward-sexp
         insert-char
+        julia-latexsub-or-indent
+        kill-region
+        org-beginning-of-line
+        org-delete-char
         org-self-insert-command
+        org-yank
+        outshine-self-insert-command
+        sp--self-insert-command
+        wdired-capitalize-word
+        yas-expand
         ))
 
 (setq mc/cmds-to-run-once
       '(
         backward-sentence
+        org-mouse-down-mouse
         ))

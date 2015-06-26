@@ -244,7 +244,7 @@
 *** Super/subscripts
     #+BEGIN_SRC emacs-lisp
       (use-package iso-transl
-        :init
+        :config
         (iso-transl-define-keys
          `(("^0" . ,(vector (decode-char 'ucs #x2070)))
            ("^4" . ,(vector (decode-char 'ucs #x2074))) ; 1-3 already defined
@@ -290,7 +290,7 @@
 ** Linum mode
    #+BEGIN_SRC emacs-lisp
      (use-package linum
-       :idle
+       :init
        (progn
          (defcustom linum-disabled-modes-list
            '(eshell-mode wl-summary-mode compilation-mode org-mode
@@ -340,7 +340,7 @@
       (defvar hl-light-colour)
       (setq hl-dark-colour "#4F4F4F")
       (setq hl-light-colour "#CDD9FF")
-      (set-face-background 'hl-line hl-dark-colour)
+      ;; (set-face-background 'hl-line hl-dark-colour)
     #+END_SRC
 *** Darkroom
     Function to quickly toggle between dark/light themes, useful in
@@ -429,6 +429,7 @@
    #+END_SRC
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
+     (use-package ox-latex)
      (setq org-latex-listings t)
 
      ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
@@ -479,7 +480,7 @@
        (unless (string-match "startup: beamer" (buffer-string))
          (setq org-latex-default-packages-alist
                (append '(("svgnames" "xcolor" t)
-                         ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
+                         ("colorlinks=true, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
                        org-latex-default-packages-alist)))
        (if (string-match "LATEX_CMD: lualatex" (buffer-string))
            (setq org-latex-default-packages-alist
