@@ -2,6 +2,7 @@
 (source melpa)
 (source org)
 
+(depends-on "4clojure")
 (depends-on "ag")
 (depends-on "alert")
 (depends-on "async")
@@ -38,6 +39,7 @@
 (depends-on "git-rebase-mode")
 (depends-on "gitignore-mode")
 (depends-on "gntp")
+(depends-on "google-contacts")
 (depends-on "google-maps")
 (depends-on "haml-mode")
 (depends-on "helm")
@@ -90,6 +92,7 @@
 (depends-on "smex")
 (depends-on "test-simple")
 (depends-on "use-package")
+(depends-on "w3")
 (depends-on "web-mode")
 (depends-on "web-server")
 (depends-on "yasnippet")
