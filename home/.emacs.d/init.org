@@ -201,6 +201,7 @@
      ;; (setq auto-save-list-file-prefix (expand-file-name
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
 
+     (global-prettify-symbols-mode 1)
 
      (setq magit-last-seen-setup-instructions "1.4.0")
    #+END_SRC
@@ -358,14 +359,9 @@
    #+END_SRC
 *** Fonts
      #+BEGIN_SRC emacs-lisp
-       ;;(set-face-attribute 'default nil :family "Anonymous Pro" :height 170)
-       ;;(set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 140)
-
-       ;; (require 'unicode-fonts)
-       ;; (unicode-fonts-setup)
-       ;; (set-default-font "Consolas-12")
-       ;; (set-fontset-font t 'greek "Consolas")
-       ;; (set-fontset-font t 'cyrillic "Consolas")
+       (set-default-font "Consolas-13")
+       (set-fontset-font t 'greek "Consolas")
+       (set-fontset-font t 'cyrillic "Consolas")
        ;; (set-fontset-font t (cons #x2070 #x209F) "Consolas")
        (set-fontset-font t 'hangul
                          (font-spec :family "Nanum Gothic"))
@@ -642,7 +638,14 @@
    #+BEGIN_SRC emacs-lisp
      (add-hook 'c-mode-common-hook
                (lambda ()
-                 (bind-key "C-c c" 'compile)))
+                 (bind-key "C-c c" 'compile)
+                 (setq prettify-symbols-alist
+                       '(("!=" . ?≠)
+                         ("<=" . ?≤)
+                         (">=" . ?≥)
+                         ("&&" . ?∧)
+                         ("||" . ?∨)
+                         ("M_PI" . ?π)))))
      (defun start-debugger ()
        (interactive)
        (if (null cppcm-src-dir)
@@ -738,6 +741,12 @@
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
      (add-hook 'inferior-lisp-mode-hook (lambda () (rainbow-delimiters-mode 0)))
+     (add-hook 'lisp-mode-common-hook
+               (lambda ()
+                 (setq prettify-symbols-alist
+                       '(("lambda" . ?λ)
+                         ("<=" . ?≤)
+                         (">=" . ?≥)))))
    #+END_SRC
 *** Clojure
     #+BEGIN_SRC emacs-lisp
