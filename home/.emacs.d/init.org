@@ -795,7 +795,7 @@
           bibtex-autokey-year-title-separator ""
           bibtex-autokey-titleword-length 0
           bibtex-autokey-titleword-separator "")
-    (setq bibliography-directory (expand-file-name "~/Dropbox/References"))
+    (setq bibliography-directory (expand-file-name "~/references"))
     (setq bibliography-file (concat bibliography-directory "/references.bib"))
   #+END_SRC
 
