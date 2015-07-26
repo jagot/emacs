@@ -1,4 +1,5 @@
 (source gnu)
+(source marmalade)
 (source melpa)
 (source org)
 
@@ -35,8 +36,6 @@
 (depends-on "flx-ido")
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
-(depends-on "git-commit-mode")
-(depends-on "git-rebase-mode")
 (depends-on "gitignore-mode")
 (depends-on "gntp")
 (depends-on "google-contacts")

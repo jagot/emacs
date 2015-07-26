@@ -195,6 +195,7 @@
      (projectile-global-mode)
 
      (setq vc-follow-symlinks nil)
+     (setq find-file-visit-truename t)
 
      (setq ring-bell-function #'ignore)
 
