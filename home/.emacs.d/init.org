@@ -41,15 +41,26 @@
      (use-package ob-tangle
        :init
        (progn
+         (setq init-file (concat user-emacs-directory "init.org"))
+         (setq init-file-el (concat user-emacs-directory "init.el"))
+         (setq init-file-bc (concat init-file-el "c"))
          (defun tangle-init ()
-           "If the current buffer is 'init.org' the code-blocks are
-          tangled, and the tangled file is compiled."
-           (let ((init-file (concat user-emacs-directory "init.org")))
-             (when (member (buffer-file-name) (list (file-truename init-file)
-                                                    (expand-file-name init-file)))
-               (org-babel-tangle)
-               (byte-compile-file (concat user-emacs-directory "init.el")))))
-         (add-hook 'after-save-hook 'tangle-init)))
+           "Tangle the code-blocks of this file, and subsequently
+         byte-compile the result."
+           (progn
+             (org-babel-tangle-file init-file)
+             (byte-compile-file init-file-el)))
+         (add-hook 'after-save-hook (lambda ()
+                                      (when (member (buffer-file-name)
+                                                    (list (file-truename init-file)
+                                                          (expand-file-name init-file)))
+                                        (tangle-init))))
+         (when (or
+                (and
+                 (file-exists-p init-file-bc)
+                 (file-newer-than-file-p init-file init-file-bc))
+                (not (file-exists-p init-file-bc)))
+           (tangle-init))))
    #+END_SRC
 ** Encoding
    #+BEGIN_SRC emacs-lisp
