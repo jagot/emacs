@@ -331,8 +331,8 @@
      (defun hydra-vi/post ()
        (set-cursor-color "#ffffff"))
 
-     (global-set-key
-      (kbd "C-z")
+     (bind-key
+      "C-z"
       (defhydra hydra-vi (:pre hydra-vi/pre :post hydra-vi/post :color amaranth)
         "vi"
         ("l" forward-char)
@@ -346,32 +346,71 @@
         ("y" kill-ring-save "yank" :color blue)
         ("q" nil "quit")))
 
-     (global-set-key (kbd "C-x SPC")
-                     (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
-                                                          :color pink
-                                                          :post (deactivate-mark))
-                       "
+     (bind-key
+      "C-x SPC"
+      (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                                           :color pink
+                                           :post (deactivate-mark))
+        "
        ^_k_^     _d_elete    _s_tring
      _h_   _l_   _o_k        _y_ank
        ^_j_^     _n_ew-copy  _r_eset
      ^^^^        _e_xchange  _u_ndo
      ^^^^        ^ ^         _p_aste
      "
-                       ("h" backward-char nil)
-                       ("l" forward-char nil)
-                       ("k" previous-line nil)
-                       ("j" next-line nil)
-                       ("e" hydra-ex-point-mark nil)
-                       ("n" copy-rectangle-as-kill nil)
-                       ("d" delete-rectangle nil)
-                       ("r" (if (region-active-p)
-                                (deactivate-mark)
-                              (rectangle-mark-mode 1)) nil)
-                       ("y" yank-rectangle nil)
-                       ("u" undo nil)
-                       ("s" string-rectangle nil)
-                       ("p" kill-rectangle nil)
-                       ("o" nil nil)))
+        ("h" backward-char nil)
+        ("l" forward-char nil)
+        ("k" previous-line nil)
+        ("j" next-line nil)
+        ("e" hydra-ex-point-mark nil)
+        ("n" copy-rectangle-as-kill nil)
+        ("d" delete-rectangle nil)
+        ("r" (if (region-active-p)
+                 (deactivate-mark)
+               (rectangle-mark-mode 1)) nil)
+        ("y" yank-rectangle nil)
+        ("u" undo nil)
+        ("s" string-rectangle nil)
+        ("p" kill-rectangle nil)
+        ("o" nil nil)))
+
+     (global-set-key
+      (kbd "S-RET")
+      (defhydra hydra-mc (:columns 3)
+        "Multiple cursors"
+        ("n" mc/mark-next-like-this "Mark next" :color red)
+        ("p" mc/mark-previous-like-this "Mark previous" :color red)
+        ("a" mc/mark-all-like-this "Mark all" :color blue)
+
+        ("N" mc/skip-to-next-like-this "Skip next" :color red)
+        ("P" mc/skip-to-previous-like-this "Skip previous" :color red)
+        ("l" mc/edit-lines "Edit lines" :color blue)
+
+        ("M-n" mc/unmark-next-like-this "Unmark next" :color red)
+        ("M-p" mc/unmark-previous-like-this "Unmark previous" :color red)
+        ("q" nil "quit" :color blue)))
+
+     (defhydra hydra-projectile (:color blue
+                                 :columns 4)
+       "Projectile"
+       ("a" projectile-ag "ag")
+       ("b" projectile-switch-to-buffer "switch to buffer")
+       ("c" projectile-invalidate-cache "cache clear")
+       ("d" projectile-find-dir "dir")
+       ("s-f" projectile-find-file "file")
+       ("ff" projectile-find-file-dwim "file dwim")
+       ("fd" projectile-find-file-in-directory "file curr dir")
+       ("g" ggtags-update-tags "update gtags")
+       ("i" projectile-ibuffer "Ibuffer")
+       ("K" projectile-kill-buffers "Kill all buffers")
+       ("o" projectile-multi-occur "multi-occur")
+       ("p" projectile-switch-project "switch")
+       ("r" projectile-recentf "recent file")
+       ("x" projectile-remove-known-project "remove known")
+       ("X" projectile-cleanup-known-projects "cleanup non-existing")
+       ("z" projectile-cache-current-file "cache current")
+       ("q" nil "cancel"))
+     (bind-key "C-S-p" 'hydra-projectile/body)
    #+END_SRC
 
 ** OS X-specific configuration

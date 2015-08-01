@@ -53,6 +53,10 @@
 (setq mc/cmds-to-run-once
       '(
         backward-sentence
+        hydra-mc/mc/edit-lines-and-exit
+        hydra-mc/mc/mark-all-like-this-and-exit
+        hydra-mc/mc/mark-next-like-this
+        hydra-mc/mc/mark-previous-like-this
         mac-mwheel-scroll
         org-export-dispatch
         org-mouse-down-mouse
