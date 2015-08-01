@@ -309,6 +309,60 @@
            ("_(" . ,(vector (decode-char 'ucs #x208D)))
            ("_)" . ,(vector (decode-char 'ucs #x208E))))))
     #+END_SRC
+** Hydras
+   Hydras taken from hydra-examples.el in the official distribution.
+   #+BEGIN_SRC emacs-lisp
+     (use-package hydra)
+
+     (defun hydra-vi/pre ()
+       (set-cursor-color "#e52b50"))
+
+     (defun hydra-vi/post ()
+       (set-cursor-color "#ffffff"))
+
+     (global-set-key
+      (kbd "C-z")
+      (defhydra hydra-vi (:pre hydra-vi/pre :post hydra-vi/post :color amaranth)
+        "vi"
+        ("l" forward-char)
+        ("h" backward-char)
+        ("j" next-line)
+        ("k" previous-line)
+        ("m" set-mark-command "mark")
+        ("a" move-beginning-of-line "beg")
+        ("e" move-end-of-line "end")
+        ("d" delete-region "del" :color blue)
+        ("y" kill-ring-save "yank" :color blue)
+        ("q" nil "quit")))
+
+     (global-set-key (kbd "C-x SPC")
+                     (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                                                          :color pink
+                                                          :post (deactivate-mark))
+                       "
+       ^_k_^     _d_elete    _s_tring
+     _h_   _l_   _o_k        _y_ank
+       ^_j_^     _n_ew-copy  _r_eset
+     ^^^^        _e_xchange  _u_ndo
+     ^^^^        ^ ^         _p_aste
+     "
+                       ("h" backward-char nil)
+                       ("l" forward-char nil)
+                       ("k" previous-line nil)
+                       ("j" next-line nil)
+                       ("e" hydra-ex-point-mark nil)
+                       ("n" copy-rectangle-as-kill nil)
+                       ("d" delete-rectangle nil)
+                       ("r" (if (region-active-p)
+                                (deactivate-mark)
+                              (rectangle-mark-mode 1)) nil)
+                       ("y" yank-rectangle nil)
+                       ("u" undo nil)
+                       ("s" string-rectangle nil)
+                       ("p" kill-rectangle nil)
+                       ("o" nil nil)))
+   #+END_SRC
+
 ** OS X-specific configuration
    #+BEGIN_SRC emacs-lisp
      (when (memq window-system '(mac ns))
