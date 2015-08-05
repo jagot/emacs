@@ -214,8 +214,6 @@
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
 
      (global-prettify-symbols-mode 1)
-
-     (setq magit-last-seen-setup-instructions "1.4.0")
    #+END_SRC
 ** Mode line
    #+BEGIN_SRC emacs-lisp
@@ -259,8 +257,6 @@
      (use-package bind-key
        :init
        (progn
-         (bind-key "C-c m" 'magit-status)
-
          (bind-key "C-?" 'help-command)
          (bind-key "M-?" 'mark-paragraph)
          (bind-key "C-h" 'delete-backward-char)
@@ -511,6 +507,20 @@
               ("C-<" . mc/mark-previous-like-this)
               ("C-c C-<" . mc/mark-all-like-this)))
    #+END_SRC
+** Magit
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :bind (("C-c m" . magit-status))
+       :init
+       (progn
+         (setq magit-last-seen-setup-instructions "1.4.0")))
+
+     (use-package magit-gitflow
+       :init
+       (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+   #+END_SRC
+
 * Helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-config

@@ -63,6 +63,7 @@
 (depends-on "log4e")
 (depends-on "lua-mode")
 (depends-on "magit")
+(depends-on "magit-gitflow")
 (depends-on "magit-popup")
 (depends-on "markdown-mode")
 (depends-on "matlab-mode")
