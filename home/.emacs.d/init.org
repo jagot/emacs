@@ -1036,7 +1036,7 @@
         (setq calendar-week-start-day 1)
         (setq calendar-sources (list
                                 (cfw:org-create-source "Blue")))
-        (let ((calendar-file (concat user-emacs-directory "calendar.el")))
+        (let ((calendar-file (concat user-emacs-directory "calfw-conf.el")))
           (if (f-exists? calendar-file)
               (load calendar-file)))
         (defun my-open-calendar ()
