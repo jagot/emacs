@@ -409,6 +409,34 @@
        ("q" nil "cancel"))
      (bind-key "C-S-p" 'hydra-projectile/body)
    #+END_SRC
+** Modalka
+   #+BEGIN_SRC emacs-lisp
+     (use-package modalka
+       :init
+       (progn
+         (add-hook 'text-mode-hook #'modalka-mode)
+         (add-hook 'prog-mode-hook #'modalka-mode)
+         (setq-default cursor-type 'box)
+         (setq modalka-cursor-type 'hollow)
+         (modalka-define-kbds '("W" . "M-w")
+                              '("Y" . "M-y")
+                              '("a" . "C-a")
+                              '("b" . "C-b")
+                              '("k" . "C-M-b")
+                              '("e" . "C-e")
+                              '("f" . "C-f")
+                              '("j" . "C-M-f")
+                              '("g" . "C-g")
+                              '("n" . "C-n")
+                              '("p" . "C-p")
+                              '("v" . "C-v")
+                              '("V" . "M-v")
+                              '("w" . "C-w")
+                              '("y" . "C-y")
+                              '("SPC" . "C-SPC")
+                              '("M-e" . "C-x C-e")))
+       :bind (("<return>" . modalka-mode)))
+   #+END_SRC
 
 ** OS X-specific configuration
    #+BEGIN_SRC emacs-lisp

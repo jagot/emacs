@@ -67,6 +67,7 @@
 (depends-on "magit-popup")
 (depends-on "markdown-mode")
 (depends-on "matlab-mode")
+(depends-on "modalka")
 (depends-on "mu4e-maildirs-extension")
 (depends-on "multiple-cursors")
 (depends-on "org")
