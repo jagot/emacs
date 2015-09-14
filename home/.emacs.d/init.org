@@ -22,6 +22,7 @@
    #+BEGIN_SRC emacs-lisp
      (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
      (load custom-file)
+     (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
    #+END_SRC
 
 ** Packages
@@ -673,6 +674,9 @@
   #+BEGIN_SRC emacs-lisp
     (use-package matlab-mode
       :mode (("\\.m\\'" . matlab-mode)))
+
+    (autoload 'gedcom-mode "gedcom")
+    (setq auto-mode-alist (cons '("\\.ged$" . gedcom-mode) auto-mode-alist))
   #+END_SRC
 
 ** Cmake
