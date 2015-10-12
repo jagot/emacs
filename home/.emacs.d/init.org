@@ -886,6 +886,26 @@
                ("\\.cuh\\'" . cuda-mode)))
     #+END_SRC
 
+** ESS
+   #+BEGIN_SRC emacs-lisp
+     (use-package ess-site)
+   #+END_SRC
+
+** Julia
+   #+BEGIN_SRC emacs-lisp
+     (use-package julia-mode
+       :mode (("\\.jl\\'" . julia-mode))
+       :init (add-hook 'julia-mode-hook
+                       (lambda ()
+                         (setq prettify-symbols-alist
+                               '(("!=" . ?≠)
+                                 ("<=" . ?≤)
+                                 (">=" . ?≥)
+                                 ("&&" . ?∧)
+                                 ("||" . ?∨)
+                                 ("->" . ?→))))))
+   #+END_SRC
+
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
