@@ -763,7 +763,7 @@
      (use-package helm-company
        :bind (("C-:" . helm-company)))
      (use-package company-quickhelp
-       :init (lambda () (company-quickhelp-mode 1)))
+       :init (company-quickhelp-mode 1))
    #+END_SRC
 ** Flycheck
    [[https://github.com/flycheck/flycheck][Flycheck]]
