@@ -565,9 +565,6 @@
    #+BEGIN_SRC emacs-lisp
      (setq org-hide-leading-stars 't)
      (setq org-src-fontify-natively 't)
-     (add-hook 'org-mode-hook (lambda () (variable-pitch-mode t)))
-     (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-     (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
 
      (use-package org-mouse)
      (use-package ox-beamer)
@@ -690,14 +687,9 @@
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
-     (bind-key "C-x p" 'org-preview-latex-fragment)
-     (bind-key "C-x P" 'org-ctrl-c-ctrl-c)
+     (bind-key "C-x p" 'org-toggle-latex-fragment)
      (add-hook 'c-mode-common-hook
-               (lambda ()
-                 (org-preview-latex-fragment)))
-     (add-hook 'cuda-mode-hook
-               (lambda ()
-                 (org-preview-latex-fragment)))
+               (lambda () (org-toggle-latex-fragment '(16))))
    #+END_SRC
 * Modes
   Misc modes
@@ -896,7 +888,6 @@
 ** Julia
    #+BEGIN_SRC emacs-lisp
      (use-package julia-mode
-       :mode (("\\.jl\\'" . julia-mode))
        :init (add-hook 'julia-mode-hook
                        (lambda ()
                          (setq prettify-symbols-alist

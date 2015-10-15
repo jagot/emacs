@@ -20,13 +20,19 @@
         c-electric-star
         comment-region
         ediff-mark-for-hiding-at-pos
+        ess-smart-comma
+        ess-yank
         f90-electric-insert
         forward-sexp
+        hydra-mc/mc/skip-to-next-like-this
+        hydra-mc/nil
         insert-char
         julia-latexsub-or-indent
         kill-region
         magit-unstage-item
+        matlab-electric-comment
         matlab-forward-sexp
+        matlab-linefeed
         org-beginning-of-line
         org-delete-char
         org-end-of-line
