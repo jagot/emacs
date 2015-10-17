@@ -21,6 +21,7 @@
 (depends-on "company-auctex")
 (depends-on "company-c-headers")
 (depends-on "company-inf-ruby")
+(depends-on "company-math")
 (depends-on "company-quickhelp")
 (depends-on "cpputils-cmake")
 (depends-on "ctable")

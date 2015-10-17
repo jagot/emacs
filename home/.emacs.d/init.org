@@ -757,8 +757,16 @@
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp
+     (use-package company-math)
      (use-package company
-       :config (add-hook 'prog-mode-hook 'global-company-mode)
+       :config (progn
+                 (setq company-tooltip-limit 20)
+                 (setq company-idle-delay 0.5)
+                 (setq company-show-numbers t)
+
+                 (add-to-list 'company-backends #'company-math-symbols-unicode)
+
+                 (global-company-mode 1))
        :bind (("<C-tab>" . company-complete)))
      (use-package helm-company
        :bind (("C-:" . helm-company)))
