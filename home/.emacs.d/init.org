@@ -551,6 +551,12 @@
        :init
        (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
    #+END_SRC
+** Ace-window
+   #+BEGIN_SRC emacs-lisp
+     (use-package ace-window
+       :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+       :bind (("C-x o" . ace-window)))
+   #+END_SRC
 
 * Helm
   #+BEGIN_SRC emacs-lisp
