@@ -100,6 +100,7 @@
 (depends-on "smart-mode-line")
 (depends-on "smartparens")
 (depends-on "smex")
+(depends-on "swiper")
 (depends-on "test-simple")
 (depends-on "use-package")
 (depends-on "w3")

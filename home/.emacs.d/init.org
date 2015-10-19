@@ -557,6 +557,15 @@
        :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
        :bind (("C-x o" . ace-window)))
    #+END_SRC
+** Swiper
+   #+BEGIN_SRC emacs-lisp
+     (use-package swiper
+       :init (progn
+               (ivy-mode 1)
+               (setq ivy-use-virtual-buffers t))
+       :bind (("C-s" . swiper)
+              ("C-r" . swiper)))
+   #+END_SRC
 
 * Helm
   #+BEGIN_SRC emacs-lisp
