@@ -155,7 +155,7 @@
 
      (global-set-key (kbd "<f1>") (lambda ()
                                     (interactive)
-                                    (ansi-term "zsh" "localhost")))
+                                    (eshell)))
      (global-set-key (kbd "S-<f1>") (lambda ()
                                       (interactive)
                                       (remote-term "lth" "ssh" "lth")))
@@ -164,6 +164,12 @@
                                       (remote-term "home" "ssh" "home")))
      (add-hook 'term-mode-hook (lambda()
                                  (setq yas-dont-activate t)))
+
+     (defun ag-eshell (string)
+       "Search with ag using the current eshell directory and a given string.
+        To be used from within an eshell alias
+        (`alias ag 'ag-eshell $1'` within eshell)"
+        (ag/search string (eshell/pwd)))
    #+END_SRC
 
 ** Web server
@@ -434,7 +440,8 @@
                         ("w" . "C-w")
                         ("y" . "C-y")
                         ("SPC" . "C-SPC")
-                        ("M-e" . "C-x C-e"))))
+                        ("M-e" . "C-x C-e")
+                        ("#" . "C-c #"))))
            (dolist (pair pairs)
              (modalka-define-kbd (car pair) (cdr pair)))))
        :bind (("<return>" . modalka-mode)))

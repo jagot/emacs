@@ -1,0 +1,2 @@
+alias ag ag-eshell $1
+alias ssh cd /ssh:$1:~

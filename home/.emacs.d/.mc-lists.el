@@ -20,6 +20,7 @@
         c-electric-star
         comment-region
         ediff-mark-for-hiding-at-pos
+        ess-electric-brace
         ess-smart-comma
         ess-yank
         f90-electric-insert

@@ -23,3 +23,6 @@ url/
 ._*
 .Spotlight-V100
 .Trashesb
+/home/.emacs.d/eshell/history
+/home/.emacs.d/eshell/lastdir
+ltxpng/
