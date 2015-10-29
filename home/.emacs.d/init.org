@@ -809,6 +809,7 @@
 ** C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
      (add-hook 'c-mode-common-hook
                (lambda ()
                  (bind-key "C-c c" 'compile)
@@ -926,7 +927,7 @@
                                  (">=" . ?≥)
                                  ("&&" . ?∧)
                                  ("||" . ?∨)
-                                 ("->" . ?→))))))
+                                 ("->" . ?↦))))))
    #+END_SRC
 
 ** Lisps
