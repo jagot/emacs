@@ -769,6 +769,20 @@
    #+BEGIN_SRC emacs-lisp
      (setq-default ediff-split-window-function 'split-window-horizontally)
      (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+
+     ;; Borrowed from http://stackoverflow.com/a/18122275/1079038
+     (defvar ediff-dired-file-1)
+
+     (defun ediff-push ()
+       (interactive)
+       (setq ediff-dired-file-1 (dired-get-filename)))
+     (defun ediff-pop ()
+       (interactive)
+       (ediff-files ediff-dired-file-1 (dired-get-filename)))
+     (add-hook 'dired-mode-hook
+           (lambda()
+                 (define-key dired-mode-map (kbd "C-c u") 'ediff-push)
+                 (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
    #+END_SRC
 ** Lilypond
    #+BEGIN_SRC emacs-lisp
