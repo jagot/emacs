@@ -38,7 +38,8 @@
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
-     (use-package org)
+     (use-package org
+       :bind ("C-c e" . LaTeX-environment))
      (use-package ob-tangle
        :init
        (progn
@@ -696,6 +697,7 @@
      (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
 
      (use-package ox-bibtex)
+     (use-package ox-md)
    #+END_SRC
 ** Out{org/shine}
 
