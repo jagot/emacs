@@ -21,6 +21,7 @@
         comment-region
         ediff-mark-for-hiding-at-pos
         ess-electric-brace
+        ess-smart-S-assign
         ess-smart-comma
         ess-yank
         f90-electric-insert
@@ -31,6 +32,7 @@
         julia-latexsub-or-indent
         kill-region
         magit-unstage-item
+        matlab-backward-sexp
         matlab-electric-comment
         matlab-forward-sexp
         matlab-linefeed
@@ -39,9 +41,12 @@
         org-end-of-line
         org-export-dispatch
         org-force-self-insert
+        org-kill-line
         org-preview-latex-fragment
         org-return-indent
         org-self-insert-command
+        org-shifttab
+        org-toggle-latex-fragment
         org-yank
         orgtbl-self-insert-command
         outshine-self-insert-command
@@ -67,6 +72,7 @@
         lyqi:change-duration-1
         lyqi:change-duration-dots
         mac-mwheel-scroll
+        matlab-shell-save-and-go
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay

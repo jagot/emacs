@@ -776,6 +776,20 @@
    #+BEGIN_SRC emacs-lisp
      (setq-default ediff-split-window-function 'split-window-horizontally)
      (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+
+     ;; Borrowed from http://stackoverflow.com/a/18122275/1079038
+     (defvar ediff-dired-file-1)
+
+     (defun ediff-push ()
+       (interactive)
+       (setq ediff-dired-file-1 (dired-get-filename)))
+     (defun ediff-pop ()
+       (interactive)
+       (ediff-files ediff-dired-file-1 (dired-get-filename)))
+     (add-hook 'dired-mode-hook
+           (lambda()
+                 (define-key dired-mode-map (kbd "C-c u") 'ediff-push)
+                 (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
    #+END_SRC
 ** Lilypond
    #+BEGIN_SRC emacs-lisp
@@ -833,6 +847,7 @@
 ** C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
      (add-hook 'c-mode-common-hook
                (lambda ()
                  (bind-key "C-c c" 'compile)
@@ -950,7 +965,7 @@
                                  (">=" . ?≥)
                                  ("&&" . ?∧)
                                  ("||" . ?∨)
-                                 ("->" . ?→))))))
+                                 ("->" . ?↦))))))
    #+END_SRC
 
 ** Lisps
@@ -1104,6 +1119,7 @@
          mu4e-headers-visible-columns 90
          mu4e-use-fancy-chars t
          mu4e-view-show-images t
+         mu4e-view-prefer-html t
          mu4e-get-mail-command "mbsync -a"
          mu4e-compose-signature-auto-include nil
          mu4e-compose-signature "")
@@ -1112,7 +1128,10 @@
         (add-to-list 'mu4e-view-actions
                      '("ViewInBrowser" . mu4e-action-view-in-browser) t)
         (when (fboundp 'imagemagick-register-types)
-          (imagemagick-register-types)))
+          (imagemagick-register-types))
+        (use-package mu4e-contrib
+          :config
+          (setq mu4e-html2text-command 'mu4e-shr2text)))
       :bind (("C-x m" . mu4e)))
   #+END_SRC
 * Calendar
