@@ -1,0 +1,3 @@
+[submodule "lyqi"]
+	path = lyqi
+	url = https://github.com/nsceaux/lyqi.git

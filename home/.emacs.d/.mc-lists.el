@@ -64,6 +64,8 @@
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
         hydra-mc/mc/mark-previous-like-this
+        lyqi:change-duration-1
+        lyqi:change-duration-dots
         mac-mwheel-scroll
         org-export-dispatch
         org-mouse-down-mouse

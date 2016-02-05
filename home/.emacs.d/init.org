@@ -779,9 +779,26 @@
    #+END_SRC
 ** Lilypond
    #+BEGIN_SRC emacs-lisp
-     (use-package lilypond-mode
-       :mode ("\\.ly\\'" . LilyPond-mode))
+     ;; (use-package lilypond-mode
+     ;;   :mode ("\\.ly\\'" . LilyPond-mode))
    #+END_SRC
+*** Lyqi
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
+      (use-package lyqi
+        :mode (("\\.ly$" . lyqi-mode)
+               ("\\.ily$" . lyqi-mode))
+        :init
+        (progn
+          (setq
+           lyqi:prefered-languages '(english)
+           lyqi:midi-command "timidity")
+          (bind-key "C-c c" (lambda ()
+                              (interactive)
+                              (save-buffer)
+                              (lyqi:compile-ly))))
+          :bind (("C-c C-m" . lyqi:open-midi)))
+    #+END_SRC
 
 * Programming
 ** Company
