@@ -203,6 +203,13 @@
                      '("\\.zip\\'" ".zip" "unzip")))
    #+END_SRC
 
+** Crontab
+   #+BEGIN_SRC emacs-lisp
+     (defun crontab-e ()
+       (interactive)
+       (with-editor-async-shell-command "crontab -e"))
+   #+END_SRC
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
