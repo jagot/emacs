@@ -309,7 +309,9 @@
          (bind-key "C-x C-M-e" 'lisp-eval-region)
 
          (bind-key "<f7>" 'flyspell-buffer)
-         (bind-key (kbd "<C-f7>") 'ispell-change-dictionary))) ;; Does not work on MBP
+         (bind-key (kbd "<C-f7>") 'ispell-change-dictionary) ;; Does not work on MBP
+
+         (bind-key "M-S-SPC" (lambda () (interactive) (insert " ")))))
    #+END_SRC
 *** Super/subscripts
     #+BEGIN_SRC emacs-lisp
@@ -1035,7 +1037,7 @@
          (floor (+ (* .3 r) (* .59 g) (* .11 b)) 256)))
      (defun hexcolour-add-to-font-lock ()
        (interactive)
-       (font-lock-add-keywords 
+       (font-lock-add-keywords
         nil
         `((,(concat "#[0-9a-fA-F]\\{3\\}[0-9a-fA-F]\\{3\\}?\\|"
                     (regexp-opt (x-defined-colors) 'words))
