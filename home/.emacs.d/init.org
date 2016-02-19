@@ -176,6 +176,16 @@
         (ag/search string (eshell/pwd)))
    #+END_SRC
 
+*** External terminal
+    This is used to open an external terminal emulator and run a
+    command there.
+    #+BEGIN_SRC emacs-lisp
+      (defun ext-terminal (wd &rest args)
+        (if (executable-find "konsole")
+            (apply #'call-process "konsole" nil 0 nil "--workdir" wd args)
+          (apply #'call-process "xterm" nil 0 nil args)))
+    #+END_SRC
+
 ** Web server
    #+BEGIN_SRC emacs-lisp
      (use-package web-server)
@@ -703,6 +713,14 @@
 
      (use-package ox-bibtex)
      (use-package ox-md)
+
+     (defun org-start-latexmk ()
+       (interactive)
+       (ext-terminal default-directory
+                     "-e" "latexmk" "-pvc"
+                     (concat (file-name-sans-extension buffer-file-name) ".tex")))
+
+     (bind-key "C-c c" 'org-start-latexmk org-mode-map)
    #+END_SRC
 ** Out{org/shine}
 
