@@ -181,9 +181,9 @@
     command there.
     #+BEGIN_SRC emacs-lisp
       (defun ext-terminal (wd &rest args)
-        (if (executable-find "konsole")
-            (apply #'call-process "konsole" nil 0 nil "--workdir" wd args)
-          (apply #'call-process "xterm" nil 0 nil args)))
+        (if (not (executable-find "konsole"))
+            (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
+          (apply #'call-process "xterm" nil 0 nil "-e" args)))
     #+END_SRC
 
 ** Web server
@@ -726,7 +726,7 @@
      (defun org-start-latexmk ()
        (interactive)
        (ext-terminal default-directory
-                     "-e" "latexmk" "-pvc"
+                     "latexmk" "-pvc"
                      (concat (file-name-sans-extension buffer-file-name) ".tex")))
 
      (bind-key "C-c c" 'org-start-latexmk org-mode-map)
@@ -798,6 +798,16 @@
    #+BEGIN_SRC emacs-lisp
      (use-package tex-site
        :defer t)
+
+     (defun latex-start-latexmk ()
+       (interactive)
+       (ext-terminal default-directory
+                     "latexmk" "-pvc"
+                     buffer-file-name))
+
+     (add-hook 'LaTeX-mode-hook
+               (lambda ()
+                 (bind-key "C-c c" 'latex-start-latexmk LaTeX-mode-map)))
    #+END_SRC
 ** Ediff
    #+BEGIN_SRC emacs-lisp
