@@ -181,7 +181,7 @@
     command there.
     #+BEGIN_SRC emacs-lisp
       (defun ext-terminal (wd &rest args)
-        (if (not (executable-find "konsole"))
+        (if (executable-find "konsole")
             (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
           (apply #'call-process "xterm" nil 0 nil "-e" args)))
     #+END_SRC
