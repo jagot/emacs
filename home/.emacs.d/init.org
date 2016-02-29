@@ -182,8 +182,8 @@
     #+BEGIN_SRC emacs-lisp
       (defun ext-terminal (wd &rest args)
         (if (executable-find "konsole")
-            (apply #'call-process "konsole" nil 0 nil "--workdir" wd args)
-          (apply #'call-process "xterm" nil 0 nil args)))
+            (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
+          (apply #'call-process "xterm" nil 0 nil "-e" args)))
     #+END_SRC
 
 ** Web server
@@ -202,6 +202,11 @@
        '(add-to-list 'dired-compress-file-suffixes
                      '("\\.zip\\'" ".zip" "unzip")))
    #+END_SRC
+
+*** PATH variable
+    #+BEGIN_SRC emacs-lisp
+      (exec-path-from-shell-initialize)
+    #+END_SRC
 
 ** Crontab
    #+BEGIN_SRC emacs-lisp
@@ -474,7 +479,6 @@
    #+BEGIN_SRC emacs-lisp
      (when (memq window-system '(mac ns))
        (progn
-         (exec-path-from-shell-initialize)
          (setq mac-option-modifier nil
                mac-command-modifier 'meta
                x-select-enable-clipboard t
@@ -606,246 +610,6 @@
     (use-package helm-ag
       :bind ("C-c a" . helm-do-ag))
   #+END_SRC
-
-* Org
-** Org configuration
-   #+BEGIN_SRC emacs-lisp
-     (setq org-hide-leading-stars 't)
-     (setq org-src-fontify-natively 't)
-
-     (use-package org-mouse)
-     (use-package ox-beamer)
-   #+END_SRC
-** Org functions
-   Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
-   #+BEGIN_SRC emacs-lisp
-     (defun org-insert-src-block (src-code-type)
-       "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
-       (interactive
-        (let ((src-code-types
-               '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
-                 "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
-                 "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
-                 "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-                 "scheme" "sqlite")))
-          (list (ido-completing-read "Source code type: " src-code-types))))
-       (progn
-         (newline-and-indent)
-         (insert (format "#+BEGIN_SRC %s\n" src-code-type))
-         (newline-and-indent)
-         (insert "#+END_SRC\n")
-         (forward-line -2)
-         (org-edit-src-code)))
-     (bind-key "C-c s" 'org-insert-src-block org-mode-map)
-   #+END_SRC
-** Org Babel
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((python . t)
-        (emacs-lisp . t)
-        (C . t)
-        (sh . t)
-        (ruby . t)
-        (clojure . t)
-        (octave . t)))
-     (setq org-confirm-babel-evaluate nil)
-     (use-package ob-clojure
-       :defer t
-       :config (setq org-babel-clojure-backend 'cider))
-   #+END_SRC
-** Org LaTeX export
-   #+BEGIN_SRC emacs-lisp
-     (use-package ox-latex)
-     (setq org-latex-listings t)
-
-     ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
-     (setq org-export-latex-packages-alist
-           '(("" "graphicx" t)
-             ("" "longtable" nil)
-             ("" "float" nil)))
-
-     ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-     ;; but adapted to use latexmk 4.20 or higher.
-     (defun my-auto-tex-cmd (backend)
-       "When exporting from .org with latex, automatically run latex,
-     pdflatex, or xelatex as appropriate, using latexmk."
-       (let ((texcmd)))
-       ;; default command: pdflatex
-       (setq texcmd "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f")
-       ;; oldstyle latex via dvi
-       (if (string-match "LATEX_CMD: dvilatex" (buffer-string))
-           (setq texcmd "latexmk -dvi -pdfps %f"))
-       ;; xelatex -> .pdf
-       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-           (setq texcmd "latexmk -pdflatex='xelatex -shell-escape' -pdf %f"))
-       ;; lualatex -> .pdf
-       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
-           (setq texcmd "latexmk -pdflatex='lualatex -shell-escape' -pdf %f"))
-       ;; LaTeX compilation command
-       (setq org-latex-pdf-process (list texcmd))
-
-       ;; default packages for ordinary latex or pdflatex export
-       (setq org-latex-default-packages-alist
-             '(("AUTO" "inputenc" t)
-               ("T1" "fontenc" t)
-               ("" "fixltx2e" nil)
-               ("" "wrapfig" nil)
-               ("" "soul" t)
-               ("" "hyperref" nil)))
-
-       ;; Packages to include when xelatex is used
-       ;; (see https://github.com/kjhealy/latex-custom-kjh for the
-       ;; non-standard ones.)
-       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-           (setq org-latex-default-packages-alist
-                 '(("" "url" t)
-                   ("" "rotating" t)
-                   ("babel" "csquotes" t)
-                   ("" "listings" nil)
-                   ("" "soul" t))))
-       (unless (string-match "startup: beamer" (buffer-string))
-         (setq org-latex-default-packages-alist
-               (append '(("svgnames" "xcolor" t)
-                         ("colorlinks=true, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
-                       org-latex-default-packages-alist)))
-       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
-           (setq org-latex-default-packages-alist
-                 '(("" "url" t)
-                   ("" "rotating" t)
-                   ("babel" "csquotes" t)
-                   ("" "listings" nil)
-                   ("svgnames" "xcolor" t)
-                   ("" "soul" t)
-                   ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
-     (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
-
-     (use-package ox-bibtex)
-     (use-package ox-md)
-
-     (defun org-start-latexmk ()
-       (interactive)
-       (ext-terminal default-directory
-                     "-e" "latexmk" "-pvc"
-                     (concat (file-name-sans-extension buffer-file-name) ".tex")))
-
-     (bind-key "C-c c" 'org-start-latexmk org-mode-map)
-   #+END_SRC
-** Out{org/shine}
-
-   #+BEGIN_SRC emacs-lisp
-     (defvar outline-minor-mode-prefix "\M-#")
-     (use-package outshine
-       :init
-       (progn
-         (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-         (add-hook 'c-mode-common-hook 'outline-minor-mode)))
-   #+END_SRC
-** Org preview LaTeX
-   #+BEGIN_SRC emacs-lisp
-     (bind-key "C-x p" 'org-toggle-latex-fragment)
-     (add-hook 'c-mode-common-hook
-               (lambda () (org-toggle-latex-fragment '(16))))
-   #+END_SRC
-* Modes
-  Misc modes
-  #+BEGIN_SRC emacs-lisp
-    (use-package matlab-mode
-      :mode (("\\.m\\'" . matlab-mode)))
-
-    (autoload 'gedcom-mode "gedcom")
-    (setq auto-mode-alist (cons '("\\.ged$" . gedcom-mode) auto-mode-alist))
-  #+END_SRC
-
-** Cmake
-   #+BEGIN_SRC emacs-lisp
-     (use-package cmake-mode
-       :mode (("CMakeLists\\.txt\\'" . cmake-mode)
-              ("\\.cmake\\'" . cmake-mode))
-       :config
-       (progn
-         (defun cmake-rename-buffer ()
-           "Renames a CMakeLists.txt buffer to cmake-<directory name>."
-           (interactive)
-           (when (and (buffer-file-name) (string-match "CMakeLists.txt" (buffer-name)))
-             (let ((new-buffer-name (concat "cmake-"
-                                            (file-name-nondirectory
-                                             (directory-file-name
-                                              (file-name-directory (buffer-file-name)))))))
-               (rename-buffer new-buffer-name t))))
-
-         (add-hook 'cmake-mode-hook (function cmake-rename-buffer))
-
-         (add-hook 'cmake-mode-hook
-                   '(lambda()
-                      (local-set-key (kbd "C-c q") 'cmake-quick-document)
-                      (defun cmake-quick-document()
-                        (interactive)
-                        (beginning-of-line)
-                        (insert (concat "project(" (read-string "Project name: ") ")\n"))
-                        (insert (concat "cmake_minimum_required(VERSION " (read-string "CMake version: " "2.8") ")\n\n"))
-                        (when (yes-or-no-p "C++ warnings and optimization flags? ")
-                          (insert "set(CMAKE_CXX_FLAGS \"--std=c++11 -Wall -Wextra\")\n")
-                          (insert "if(\"${CMAKE_BUILD_TYPE}\" STREQUAL \"Release\")\n")
-                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O3\")\n")
-                          (insert "else()\n")
-                          (insert "  set(CMAKE_BUILD_TYPE \"Debug\")\n")
-                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O0 -g\")\n")
-                          (insert "  add_definitions(\"-DDEBUG\")\n")
-                          (insert "endif()\n\n")))))))
-   #+END_SRC
-** LaTeX
-   #+BEGIN_SRC emacs-lisp
-     (use-package tex-site
-       :defer t)
-   #+END_SRC
-** Ediff
-   #+BEGIN_SRC emacs-lisp
-     (setq-default ediff-split-window-function 'split-window-horizontally)
-     (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
-
-     ;; Borrowed from http://stackoverflow.com/a/18122275/1079038
-     (defvar ediff-dired-file-1)
-
-     (defun ediff-push ()
-       (interactive)
-       (setq ediff-dired-file-1 (dired-get-filename)))
-     (defun ediff-pop ()
-       (interactive)
-       (ediff-files ediff-dired-file-1 (dired-get-filename)))
-     (add-hook 'dired-mode-hook
-           (lambda()
-                 (define-key dired-mode-map (kbd "C-c u") 'ediff-push)
-                 (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
-   #+END_SRC
-** Lilypond
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package lilypond-mode
-     ;;   :mode ("\\.ly\\'" . LilyPond-mode))
-   #+END_SRC
-*** Lyqi
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
-      (use-package lyqi
-        :mode (("\\.ly$" . lyqi-mode)
-               ("\\.ily$" . lyqi-mode))
-        :init
-        (progn
-          (setq
-           lyqi:prefered-languages '(english)
-           lyqi:midi-command "timidity")
-          (bind-key "C-c c" (lambda ()
-                              (interactive)
-                              (save-buffer)
-                              (lyqi:compile-ly))))
-          :bind (("C-c C-m" . lyqi:open-midi)))
-    #+END_SRC
-
-** YAML
-   #+BEGIN_SRC emacs-lisp
-     (use-package yaml-mode
-       :mode "\\.yml\\'")
-   #+END_SRC
 
 * Programming
 ** Company
@@ -1082,6 +846,260 @@
         :config
         (add-hook 'web-mode-hook 'turn-off-smartparens-mode))
     #+END_SRC
+* Modes
+  Misc modes
+  #+BEGIN_SRC emacs-lisp
+    (use-package matlab-mode
+      :mode (("\\.m\\'" . matlab-mode)))
+
+    (autoload 'gedcom-mode "gedcom")
+    (setq auto-mode-alist (cons '("\\.ged$" . gedcom-mode) auto-mode-alist))
+  #+END_SRC
+
+** Cmake
+   #+BEGIN_SRC emacs-lisp
+     (use-package cmake-mode
+       :mode (("CMakeLists\\.txt\\'" . cmake-mode)
+              ("\\.cmake\\'" . cmake-mode))
+       :config
+       (progn
+         (defun cmake-rename-buffer ()
+           "Renames a CMakeLists.txt buffer to cmake-<directory name>."
+           (interactive)
+           (when (and (buffer-file-name) (string-match "CMakeLists.txt" (buffer-name)))
+             (let ((new-buffer-name (concat "cmake-"
+                                            (file-name-nondirectory
+                                             (directory-file-name
+                                              (file-name-directory (buffer-file-name)))))))
+               (rename-buffer new-buffer-name t))))
+
+         (add-hook 'cmake-mode-hook (function cmake-rename-buffer))
+
+         (add-hook 'cmake-mode-hook
+                   '(lambda()
+                      (local-set-key (kbd "C-c q") 'cmake-quick-document)
+                      (defun cmake-quick-document()
+                        (interactive)
+                        (beginning-of-line)
+                        (insert (concat "project(" (read-string "Project name: ") ")\n"))
+                        (insert (concat "cmake_minimum_required(VERSION " (read-string "CMake version: " "2.8") ")\n\n"))
+                        (when (yes-or-no-p "C++ warnings and optimization flags? ")
+                          (insert "set(CMAKE_CXX_FLAGS \"--std=c++11 -Wall -Wextra\")\n")
+                          (insert "if(\"${CMAKE_BUILD_TYPE}\" STREQUAL \"Release\")\n")
+                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O3\")\n")
+                          (insert "else()\n")
+                          (insert "  set(CMAKE_BUILD_TYPE \"Debug\")\n")
+                          (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O0 -g\")\n")
+                          (insert "  add_definitions(\"-DDEBUG\")\n")
+                          (insert "endif()\n\n")))))))
+   #+END_SRC
+** LaTeX
+   #+BEGIN_SRC emacs-lisp
+     (use-package tex-site
+       :defer t)
+
+     (defun latex-start-latexmk ()
+       (interactive)
+       (ext-terminal default-directory
+                     "latexmk" "-pvc"
+                     buffer-file-name))
+
+     (add-hook 'LaTeX-mode-hook
+               (lambda ()
+                 (bind-key "C-c c" 'latex-start-latexmk LaTeX-mode-map)))
+   #+END_SRC
+** Ediff
+   #+BEGIN_SRC emacs-lisp
+     (setq-default ediff-split-window-function 'split-window-horizontally)
+     (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
+
+     ;; Borrowed from http://stackoverflow.com/a/18122275/1079038
+     (defvar ediff-dired-file-1)
+
+     (defun ediff-push ()
+       (interactive)
+       (setq ediff-dired-file-1 (dired-get-filename)))
+     (defun ediff-pop ()
+       (interactive)
+       (ediff-files ediff-dired-file-1 (dired-get-filename)))
+     (add-hook 'dired-mode-hook
+           (lambda()
+                 (define-key dired-mode-map (kbd "C-c u") 'ediff-push)
+                 (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
+   #+END_SRC
+** Lilypond
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package lilypond-mode
+     ;;   :mode ("\\.ly\\'" . LilyPond-mode))
+   #+END_SRC
+*** Lyqi
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
+      (use-package lyqi
+        :mode (("\\.ly$" . lyqi-mode)
+               ("\\.ily$" . lyqi-mode))
+        :init
+        (progn
+          (setq
+           lyqi:prefered-languages '(english)
+           lyqi:midi-command "timidity")
+          (bind-key "C-c c" (lambda ()
+                              (interactive)
+                              (save-buffer)
+                              (lyqi:compile-ly))))
+          :bind (("C-c C-m" . lyqi:open-midi)))
+    #+END_SRC
+** PKGBUILD
+   #+BEGIN_SRC emacs-lisp
+     (use-package pkgbuild-mode
+       :mode "/PKGBUILD$")
+   #+END_SRC
+
+* Org
+** Org configuration
+   #+BEGIN_SRC emacs-lisp
+     (setq org-hide-leading-stars 't)
+     (setq org-src-fontify-natively 't)
+
+     (use-package org-mouse)
+     (use-package ox-beamer)
+   #+END_SRC
+** Org functions
+   Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
+   #+BEGIN_SRC emacs-lisp
+     (defun org-insert-src-block (src-code-type)
+       "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+       (interactive
+        (let ((src-code-types
+               '("emacs-lisp" "python" "julia" "C" "sh" "java" "js" "clojure" "C++" "css"
+                 "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+                 "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+                 "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+                 "scheme" "sqlite")))
+          (list (ido-completing-read "Source code type: " src-code-types))))
+       (progn
+         (newline-and-indent)
+         (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+         (newline-and-indent)
+         (insert "#+END_SRC\n")
+         (forward-line -2)
+         (org-edit-src-code)))
+     (bind-key "C-c s" 'org-insert-src-block org-mode-map)
+   #+END_SRC
+** Org Babel
+   #+BEGIN_SRC emacs-lisp
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((python . t)
+        (emacs-lisp . t)
+        (julia . t)
+        (C . t)
+        (sh . t)
+        (ruby . t)
+        (clojure . t)
+        (octave . t)))
+     (setq org-confirm-babel-evaluate nil)
+     (use-package ob-clojure
+       :defer t
+       :config (setq org-babel-clojure-backend 'cider))
+   #+END_SRC
+** Org LaTeX export
+   #+BEGIN_SRC emacs-lisp
+     (use-package ox-latex)
+     (setq org-latex-listings t)
+
+     ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
+     (setq org-export-latex-packages-alist
+           '(("" "graphicx" t)
+             ("" "longtable" nil)
+             ("" "float" nil)))
+
+     ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+     ;; but adapted to use latexmk 4.20 or higher.
+     (defun my-auto-tex-cmd (backend)
+       "When exporting from .org with latex, automatically run latex,
+     pdflatex, or xelatex as appropriate, using latexmk."
+       (let ((texcmd)))
+       ;; default command: pdflatex
+       (setq texcmd "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f")
+       ;; oldstyle latex via dvi
+       (if (string-match "LATEX_CMD: dvilatex" (buffer-string))
+           (setq texcmd "latexmk -dvi -pdfps %f"))
+       ;; xelatex -> .pdf
+       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+           (setq texcmd "latexmk -pdflatex='xelatex -shell-escape' -pdf %f"))
+       ;; lualatex -> .pdf
+       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
+           (setq texcmd "latexmk -pdflatex='lualatex -shell-escape' -pdf %f"))
+       ;; LaTeX compilation command
+       (setq org-latex-pdf-process (list texcmd))
+
+       ;; default packages for ordinary latex or pdflatex export
+       (setq org-latex-default-packages-alist
+             '(("AUTO" "inputenc" t)
+               ("T1" "fontenc" t)
+               ("" "fixltx2e" nil)
+               ("" "wrapfig" nil)
+               ("" "soul" t)
+               ("" "hyperref" nil)))
+
+       ;; Packages to include when xelatex is used
+       ;; (see https://github.com/kjhealy/latex-custom-kjh for the
+       ;; non-standard ones.)
+       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+           (setq org-latex-default-packages-alist
+                 '(("" "url" t)
+                   ("" "rotating" t)
+                   ("babel" "csquotes" t)
+                   ("" "listings" nil)
+                   ("" "soul" t))))
+       (unless (string-match "startup: beamer" (buffer-string))
+         (setq org-latex-default-packages-alist
+               (append '(("svgnames" "xcolor" t)
+                         ("colorlinks=true, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
+                       org-latex-default-packages-alist)))
+       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
+           (setq org-latex-default-packages-alist
+                 '(("" "url" t)
+                   ("" "rotating" t)
+                   ("babel" "csquotes" t)
+                   ("" "listings" nil)
+                   ("svgnames" "xcolor" t)
+                   ("" "soul" t)
+                   ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
+     (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
+
+     (use-package ox-bibtex)
+     (use-package ox-md)
+
+     (defun org-start-latexmk (arg)
+       (interactive "p")
+       (if (= arg 4)
+           (ext-terminal default-directory
+                         "latexmk" "-C"
+                         (concat (file-name-sans-extension buffer-file-name) ".tex")))
+       (ext-terminal default-directory
+                     "latexmk" "-pvc"
+                     (concat (file-name-sans-extension buffer-file-name) ".tex")))
+
+     (bind-key "C-c c" 'org-start-latexmk org-mode-map)
+   #+END_SRC
+** Out{org/shine}
+
+   #+BEGIN_SRC emacs-lisp
+     (defvar outline-minor-mode-prefix "\M-#")
+     (use-package outshine
+       :init
+       (progn
+         (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+         (add-hook 'c-mode-common-hook 'outline-minor-mode)))
+   #+END_SRC
+** Org preview LaTeX
+   #+BEGIN_SRC emacs-lisp
+     (bind-key "C-x p" 'org-toggle-latex-fragment)
+     (add-hook 'c-mode-common-hook
+               (lambda () (org-toggle-latex-fragment '(16))))
+   #+END_SRC
 * BibTeX
   #+BEGIN_SRC emacs-lisp
     (setq bibtex-autokey-name-case-convert-function 'capitalize
