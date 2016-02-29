@@ -23,9 +23,14 @@
      (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
      (load custom-file)
      (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-     (when (memq window-system '(mac ns))
-       (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-         (normal-top-level-add-subdirs-to-load-path)))
+
+     (defvar osx?)
+     (setq osx? (not (eq nil (memq window-system '(mac ns)))))
+     (when osx?
+       (progn
+         (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+           (normal-top-level-add-subdirs-to-load-path))
+         (require 'osx-osascript)))
    #+END_SRC
 
 ** Packages
@@ -181,9 +186,16 @@
     command there.
     #+BEGIN_SRC emacs-lisp
       (defun ext-terminal (wd &rest args)
-        (if (executable-find "konsole")
-            (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
-          (apply #'call-process "xterm" nil 0 nil "-e" args)))
+        (if osx?
+            (osascript-run-str
+             (concat
+              "tell app \"Terminal\" to do script \""
+              " cd " wd " && "
+              (mapconcat 'identity args " ")
+              " && exit\""))
+          (if (executable-find "konsole")
+              (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
+            (apply #'call-process "xterm" nil 0 nil "-e" args))))
     #+END_SRC
 
 ** Web server
@@ -195,8 +207,7 @@
    #+BEGIN_SRC emacs-lisp
      (defvar opener)
      (setq opener "xdg-open")
-     (when (memq window-system '(mac ns))
-       (setq opener "open"))
+     (when osx? (setq opener "open"))
 
      (eval-after-load "dired-aux"
        '(add-to-list 'dired-compress-file-suffixes
@@ -477,7 +488,7 @@
 
 ** OS X-specific configuration
    #+BEGIN_SRC emacs-lisp
-     (when (memq window-system '(mac ns))
+     (when osx?
        (progn
          (setq mac-option-modifier nil
                mac-command-modifier 'meta
