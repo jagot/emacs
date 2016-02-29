@@ -31,6 +31,7 @@
         insert-char
         julia-latexsub-or-indent
         kill-region
+        lyqi:insert-closing-delimiter
         magit-unstage-item
         matlab-backward-sexp
         matlab-electric-comment
