@@ -841,6 +841,12 @@
           :bind (("C-c C-m" . lyqi:open-midi)))
     #+END_SRC
 
+** YAML
+   #+BEGIN_SRC emacs-lisp
+     (use-package yaml-mode
+       :mode "\\.yml\\'")
+   #+END_SRC
+
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp

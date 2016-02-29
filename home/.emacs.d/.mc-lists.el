@@ -59,6 +59,7 @@
         wdired-downcase-word
         wdired-next-line
         wdired-previous-line
+        yaml-electric-dash-and-dot
         yas-expand
         ))
 
