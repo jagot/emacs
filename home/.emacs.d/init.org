@@ -909,11 +909,23 @@
      (use-package tex-site
        :defer t)
 
-     (defun latex-start-latexmk ()
-       (interactive)
-       (ext-terminal default-directory
-                     "latexmk" "-pvc"
-                     buffer-file-name))
+     (defun latex-start-latexmk (arg)
+       (interactive "p")
+       (let* ((latexcmd (s-match "LATEX_CMD: \\([a-z]+\\)latex" (buffer-string)))
+              (pdflatex
+               (concat "-pdflatex='"
+                       (if latexcmd (concat (second latexcmd) "latex")
+                         "xelatex")
+                      "'")))
+         (if (= arg 4)
+             (ext-terminal default-directory
+                           "latexmk" "-C"
+                           pdflatex
+                           (concat (file-name-sans-extension buffer-file-name) ".tex")))
+         (ext-terminal default-directory
+                       "latexmk" "-pvc"
+                       pdflatex
+                       (concat (file-name-sans-extension buffer-file-name) ".tex"))))
 
      (add-hook 'LaTeX-mode-hook
                (lambda ()
@@ -1083,17 +1095,7 @@
      (use-package ox-bibtex)
      (use-package ox-md)
 
-     (defun org-start-latexmk (arg)
-       (interactive "p")
-       (if (= arg 4)
-           (ext-terminal default-directory
-                         "latexmk" "-C"
-                         (concat (file-name-sans-extension buffer-file-name) ".tex")))
-       (ext-terminal default-directory
-                     "latexmk" "-pvc"
-                     (concat (file-name-sans-extension buffer-file-name) ".tex")))
-
-     (bind-key "C-c c" 'org-start-latexmk org-mode-map)
+     (bind-key "C-c c" 'latex-start-latexmk org-mode-map)
    #+END_SRC
 ** Out{org/shine}
 

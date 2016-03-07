@@ -21,6 +21,8 @@
         comment-region
         ediff-mark-for-hiding-at-pos
         ess-electric-brace
+        ess-goto-end-of-function-or-para
+        ess-newline-and-indent
         ess-smart-S-assign
         ess-smart-comma
         ess-yank
