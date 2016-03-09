@@ -81,6 +81,7 @@
 (depends-on "package-build")
 (depends-on "pallet")
 (depends-on "parsebib")
+(depends-on "peep-dired")
 (depends-on "pkg-info")
 (depends-on "pkgbuild-mode")
 (depends-on "popup")

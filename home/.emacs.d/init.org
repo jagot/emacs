@@ -209,6 +209,23 @@
      (setq opener "xdg-open")
      (when osx? (setq opener "open"))
 
+     (defun open-in-external-app ()
+       "Inspired by
+     URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'"
+       (interactive)
+       (let ((file-list
+              (if (string-equal major-mode "dired-mode")
+                  (dired-get-marked-files)
+                (list (buffer-file-name)))))
+         (when (if (<= (length file-list) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files? "))
+           (mapc
+            (lambda (file-path)
+              (call-process opener nil 0 nil file-path))
+            file-list))))
+     (bind-key "C-M-o" 'open-in-external-app dired-mode-map)
+
      (eval-after-load "dired-aux"
        '(add-to-list 'dired-compress-file-suffixes
                      '("\\.zip\\'" ".zip" "unzip")))
@@ -612,6 +629,14 @@
                (setq ivy-use-virtual-buffers t))
        :bind (("C-s" . swiper)
               ("C-r" . swiper)))
+   #+END_SRC
+
+** Peep-dired
+   #+BEGIN_SRC emacs-lisp
+     (use-package peep-dired
+       :defer t
+       :bind (:map dired-mode-map
+                   ("P" . peep-dired)))
    #+END_SRC
 
 * Helm

@@ -30,6 +30,7 @@
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
+        indent-for-tab-command
         insert-char
         julia-latexsub-or-indent
         kill-region
@@ -69,6 +70,7 @@
 (setq mc/cmds-to-run-once
       '(
         backward-sentence
+        balance-windows
         hydra-mc/mc/edit-lines-and-exit
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
