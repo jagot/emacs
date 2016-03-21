@@ -1138,6 +1138,11 @@
      (add-hook 'c-mode-common-hook
                (lambda () (org-toggle-latex-fragment '(16))))
    #+END_SRC
+** Org download
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-download)
+   #+END_SRC
+
 * BibTeX
   #+BEGIN_SRC emacs-lisp
     (setq bibtex-autokey-name-case-convert-function 'capitalize
