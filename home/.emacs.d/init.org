@@ -948,7 +948,7 @@
                            pdflatex
                            (concat (file-name-sans-extension buffer-file-name) ".tex")))
          (ext-terminal default-directory
-                       "latexmk" "-pvc"
+                       "latexmk" "-shell-escape" "-pvc"
                        pdflatex
                        (concat (file-name-sans-extension buffer-file-name) ".tex"))))
 
