@@ -674,7 +674,8 @@
        (progn
          (add-hook 'after-init-hook #'global-flycheck-mode)
          (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-         (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))))
+         (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+         (add-hook 'flycheck-mode-hook #'flycheck-typescript-tslint-setup)))
    #+END_SRC
 
 ** C/C++
@@ -875,13 +876,43 @@
    #+END_SRC
 
 ** Web development
+*** Typescript
+    #+BEGIN_SRC emacs-lisp
+      (use-package typescript-mode
+        :mode "\\.ts\\'"
+        :config
+        (add-hook 'typescript-mode-hook
+                  (lambda ()
+                    (setq prettify-symbols-alist
+                          '(("!=" . ?≠)
+                            ("<=" . ?≤)
+                            (">=" . ?≥)
+                            ("&&" . ?∧)
+                            ("||" . ?∨)
+                            ("=>" . ?↦)))
+                    (tide-setup)
+                    (flycheck-mode +1)
+                    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+                    (eldoc-mode +1)
+                    (company-mode-on)
+                    (setq company-tooltip-align-annotations t))))
+    #+END_SRC
 *** Web mode
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
-        :mode "\\.erb\\'"
+        :mode ("\\.erb\\'" "\\.tsx\\'")
         :config
-        (add-hook 'web-mode-hook 'turn-off-smartparens-mode))
+        (add-hook 'web-mode-hook
+                  (lambda ()
+                    (turn-off-smartparens-mode)
+                    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                      (tide-setup)
+                      (flycheck-mode +1)
+                      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+                      (eldoc-mode +1)
+                      (company-mode-on)))))
     #+END_SRC
+
 * Modes
   Misc modes
   #+BEGIN_SRC emacs-lisp
