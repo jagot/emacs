@@ -873,6 +873,7 @@
                (use-package inf-ruby
                  :init (inf-ruby-minor-mode)
                  (rvm-use-default))))
+     (use-package bundler)
    #+END_SRC
 
 ** Web development
@@ -911,6 +912,12 @@
                       (setq flycheck-check-syntax-automatically '(save mode-enabled))
                       (eldoc-mode +1)
                       (company-mode-on)))))
+    #+END_SRC
+*** Rails
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile-rails
+        :config
+        (add-hook 'projectile-mode-hook 'projectile-rails-on))
     #+END_SRC
 
 * Modes
