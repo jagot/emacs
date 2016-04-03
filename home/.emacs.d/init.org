@@ -639,6 +639,18 @@
                    ("P" . peep-dired)))
    #+END_SRC
 
+** Visual regexp
+   #+BEGIN_SRC emacs-lisp
+     (use-package visual-regexp
+       :init
+       (bind-key "C-c r" (lambda (arg)
+                           (interactive "P")
+                           (princ arg)
+                           (if arg
+                               (call-interactively 'vr/query-replace)
+                             (call-interactively 'vr/replace)))))
+   #+END_SRC
+
 * Helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-config

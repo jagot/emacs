@@ -114,6 +114,7 @@
 (depends-on "tide")
 (depends-on "use-package")
 (depends-on "visual-fill-column")
+(depends-on "visual-regexp")
 (depends-on "w3")
 (depends-on "web-mode")
 (depends-on "web-server")
