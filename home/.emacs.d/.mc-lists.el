@@ -20,6 +20,7 @@
         c-electric-star
         comment-region
         ediff-mark-for-hiding-at-pos
+        end-of-defun
         ess-electric-brace
         ess-goto-end-of-function-or-para
         ess-newline-and-indent
@@ -27,6 +28,7 @@
         ess-smart-comma
         ess-yank
         f90-electric-insert
+        fill-paragraph
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
@@ -35,6 +37,7 @@
         julia-latexsub-or-indent
         kill-region
         lyqi:insert-closing-delimiter
+        lyqi:insert-delimiter
         magit-unstage-item
         matlab-backward-sexp
         matlab-electric-comment
@@ -79,6 +82,7 @@
         lyqi:change-duration-dots
         mac-mwheel-scroll
         matlab-shell-save-and-go
+        mouse-drag-mode-line
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay

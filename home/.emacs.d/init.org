@@ -1103,6 +1103,7 @@
       'org-babel-load-languages
       '((python . t)
         (emacs-lisp . t)
+        (calc . t)
         (julia . t)
         (C . t)
         (sh . t)
