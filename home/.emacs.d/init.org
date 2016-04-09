@@ -936,6 +936,14 @@
         :config
         (add-hook 'projectile-mode-hook 'projectile-rails-on))
     #+END_SRC
+*** Restclient
+    #+BEGIN_SRC emacs-lisp
+      (use-package restclient
+        :mode ("\\.rest\\'" . restclient-mode))
+      (use-package company-restclient
+        :config
+        (add-to-list 'company-backends 'company-restclient))
+    #+END_SRC
 
 * Modes
   Misc modes
