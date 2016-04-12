@@ -27,6 +27,7 @@
         ess-smart-comma
         ess-yank
         f90-electric-insert
+        fill-paragraph
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
@@ -38,6 +39,7 @@
         magit-unstage-item
         matlab-backward-sexp
         matlab-electric-comment
+        matlab-end-of-defun
         matlab-forward-sexp
         matlab-linefeed
         org-beginning-of-line
@@ -79,6 +81,7 @@
         lyqi:change-duration-dots
         mac-mwheel-scroll
         matlab-shell-save-and-go
+        mouse-drag-mode-line
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay

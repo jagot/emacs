@@ -987,7 +987,7 @@
                            pdflatex
                            (concat (file-name-sans-extension buffer-file-name) ".tex")))
          (ext-terminal default-directory
-                       "latexmk" "-shell-escape" "-pvc"
+                       "latexmk" "-shell-escape" "--synctex=1" "-pvc"
                        pdflatex
                        (concat (file-name-sans-extension buffer-file-name) ".tex"))))
 
@@ -1084,6 +1084,7 @@
       'org-babel-load-languages
       '((python . t)
         (emacs-lisp . t)
+        (calc . t)
         (julia . t)
         (C . t)
         (sh . t)
@@ -1174,11 +1175,14 @@
        :init
        (progn
          (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-         (add-hook 'c-mode-common-hook 'outline-minor-mode)))
+         (add-hook 'c-mode-common-hook 'outline-minor-mode)
+         (add-hook 'julia-mode-hook 'outline-minor-mode)))
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-x p" 'org-toggle-latex-fragment)
+     (add-hook 'julia-mode-hook
+               (lambda () (org-toggle-latex-fragment '(16))))
      (add-hook 'c-mode-common-hook
                (lambda () (org-toggle-latex-fragment '(16))))
    #+END_SRC
