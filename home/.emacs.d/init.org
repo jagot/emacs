@@ -638,6 +638,11 @@
        :bind (("C-s" . swiper)
               ("C-r" . swiper)))
    #+END_SRC
+** Avy
+   #+BEGIN_SRC emacs-lisp
+     (use-package avy
+       :bind (("M-s" . avy-goto-word-1)))
+   #+END_SRC
 
 ** Peep-dired
    #+BEGIN_SRC emacs-lisp
@@ -645,6 +650,18 @@
        :defer t
        :bind (:map dired-mode-map
                    ("P" . peep-dired)))
+   #+END_SRC
+
+** Visual regexp
+   #+BEGIN_SRC emacs-lisp
+     (use-package visual-regexp
+       :init
+       (bind-key "C-c r" (lambda (arg)
+                           (interactive "P")
+                           (princ arg)
+                           (if arg
+                               (call-interactively 'vr/query-replace)
+                             (call-interactively 'vr/replace)))))
    #+END_SRC
 
 * Helm
@@ -881,6 +898,7 @@
                (use-package inf-ruby
                  :init (inf-ruby-minor-mode)
                  (rvm-use-default))))
+     (use-package bundler)
    #+END_SRC
 
 ** Web development
@@ -919,6 +937,20 @@
                       (setq flycheck-check-syntax-automatically '(save mode-enabled))
                       (eldoc-mode +1)
                       (company-mode-on)))))
+    #+END_SRC
+*** Rails
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile-rails
+        :config
+        (add-hook 'projectile-mode-hook 'projectile-rails-on))
+    #+END_SRC
+*** Restclient
+    #+BEGIN_SRC emacs-lisp
+      (use-package restclient
+        :mode ("\\.rest\\'" . restclient-mode))
+      (use-package company-restclient
+        :config
+        (add-to-list 'company-backends 'company-restclient))
     #+END_SRC
 
 * Modes

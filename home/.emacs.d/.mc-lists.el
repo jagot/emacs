@@ -20,6 +20,7 @@
         c-electric-star
         comment-region
         ediff-mark-for-hiding-at-pos
+        end-of-defun
         ess-electric-brace
         ess-goto-end-of-function-or-para
         ess-newline-and-indent
@@ -36,6 +37,7 @@
         julia-latexsub-or-indent
         kill-region
         lyqi:insert-closing-delimiter
+        lyqi:insert-delimiter
         magit-unstage-item
         matlab-backward-sexp
         matlab-electric-comment

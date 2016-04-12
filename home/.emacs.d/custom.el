@@ -42,6 +42,7 @@
       ("\\section{%s}" . "\\section*{%s}")
       ("\\subsection{%s}" . "\\subsection*{%s}")
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+ '(reb-re-syntax (quote string))
  '(safe-local-variable-values
    (quote
     ((org-download-heading-lvl)
