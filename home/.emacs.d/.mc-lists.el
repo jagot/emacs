@@ -41,6 +41,7 @@
         magit-unstage-item
         matlab-backward-sexp
         matlab-electric-comment
+        matlab-end-of-defun
         matlab-forward-sexp
         matlab-linefeed
         org-beginning-of-line

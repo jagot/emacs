@@ -43,11 +43,19 @@
      (use-package pallet
        :init (pallet-mode))
    #+END_SRC
+
+** Org mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package org
+       :bind (("C-c e" . LaTeX-environment)
+              ("C-c a" . org-agenda)
+              ("C-c l" . org-store-link)
+              ("C-c C-l" . org-insert-link)))
+   #+END_SRC
+
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :bind ("C-c e" . LaTeX-environment))
      (use-package ob-tangle
        :init
        (progn
@@ -664,7 +672,7 @@
     (use-package helm-config
       :bind ("C-c h" . helm-mini))
     (use-package helm-ag
-      :bind ("C-c a" . helm-do-ag))
+      :bind ("C-c C-a" . helm-do-ag))
   #+END_SRC
 
 * Programming
@@ -1016,7 +1024,7 @@
                            pdflatex
                            tex-name))
          (ext-terminal (ext-cmd-wrap-string default-directory)
-                       "latexmk" "-shell-escape" "-pvc"
+                       "latexmk" "-shell-escape" "--synctex=1" "-pvc"
                        pdflatex
                        tex-name)))
 
@@ -1079,6 +1087,11 @@
 
      (use-package org-mouse)
      (use-package ox-beamer)
+   #+END_SRC
+** Org agenda
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-depend)
+     (setq org-agenda-files '("~/org/todo.org"))
    #+END_SRC
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
@@ -1199,11 +1212,14 @@
        :init
        (progn
          (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-         (add-hook 'c-mode-common-hook 'outline-minor-mode)))
+         (add-hook 'c-mode-common-hook 'outline-minor-mode)
+         (add-hook 'julia-mode-hook 'outline-minor-mode)))
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-x p" 'org-toggle-latex-fragment)
+     (add-hook 'julia-mode-hook
+               (lambda () (org-toggle-latex-fragment '(16))))
      (add-hook 'c-mode-common-hook
                (lambda () (org-toggle-latex-fragment '(16))))
    #+END_SRC
