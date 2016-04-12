@@ -43,11 +43,19 @@
      (use-package pallet
        :init (pallet-mode))
    #+END_SRC
+
+** Org mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package org
+       :bind (("C-c e" . LaTeX-environment)
+              ("C-c a" . org-agenda)
+              ("C-c l" . org-store-link)
+              ("C-c C-l" . org-insert-link)))
+   #+END_SRC
+
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :bind ("C-c e" . LaTeX-environment))
      (use-package ob-tangle
        :init
        (progn
@@ -644,7 +652,7 @@
     (use-package helm-config
       :bind ("C-c h" . helm-mini))
     (use-package helm-ag
-      :bind ("C-c a" . helm-do-ag))
+      :bind ("C-x C-a" . helm-do-ag))
   #+END_SRC
 
 * Programming
@@ -1042,6 +1050,11 @@
 
      (use-package org-mouse)
      (use-package ox-beamer)
+   #+END_SRC
+** Org agenda
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-depend)
+     (setq org-agenda-files '("~/org/todo.org"))
    #+END_SRC
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
