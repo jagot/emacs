@@ -669,7 +669,7 @@
     (use-package helm-config
       :bind ("C-c h" . helm-mini))
     (use-package helm-ag
-      :bind ("C-x C-a" . helm-do-ag))
+      :bind ("C-c C-a" . helm-do-ag))
   #+END_SRC
 
 * Programming
