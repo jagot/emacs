@@ -196,6 +196,9 @@
           (if (executable-find "konsole")
               (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
             (apply #'call-process "xterm" nil 0 nil "-e" args))))
+
+      (defun ext-cmd-wrap-string (s)
+        (concat "\\\"" s "\\\""))
     #+END_SRC
 
 ** Web server
@@ -1004,16 +1007,18 @@
                (concat "-pdflatex='"
                        (if latexcmd (concat (second latexcmd) "latex")
                          "xelatex")
-                      "'")))
+                       "'"))
+              (tex-name (ext-cmd-wrap-string (concat (file-name-sans-extension buffer-file-name)
+                                             ".tex"))))
          (if (= arg 4)
-             (ext-terminal default-directory
+             (ext-terminal (ext-cmd-wrap-string default-directory)
                            "latexmk" "-C"
                            pdflatex
-                           (concat (file-name-sans-extension buffer-file-name) ".tex")))
-         (ext-terminal default-directory
+                           tex-name))
+         (ext-terminal (ext-cmd-wrap-string default-directory)
                        "latexmk" "-shell-escape" "-pvc"
                        pdflatex
-                       (concat (file-name-sans-extension buffer-file-name) ".tex"))))
+                       tex-name)))
 
      (add-hook 'LaTeX-mode-hook
                (lambda ()
