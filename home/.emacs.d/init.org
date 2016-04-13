@@ -1079,6 +1079,9 @@
 * Org
 ** Org configuration
    #+BEGIN_SRC emacs-lisp
+     (setq org-directory (expand-file-name "org" "~"))
+     (setq org-default-notes-file (expand-file-name "notes.org" org-directory))
+
      (setq org-hide-leading-stars 't)
      (setq org-src-fontify-natively 't)
 
