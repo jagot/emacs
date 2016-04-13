@@ -47,10 +47,7 @@
 ** Org mode
    #+BEGIN_SRC emacs-lisp
      (use-package org
-       :bind (("C-c e" . LaTeX-environment)
-              ("C-c a" . org-agenda)
-              ("C-c l" . org-store-link)
-              ("C-c C-l" . org-insert-link)))
+       :bind (("C-c e" . LaTeX-environment)))
    #+END_SRC
 
 ** Org tangle configuration
@@ -1088,11 +1085,24 @@
      (use-package org-mouse)
      (use-package ox-beamer)
    #+END_SRC
+** Org keymap
+   #+BEGIN_SRC emacs-lisp
+     (bind-keys* :prefix "C-;" :prefix-map my-org-map
+                 ("a" . org-agenda)
+                 ("C-a". (lambda ()
+                           (interactive)
+                           (find-file (first (org-agenda-files)))))
+                 ("l" . org-store-link)
+                 ("C-l" . org-insert-link)
+                 ("c" . org-capture))
+   #+END_SRC
+
 ** Org agenda
    #+BEGIN_SRC emacs-lisp
      (use-package org-depend)
      (setq org-agenda-files '("~/org/todo.org"))
    #+END_SRC
+
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
    #+BEGIN_SRC emacs-lisp
