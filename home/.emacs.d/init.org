@@ -664,6 +664,12 @@
                              (call-interactively 'vr/replace)))))
    #+END_SRC
 
+** Calc
+   #+BEGIN_SRC emacs-lisp
+     (use-package calc)
+     (bind-key "<backtab>" 'calc-roll-up calc-mode-map)
+   #+END_SRC
+
 * Helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-config
