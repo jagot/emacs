@@ -45,7 +45,8 @@
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
    (quote
-    ((org-download-heading-lvl)
+    ((org-export-babel-evaluate . inline-only)
+     (org-download-heading-lvl)
      (org-download-image-dir . "./pictures")
      (org-download-image-dir . ".~/pictures")))))
 (custom-set-faces
