@@ -1109,7 +1109,7 @@
 ** Org agenda
    #+BEGIN_SRC emacs-lisp
      (use-package org-depend)
-     (setq org-agenda-files '("~/org/todo.org"))
+     (setq org-agenda-files '("~/org/todo.org" "~/org/notes.org"))
    #+END_SRC
 
 ** Org functions
