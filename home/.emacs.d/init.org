@@ -1151,6 +1151,7 @@
      (use-package ob-clojure
        :defer t
        :config (setq org-babel-clojure-backend 'cider))
+     (setq org-babel-julia-write-object-command "ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o);ob_julia_str(f::AbstractString,o)=write(f,string(o));ob_julia_str(\"%s\",%s)")
    #+END_SRC
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
