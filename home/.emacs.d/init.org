@@ -1153,6 +1153,18 @@
        :config (setq org-babel-clojure-backend 'cider))
      (setq org-babel-julia-write-object-command "ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o);ob_julia_str(f::AbstractString,o)=write(f,string(o));ob_julia_str(\"%s\",%s)")
    #+END_SRC
+** Org export
+   #+BEGIN_SRC emacs-lisp
+     (defun sa-ignore-headline (contents backend info)
+       "Ignore headlines with tag `ignoreheading'."
+       (when (and (org-export-derived-backend-p backend 'latex 'html 'ascii)
+                  (string-match "\\`.*ignoreheading.*\n"
+                                (downcase contents)))
+         (replace-match "" nil nil contents)))
+
+     (add-to-list 'org-export-filter-headline-functions 'sa-ignore-headline)
+   #+END_SRC
+
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
      (use-package ox-latex)
