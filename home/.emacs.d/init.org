@@ -1091,6 +1091,8 @@
      (setq org-hide-leading-stars 't)
      (setq org-src-fontify-natively 't)
 
+     (add-hook 'org-mode-hook 'org-display-inline-images)
+
      (use-package org-mouse)
      (use-package ox-beamer)
    #+END_SRC
@@ -1152,6 +1154,7 @@
        :defer t
        :config (setq org-babel-clojure-backend 'cider))
      (setq org-babel-julia-write-object-command "ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o);ob_julia_str(f::AbstractString,o)=write(f,string(o));ob_julia_str(\"%s\",%s)")
+     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
    #+END_SRC
 ** Org export
    #+BEGIN_SRC emacs-lisp
