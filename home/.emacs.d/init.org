@@ -821,6 +821,7 @@
 
 ** Julia
    #+BEGIN_SRC emacs-lisp
+     (use-package julia-shell)
      (use-package julia-mode
        :init (add-hook 'julia-mode-hook
                        (lambda ()
@@ -830,7 +831,13 @@
                                  (">=" . ?≥)
                                  ("&&" . ?∧)
                                  ("||" . ?∨)
-                                 ("->" . ?↦))))))
+                                 ("->" . ?↦)))))
+       :bind (("C-c C-c" . julia-shell-run-region)
+              ("C-c C-s" . julia-shell-save-and-go)))
+     (defun julia-master ()
+       (interactive)
+       (let ((julia-shell-program (exec-path-from-shell-getenv "JULIA_MASTER")))
+         (run-julia)))
    #+END_SRC
 
 ** Lisps

@@ -20,6 +20,7 @@
         c-electric-star
         comment-region
         ediff-mark-for-hiding-at-pos
+        end-of-buffer
         end-of-defun
         ess-electric-brace
         ess-goto-end-of-function-or-para
@@ -39,6 +40,7 @@
         lyqi:insert-closing-delimiter
         lyqi:insert-delimiter
         magit-unstage-item
+        markdown-exdent-or-delete
         matlab-backward-sexp
         matlab-electric-comment
         matlab-end-of-defun

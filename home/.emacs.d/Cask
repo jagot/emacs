@@ -63,6 +63,7 @@
 (depends-on "ido-vertical-mode")
 (depends-on "inf-ruby")
 (depends-on "julia-mode")
+(depends-on "julia-shell")
 (depends-on "let-alist")
 (depends-on "list-utils")
 (depends-on "load-relative")
