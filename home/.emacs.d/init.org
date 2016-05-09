@@ -484,8 +484,6 @@
      (use-package modalka
        :init
        (progn
-         (add-hook 'text-mode-hook #'modalka-mode)
-         (add-hook 'prog-mode-hook #'modalka-mode)
          (setq-default cursor-type 'box)
          (setq modalka-cursor-type 'hollow)
          (let ((pairs '(("W" . "M-w")
