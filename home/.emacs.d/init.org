@@ -1176,7 +1176,7 @@
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
      (use-package ox-latex)
-     (setq org-latex-listings t)
+     (setq org-latex-listings 'minted)
 
      ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
      (setq org-export-latex-packages-alist
@@ -1221,7 +1221,7 @@
                  '(("" "url" t)
                    ("" "rotating" t)
                    ("babel" "csquotes" t)
-                   ("" "listings" nil)
+                   ("" "minted" nil)
                    ("" "soul" t))))
        (unless (string-match "startup: beamer" (buffer-string))
          (setq org-latex-default-packages-alist
@@ -1233,7 +1233,7 @@
                  '(("" "url" t)
                    ("" "rotating" t)
                    ("babel" "csquotes" t)
-                   ("" "listings" nil)
+                   ("" "minted" nil)
                    ("svgnames" "xcolor" t)
                    ("" "soul" t)
                    ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
