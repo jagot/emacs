@@ -1097,6 +1097,8 @@
      (setq org-src-fontify-natively 't)
 
      (add-hook 'org-mode-hook 'org-display-inline-images)
+     (add-hook 'org-mode-hook (lambda ()
+                                (linum-mode -1)))
 
      (use-package org-mouse)
      (use-package ox-beamer)
