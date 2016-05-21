@@ -198,9 +198,7 @@
               " cd " wd " && "
               (mapconcat 'identity args " ")
               " && exit\""))
-          (if (executable-find "konsole")
-              (apply #'call-process "konsole" nil 0 nil "--workdir" wd "-e" args)
-            (apply #'call-process "xterm" nil 0 nil "-e" args))))
+          (apply #'call-process "xterm" nil 0 nil "-e" (list "/bin/zsh" "-c" (mapconcat 'identity args " ")))))
 
       (defun ext-cmd-wrap-string (s)
         (concat "\\\"" s "\\\""))
@@ -1024,8 +1022,8 @@
                        (if latexcmd (concat (second latexcmd) "latex")
                          "xelatex")
                        "'"))
-              (tex-name (ext-cmd-wrap-string (concat (file-name-sans-extension buffer-file-name)
-                                             ".tex"))))
+              (tex-name  (concat (file-name-sans-extension buffer-file-name)
+                                             ".tex")))
          (if (= arg 4)
              (ext-terminal (ext-cmd-wrap-string default-directory)
                            "latexmk" "-C"
