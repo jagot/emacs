@@ -46,8 +46,12 @@
 
 ** Org mode
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path (expand-file-name "~/org-mode/lisp"))
+     (add-to-list 'load-path (expand-file-name "~/org-mode/contrib/lisp"))
+
      (use-package org
        :bind (("C-c e" . LaTeX-environment)))
+     (use-package org-contrib)
    #+END_SRC
 
 ** Org tangle configuration
@@ -63,7 +67,7 @@
            "Tangle the code-blocks of this file, and subsequently
          byte-compile the result."
            (progn
-             (org-babel-tangle-file init-file)
+             (org-babel-tangle-file init-file init-file-el)
              (byte-compile-file init-file-el)))
          (add-hook 'after-save-hook (lambda ()
                                       (when (member (buffer-file-name)
@@ -169,7 +173,7 @@
 
      (global-set-key (kbd "<f1>") (lambda ()
                                     (interactive)
-                                    (eshell)))
+                                    (ansi-term "zsh")))
      (global-set-key (kbd "S-<f1>") (lambda ()
                                       (interactive)
                                       (remote-term "lth" "ssh" "lth")))
@@ -639,14 +643,19 @@
      (use-package avy
        :bind (("M-s" . avy-goto-word-1)))
    #+END_SRC
-
-** Peep-dired
+** Dired
    #+BEGIN_SRC emacs-lisp
-     (use-package peep-dired
-       :defer t
-       :bind (:map dired-mode-map
-                   ("P" . peep-dired)))
+     (setq dired-listing-switches "-alh")
+     (setq dired-dwim-target t)
    #+END_SRC
+
+*** Peep-dired
+    #+BEGIN_SRC emacs-lisp
+      (use-package peep-dired
+        :defer t
+        :bind (:map dired-mode-map
+                    ("P" . peep-dired)))
+    #+END_SRC
 
 ** Visual regexp
    #+BEGIN_SRC emacs-lisp
@@ -692,6 +701,7 @@
        :bind (("C-:" . helm-company)))
      (use-package company-quickhelp
        :init (company-quickhelp-mode 1))
+     (global-company-mode -1)
    #+END_SRC
 ** Flycheck
    [[https://github.com/flycheck/flycheck][Flycheck]]
@@ -702,7 +712,8 @@
          (add-hook 'after-init-hook #'global-flycheck-mode)
          (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
          (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
-         (add-hook 'flycheck-mode-hook #'flycheck-typescript-tslint-setup)))
+         ;; (add-hook 'flycheck-mode-hook #'flycheck-typescript-tslint-setup)
+         ))
    #+END_SRC
 
 ** C/C++
@@ -1253,15 +1264,12 @@
        (progn
          (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
          (add-hook 'c-mode-common-hook 'outline-minor-mode)
+         (add-hook 'sh-mode-common-hook 'outline-minor-mode)
          (add-hook 'julia-mode-hook 'outline-minor-mode)))
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-x p" 'org-toggle-latex-fragment)
-     (add-hook 'julia-mode-hook
-               (lambda () (org-toggle-latex-fragment '(16))))
-     (add-hook 'c-mode-common-hook
-               (lambda () (org-toggle-latex-fragment '(16))))
    #+END_SRC
 ** Org download
    #+BEGIN_SRC emacs-lisp

@@ -46,7 +46,13 @@
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
    (quote
-    ((org-export-babel-evaluate . inline-only)
+    ((ffforg-latex-image-default-width)
+     (org-latex-packages-alist quote nil)
+     (org-latex-default-packages-alist quote nil)
+     (org-latex-packages-alist)
+     (org-latex-default-packages-alist)
+     (org-latex-image-default-width)
+     (org-export-babel-evaluate . inline-only)
      (org-download-heading-lvl)
      (org-download-image-dir . "./pictures")))))
 (custom-set-faces

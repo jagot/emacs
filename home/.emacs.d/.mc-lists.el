@@ -29,6 +29,7 @@
         ess-smart-comma
         ess-yank
         f90-electric-insert
+        f90-indent-new-line
         fill-paragraph
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
@@ -77,6 +78,7 @@
       '(
         backward-sentence
         balance-windows
+        ess-load-file
         hydra-mc/mc/edit-lines-and-exit
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
@@ -89,4 +91,5 @@
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay
+        yaml-electric-backspace
         ))
