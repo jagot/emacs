@@ -46,8 +46,7 @@
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
    (quote
-    ((ffforg-latex-image-default-width)
-     (org-latex-packages-alist quote nil)
+    ((org-latex-packages-alist quote nil)
      (org-latex-default-packages-alist quote nil)
      (org-latex-packages-alist)
      (org-latex-default-packages-alist)

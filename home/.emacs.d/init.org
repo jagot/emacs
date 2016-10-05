@@ -9,7 +9,11 @@
    - [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua's config]]
    - [[https://github.com/grettke/home][Grant Rettke's config]]
    - [[https://github.com/larstvei/dot-emacs][Lars Tveito's config]]
-
+* Git Org-mode
+  #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path (expand-file-name "~/org-mode/lisp"))
+     (add-to-list 'load-path (expand-file-name "~/org-mode/contrib/lisp"))
+  #+END_SRC
 * Misc
   [[http://www.emacswiki.org/emacs/CommonLispForEmacs][Common Lisp macros for Emacs lisp]].
   #+BEGIN_SRC emacs-lisp
@@ -42,13 +46,11 @@
      (require 'use-package)
      (use-package pallet
        :init (pallet-mode))
+     (use-package dash)
    #+END_SRC
 
 ** Org mode
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'load-path (expand-file-name "~/org-mode/lisp"))
-     (add-to-list 'load-path (expand-file-name "~/org-mode/contrib/lisp"))
-
      (use-package org
        :bind (("C-c e" . LaTeX-environment)))
      (use-package org-contrib)
@@ -57,29 +59,30 @@
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
-     (use-package ob-tangle
-       :init
+     (use-package ob-tangle)
+
+     (setq init-file (file-truename (concat user-emacs-directory "init.org")))
+     (setq init-file-el (file-truename (concat user-emacs-directory "init.el")))
+     (setq init-file-bc (file-truename (concat init-file-el "c")))
+
+     (defun tangle-init ()
+       "Tangle the code-blocks of this file, and subsequently
+              byte-compile the result."
        (progn
-         (setq init-file (concat user-emacs-directory "init.org"))
-         (setq init-file-el (concat user-emacs-directory "init.el"))
-         (setq init-file-bc (concat init-file-el "c"))
-         (defun tangle-init ()
-           "Tangle the code-blocks of this file, and subsequently
-         byte-compile the result."
-           (progn
-             (org-babel-tangle-file init-file init-file-el)
-             (byte-compile-file init-file-el)))
-         (add-hook 'after-save-hook (lambda ()
-                                      (when (member (buffer-file-name)
-                                                    (list (file-truename init-file)
-                                                          (expand-file-name init-file)))
-                                        (tangle-init))))
-         (when (or
-                (and
-                 (file-exists-p init-file-bc)
-                 (file-newer-than-file-p init-file init-file-bc))
-                (not (file-exists-p init-file-bc)))
-           (tangle-init))))
+         (org-babel-tangle-file init-file)
+         (byte-compile-file init-file-el)))
+     (add-hook 'after-save-hook (lambda ()
+                                  (when (member (buffer-file-name)
+                                                (list (file-truename init-file)
+                                                      (expand-file-name init-file)))
+                                    (tangle-init))))
+
+     (when (or
+            (and
+             (file-exists-p init-file-bc)
+             (file-newer-than-file-p init-file init-file-bc))
+            (not (file-exists-p init-file-bc)))
+       (tangle-init))
    #+END_SRC
 ** Encoding
    #+BEGIN_SRC emacs-lisp
