@@ -83,6 +83,7 @@
 (depends-on "org-download")
 (depends-on "outorg")
 (depends-on "outshine")
+(depends-on "ox-pandoc")
 (depends-on "ox-reveal")
 (depends-on "package-build")
 (depends-on "pallet")

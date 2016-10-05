@@ -1174,6 +1174,8 @@
    #+END_SRC
 ** Org export
    #+BEGIN_SRC emacs-lisp
+     (use-package ox-pandoc)
+
      (defun sa-ignore-headline (contents backend info)
        "Ignore headlines with tag `ignoreheading'."
        (when (and (org-export-derived-backend-p backend 'latex 'html 'ascii)
