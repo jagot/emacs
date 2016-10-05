@@ -1213,41 +1213,7 @@
        (if (string-match "LATEX_CMD: lualatex" (buffer-string))
            (setq texcmd "latexmk -pdflatex='lualatex -shell-escape' -pdf %f"))
        ;; LaTeX compilation command
-       (setq org-latex-pdf-process (list texcmd))
-
-       ;; default packages for ordinary latex or pdflatex export
-       (setq org-latex-default-packages-alist
-             '(("AUTO" "inputenc" t)
-               ("T1" "fontenc" t)
-               ("" "fixltx2e" nil)
-               ("" "wrapfig" nil)
-               ("" "soul" t)
-               ("" "hyperref" nil)))
-
-       ;; Packages to include when xelatex is used
-       ;; (see https://github.com/kjhealy/latex-custom-kjh for the
-       ;; non-standard ones.)
-       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-           (setq org-latex-default-packages-alist
-                 '(("" "url" t)
-                   ("" "rotating" t)
-                   ("babel" "csquotes" t)
-                   ("" "minted" nil)
-                   ("" "soul" t))))
-       (unless (string-match "startup: beamer" (buffer-string))
-         (setq org-latex-default-packages-alist
-               (append '(("svgnames" "xcolor" t)
-                         ("colorlinks=true, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil))
-                       org-latex-default-packages-alist)))
-       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
-           (setq org-latex-default-packages-alist
-                 '(("" "url" t)
-                   ("" "rotating" t)
-                   ("babel" "csquotes" t)
-                   ("" "minted" nil)
-                   ("svgnames" "xcolor" t)
-                   ("" "soul" t)
-                   ("colorlinks=false, linkcolor=FireBrick, urlcolor=FireBrick, citecolor=ForestGreen, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)))))
+       (setq org-latex-pdf-process (list texcmd)))
      (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
 
      (use-package ox-bibtex)
