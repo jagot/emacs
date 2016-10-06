@@ -1036,9 +1036,10 @@
                        (if latexcmd (concat (second latexcmd) "latex")
                          "xelatex")
                        "'"))
-              (tex-name  (ext-cmd-wrap-string
-                          (concat (file-name-sans-extension buffer-file-name)
-                                  ".tex"))))
+              (tex-name-pre (concat (file-name-sans-extension buffer-file-name)
+                                    ".tex"))
+              (tex-name (if osx? (ext-cmd-wrap-string tex-name-pre)
+                          tex-name-pre)))
          (if (= arg 4)
              (ext-terminal (ext-cmd-wrap-string default-directory)
                            "latexmk" "-C"
