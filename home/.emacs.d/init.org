@@ -1328,7 +1328,7 @@
        (bibtex-fill-entry))
    #+END_SRC
 
-* Mail
+* Mail                                                             :noexport:
   #+BEGIN_SRC emacs-lisp
     (use-package mu4e
       :config
