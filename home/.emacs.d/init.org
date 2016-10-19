@@ -220,6 +220,7 @@
      (defvar opener)
      (setq opener "xdg-open")
      (when osx? (setq opener "open"))
+     (when (executable-find "mimeopen") (setq opener "mimeopen"))
 
      (defun open-in-external-app ()
        "Inspired by
@@ -658,6 +659,13 @@
         :defer t
         :bind (:map dired-mode-map
                     ("P" . peep-dired)))
+    #+END_SRC
+
+*** dired-launch
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired-launch
+        :config
+        (dired-launch-enable))
     #+END_SRC
 
 ** Visual regexp
