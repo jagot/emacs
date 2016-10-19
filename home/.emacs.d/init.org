@@ -196,6 +196,11 @@
     This is used to open an external terminal emulator and run a
     command there.
     #+BEGIN_SRC emacs-lisp
+      (defun get-env-terminal ()
+        (let ((env-term (exec-path-from-shell-getenv "TERMINAL")))
+          (if (s-blank? env-term)
+              "xterm" env-term)))
+
       (defun ext-terminal (wd &rest args)
         (if osx?
             (osascript-run-str
@@ -204,7 +209,10 @@
               " cd " wd " && "
               (mapconcat 'identity args " ")
               " && exit\""))
-          (apply #'call-process "xterm" nil 0 nil "-e" (list "/bin/zsh" "-c" (mapconcat 'identity args " ")))))
+          (progn
+            (apply #'call-process
+                   (get-env-terminal)
+                   nil 0 nil "-e" (list "/bin/zsh" "-c" (mapconcat 'identity args " "))))))
 
       (defun ext-cmd-wrap-string (s)
         (concat "\\\"" s "\\\""))
