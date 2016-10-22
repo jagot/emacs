@@ -30,6 +30,7 @@
 (depends-on "ctable")
 (depends-on "cuda-mode")
 (depends-on "dash")
+(depends-on "define-word")
 (depends-on "diminish")
 (depends-on "dired-launch")
 (depends-on "drag-stuff")

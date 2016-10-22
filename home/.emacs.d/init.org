@@ -265,6 +265,17 @@
        (with-editor-async-shell-command "crontab -e"))
    #+END_SRC
 
+** define-word
+   #+BEGIN_SRC emacs-lisp
+     (use-package define-word
+       :init
+       (bind-key "C-c D" (lambda (begin end &optional arg)
+                           (interactive "r\nP")
+                           (if arg
+                               (call-interactively 'define-word)
+                             (call-interactively 'define-word-at-point)))))
+   #+END_SRC
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
