@@ -1378,32 +1378,6 @@
        (bibtex-fill-entry))
    #+END_SRC
 
-* Mail                                                             :noexport:
-  #+BEGIN_SRC emacs-lisp
-    (use-package mu4e
-      :config
-      (progn
-        (setq
-         mu4e-maildir       "~/Maildir"   ;; top-level Maildir
-         mu4e-split-view 'vertical
-         mu4e-headers-visible-columns 90
-         mu4e-use-fancy-chars t
-         mu4e-view-show-images t
-         mu4e-view-prefer-html t
-         mu4e-get-mail-command "mbsync -a"
-         mu4e-compose-signature-auto-include nil
-         mu4e-compose-signature "")
-        (mu4e-maildirs-extension)
-        (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
-        (add-to-list 'mu4e-view-actions
-                     '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-        (when (fboundp 'imagemagick-register-types)
-          (imagemagick-register-types))
-        (use-package mu4e-contrib
-          :config
-          (setq mu4e-html2text-command 'mu4e-shr2text)))
-      :bind (("C-x m" . mu4e)))
-  #+END_SRC
 * Calendar
   #+BEGIN_SRC emacs-lisp
     (use-package calfw
