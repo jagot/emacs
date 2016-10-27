@@ -1291,6 +1291,36 @@
     (setq bibliography-file (concat bibliography-directory "/references.bib"))
   #+END_SRC
 
+** Citation commands
+
+   #+BEGIN_SRC emacs-lisp
+     (org-add-link-type
+      "citep" 'ebib
+      (lambda (path desc format)
+        (cond
+         ((eq format 'html)
+          (format "(<cite>%s</cite>)" path))
+         ((eq format 'latex)
+          (if (or (not desc) (equal 0 (search "citep:" desc)))
+              (format "\\parencite{%s}" path)
+            (format "\\parencite[%s][%s]{%s}"
+                    (cadr (split-string desc ";"))
+                    (car (split-string desc ";"))  path))))))
+
+     (org-add-link-type
+      "citet" 'ebib
+      (lambda (path desc format)
+        (cond
+         ((eq format 'html)
+          (format "(<cite>%s</cite>)" path))
+         ((eq format 'latex)
+          (if (or (not desc) (equal 0 (search "citet:" desc)))
+              (format "\\textcite{%s}" path)
+            (format "\\textcite[%s][%s]{%s}"
+                    (cadr (split-string desc ";"))
+                    (car (split-string desc ";"))  path))))))
+   #+END_SRC
+
 ** Ebib
    #+BEGIN_SRC emacs-lisp
      (use-package ebib
