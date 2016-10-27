@@ -47,6 +47,7 @@
      (use-package pallet
        :init (pallet-mode))
      (use-package dash)
+     (use-package s)
    #+END_SRC
 
 ** Org mode
