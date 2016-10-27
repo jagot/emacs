@@ -362,10 +362,11 @@
 
          ;; (bind-key "M-q") '(lambda () (interactive (fill-paragraph 60)))
 
-         (bind-key "M-S-<up>" 'enlarge-window)
-         (bind-key "M-S-<down>" 'shrink-window)
-         (bind-key "M-S-<right>" 'enlarge-window-horizontally)
-         (bind-key "M-S-<left>" 'shrink-window-horizontally)
+         (bind-keys*
+          ("M-J" . enlarge-window)
+          ("M-K" . shrink-window)
+          ("M-H" . shrink-window-horizontally)
+          ("M-L" . enlarge-window-horizontally))
 
          (bind-key "C-c SPC w" 'whitespace-mode)
          (bind-key "C-c SPC c" 'whitespace-cleanup)
