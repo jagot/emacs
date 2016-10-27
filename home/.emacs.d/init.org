@@ -1019,7 +1019,7 @@
 * Modes
   Misc modes
   #+BEGIN_SRC emacs-lisp
-    (use-package matlab-mode
+    (use-package matlab
       :mode (("\\.m\\'" . matlab-mode)))
 
     (autoload 'gedcom-mode "gedcom")
@@ -1378,7 +1378,7 @@
        (bibtex-fill-entry))
    #+END_SRC
 
-* Mail
+* Mail                                                             :noexport:
   #+BEGIN_SRC emacs-lisp
     (use-package mu4e
       :config

@@ -47,7 +47,6 @@
 (depends-on "flx-ido")
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
-(depends-on "flycheck-typescript-tslint")
 (depends-on "git-commit")
 (depends-on "gitignore-mode")
 (depends-on "gntp")
