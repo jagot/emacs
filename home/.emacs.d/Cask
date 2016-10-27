@@ -32,6 +32,7 @@
 (depends-on "dash")
 (depends-on "define-word")
 (depends-on "diminish")
+(depends-on "dired-k")
 (depends-on "dired-launch")
 (depends-on "drag-stuff")
 (depends-on "dropdown-list")

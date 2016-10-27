@@ -692,6 +692,13 @@
         (dired-launch-enable))
     #+END_SRC
 
+*** dired-k
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired-k
+        :bind (:map dired-mode-map
+                    ("M-k" . dired-k)))
+    #+END_SRC
+
 ** Visual regexp
    #+BEGIN_SRC emacs-lisp
      (use-package visual-regexp
