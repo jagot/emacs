@@ -1289,6 +1289,15 @@
      (use-package org-download)
    #+END_SRC
 
+* Music
+  #+BEGIN_SRC emacs-lisp
+    (use-package simple-mpc
+      :bind ("<f8>" . simple-mpc))
+
+    (use-package mingus
+      :bind ("C-<f8>" . mingus))
+  #+END_SRC
+
 * BibTeX
   #+BEGIN_SRC emacs-lisp
     (setq bibtex-autokey-name-case-convert-function 'capitalize
