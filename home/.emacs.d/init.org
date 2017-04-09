@@ -2,8 +2,8 @@
 #+AUTHOR: Stefanos Carlström
 #+EMAIL: stefanos.carlstrom@gmail.com
 
-#+PROPERTY: tangle yes
-#+PROPERTY: comments org
+#+PROPERTY: header-args :tangle yes :comments org
+
 * Introduction
 ** References
    - [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua's config]]
