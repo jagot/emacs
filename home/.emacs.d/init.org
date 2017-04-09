@@ -959,6 +959,25 @@
      (use-package bundler)
    #+END_SRC
 
+** Rust
+   #+BEGIN_SRC emacs-lisp
+     (use-package racer
+       :init
+       (add-hook 'racer-mode-hook #'eldoc-mode)
+       (add-hook 'racer-mode-hook #'company-mode))
+
+     (use-package rust-mode
+       :bind (:map rust-mode-map
+                   ("C-c c" . compile)
+                   ("TAB" . company-indent-or-complete-common))
+       :init
+       (add-hook 'rust-mode-hook #'racer-mode)
+       (add-hook 'rust-mode-hook
+                 (lambda ()
+                   (set (make-local-variable 'compile-command)
+                        "cargo run"))))
+   #+END_SRC
+
 ** Web development
 *** Typescript
     #+BEGIN_SRC emacs-lisp
