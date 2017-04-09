@@ -9,11 +9,6 @@
    - [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua's config]]
    - [[https://github.com/grettke/home][Grant Rettke's config]]
    - [[https://github.com/larstvei/dot-emacs][Lars Tveito's config]]
-* Git Org-mode
-  #+BEGIN_SRC emacs-lisp
-     (add-to-list 'load-path (expand-file-name "~/org-mode/lisp"))
-     (add-to-list 'load-path (expand-file-name "~/org-mode/contrib/lisp"))
-  #+END_SRC
 * Misc
   [[http://www.emacswiki.org/emacs/CommonLispForEmacs][Common Lisp macros for Emacs lisp]].
   #+BEGIN_SRC emacs-lisp
