@@ -126,6 +126,7 @@
 (depends-on "swiper")
 (depends-on "test-simple")
 (depends-on "tide")
+(depends-on "tuareg")
 (depends-on "typescript-mode")
 (depends-on "use-package")
 (depends-on "visual-fill-column")
