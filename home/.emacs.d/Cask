@@ -129,6 +129,7 @@
 (depends-on "tuareg")
 (depends-on "typescript-mode")
 (depends-on "use-package")
+(depends-on "utop")
 (depends-on "visual-fill-column")
 (depends-on "visual-regexp")
 (depends-on "w3")
