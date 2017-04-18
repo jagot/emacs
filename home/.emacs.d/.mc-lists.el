@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         LaTeX-babel-insert-hyphen
+        LaTeX-environment
         LaTeX-insert-left-brace
         TeX-insert-backslash
         TeX-insert-dollar
@@ -38,8 +39,10 @@
         insert-char
         julia-latexsub-or-indent
         kill-region
+        lyqi:indent-line
         lyqi:insert-closing-delimiter
         lyqi:insert-delimiter
+        lyqi:insert-opening-delimiter
         magit-unstage-item
         markdown-exdent-or-delete
         matlab-backward-sexp
@@ -56,9 +59,11 @@
         org-preview-latex-fragment
         org-return-indent
         org-self-insert-command
+        org-shiftright
         org-shifttab
         org-toggle-latex-fragment
         org-yank
+        orgtbl-hijacker-command-109
         orgtbl-self-insert-command
         outshine-self-insert-command
         reindent-then-newline-and-indent
@@ -70,6 +75,7 @@
         wdired-downcase-word
         wdired-next-line
         wdired-previous-line
+        whitespace-cleanup
         yaml-electric-dash-and-dot
         yas-expand
         ))
@@ -83,6 +89,7 @@
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
         hydra-mc/mc/mark-previous-like-this
+        ivy-switch-buffer
         lyqi:change-duration-1
         lyqi:change-duration-dots
         mac-mwheel-scroll

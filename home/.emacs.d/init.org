@@ -684,8 +684,11 @@
 *** dired-launch
     #+BEGIN_SRC emacs-lisp
       (use-package dired-launch
-        :config
-        (dired-launch-enable))
+        :init
+        (progn
+          (dired-launch-enable)
+          (setq dired-launch-default-launcher '(opener))
+          (setf dired-launch-extensions-map '())))
     #+END_SRC
 
 *** dired-k
@@ -1156,10 +1159,6 @@
                  (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
    #+END_SRC
 ** Lilypond
-   #+BEGIN_SRC emacs-lisp
-     ;; (use-package lilypond-mode
-     ;;   :mode ("\\.ly\\'" . LilyPond-mode))
-   #+END_SRC
 *** Lyqi
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
@@ -1214,7 +1213,9 @@
 ** Org agenda
    #+BEGIN_SRC emacs-lisp
      (use-package org-depend)
-     (setq org-agenda-files '("~/org/todo.org" "~/org/notes.org"))
+     (setq org-agenda-files '("~/org/todo.org" "~/org/notes.org"
+                              "~/org/research.org" "~/org/teaching.org"
+                              "~/org/lss.org"))
    #+END_SRC
 
 ** Org functions
