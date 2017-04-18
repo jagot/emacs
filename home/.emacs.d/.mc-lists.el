@@ -10,6 +10,7 @@
         TeX-insert-dollar
         TeX-insert-sub-or-superscript
         backward-sexp
+        beginning-of-buffer
         beginning-of-defun
         c-electric-brace
         c-electric-colon
@@ -51,12 +52,15 @@
         matlab-forward-sexp
         matlab-linefeed
         org-beginning-of-line
+        org-ctrl-c-ctrl-c
+        org-cycle
         org-delete-char
         org-end-of-line
         org-export-dispatch
         org-force-self-insert
         org-kill-line
         org-preview-latex-fragment
+        org-return
         org-return-indent
         org-self-insert-command
         org-shiftright
@@ -66,11 +70,13 @@
         orgtbl-hijacker-command-109
         orgtbl-self-insert-command
         outshine-self-insert-command
+        overwrite-mode
         reindent-then-newline-and-indent
         sh-assignment
         sp--self-insert-command
         sp-add-to-previous-sexp
         sp-wrap-cancel
+        transpose-words
         wdired-capitalize-word
         wdired-downcase-word
         wdired-next-line

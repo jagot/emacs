@@ -1113,6 +1113,8 @@
      (use-package tex-site
        :defer t)
 
+     (add-to-list 'auto-mode-alist '("\\.tikz$" . LaTeX-mode))
+
      (defun latex-start-latexmk (arg)
        (interactive "p")
        (let* ((latexcmd (s-match "LATEX_CMD: \\([a-z]+\\)latex" (buffer-string)))
