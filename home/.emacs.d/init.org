@@ -1251,7 +1251,7 @@
         (calc . t)
         (julia . t)
         (C . t)
-        (sh . t)
+        (shell . t)
         (ruby . t)
         (clojure . t)
         (octave . t)))
