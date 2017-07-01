@@ -304,6 +304,8 @@
      ;;                                   "tmp/auto-save-list/.saves-" emacs.d))
 
      (global-prettify-symbols-mode 1)
+
+     (setf epa-pinentry-mode 'loopback)
    #+END_SRC
 ** Mode line
    #+BEGIN_SRC emacs-lisp
@@ -646,6 +648,11 @@
      (use-package magit-gitflow
        :init
        (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+
+     (use-package magithub
+       :after magit
+       :config (magithub-feature-autoinject t))
+   #+END_SRC
    #+END_SRC
 ** Ace-window
    #+BEGIN_SRC emacs-lisp

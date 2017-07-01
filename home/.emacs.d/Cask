@@ -78,6 +78,7 @@
 (depends-on "magit")
 (depends-on "magit-gitflow")
 (depends-on "magit-popup")
+(depends-on "magithub")
 (depends-on "markdown-mode")
 (depends-on "matlab-mode")
 (depends-on "mingus")
