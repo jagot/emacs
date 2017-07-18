@@ -24,8 +24,10 @@
         ediff-mark-for-hiding-at-pos
         end-of-buffer
         end-of-defun
+        eruby-mode-electric-percent
         ess-electric-brace
         ess-goto-end-of-function-or-para
+        ess-indent-or-complete
         ess-newline-and-indent
         ess-smart-S-assign
         ess-smart-comma
@@ -95,6 +97,7 @@
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
         hydra-mc/mc/mark-previous-like-this
+        ido-dired
         ivy-switch-buffer
         lyqi:change-duration-1
         lyqi:change-duration-dots

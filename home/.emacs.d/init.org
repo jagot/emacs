@@ -318,32 +318,6 @@
      (display-time-mode 1)
    #+END_SRC
 
-** ido
-   #+BEGIN_SRC emacs-lisp
-     (use-package flx-ido
-       :init
-       (progn
-         (ido-mode 1)
-         (ido-everywhere 1)
-         (flx-ido-mode 1)
-         (setq ido-auto-merge-work-directories-length -1)
-         ;; disable ido faces to see flx highlights.
-         (setq ido-use-faces nil)))
-
-     (use-package ido-vertical-mode
-       :init
-       (ido-vertical-mode 1))
-   #+END_SRC
-** Smex
-   #+BEGIN_SRC emacs-lisp
-     (use-package smex
-       :config
-       (smex-initialize)
-       :bind
-       (("M-x" . smex)
-        ("S-M-x" . smex-major-mode-commands)))
-   #+END_SRC
-
 ** Shortcut keys
    #+BEGIN_SRC emacs-lisp
      (use-package bind-key
@@ -660,20 +634,61 @@
        :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
        :bind (("C-x o" . ace-window)))
    #+END_SRC
-** Swiper
-   #+BEGIN_SRC emacs-lisp
-     (use-package swiper
-       :init (progn
-               (ivy-mode 1)
-               (setq ivy-use-virtual-buffers t))
-       :bind (("C-s" . swiper)
-              ("C-r" . swiper)))
-   #+END_SRC
-** Avy
-   #+BEGIN_SRC emacs-lisp
-     (use-package avy
-       :bind (("M-s" . avy-goto-word-1)))
-   #+END_SRC
+** Ivy/Counsel
+*** Ivy
+    #+BEGIN_SRC emacs-lisp
+      (use-package ivy :ensure t
+        :diminish (ivy-mode . "")
+        :bind
+        (:map ivy-mode-map
+              ("C-'" . ivy-avy))
+        :config
+        (ivy-mode 1)
+        ;; add `recentf-mode' and bookmarks to `ivy-switch-buffer'.
+        (setq ivy-use-virtual-buffers t)
+        ;; number of result lines to display
+        (setq ivy-height 15)
+        ;; does not count candidates
+        (setq ivy-count-format "")
+        ;; no regexp by default
+        (setq ivy-initial-inputs-alist nil)
+        ;; configure regexp engine.
+        (setq ivy-re-builders-alist
+              ;; allow input not in order
+              '((t   . ivy--regex-plus))))
+      (use-package ivy-hydra)
+      (setq ivy-switch-buffer-faces-alist
+            '((emacs-lisp-mode . swiper-match-face-1)
+              (dired-mode . ivy-subdir)
+              (org-mode . org-level-4)))
+    #+END_SRC
+*** Counsel
+    #+BEGIN_SRC emacs-lisp
+      (use-package counsel
+        :bind
+        (("M-x" . counsel-M-x)
+         ("C-/" . counsel-rg)
+         ("C-x C-f" . counsel-find-file)
+         ("C-c g" . counsel-git)
+         ("C-x l" . counsel-locate)
+         ("C-c o" . counsel-outline)
+         ("C-x 8 C-m" . counsel-unicode-char)))
+    #+END_SRC
+
+*** Swiper
+    #+BEGIN_SRC emacs-lisp
+      (use-package swiper
+        :init (progn
+                (ivy-mode 1)
+                (setq ivy-use-virtual-buffers t))
+        :bind (("C-s" . swiper)
+               ("C-r" . swiper)))
+    #+END_SRC
+*** Avy
+    #+BEGIN_SRC emacs-lisp
+      (use-package avy
+        :bind (("M-s" . avy-goto-word-1)))
+    #+END_SRC
 ** Dired
    #+BEGIN_SRC emacs-lisp
      (setq dired-listing-switches "-alh")
