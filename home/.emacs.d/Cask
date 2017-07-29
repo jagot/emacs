@@ -84,6 +84,7 @@
 (depends-on "matlab-mode")
 (depends-on "mingus")
 (depends-on "modalka")
+(depends-on "monokai-theme")
 (depends-on "mu4e-maildirs-extension")
 (depends-on "multiple-cursors")
 (depends-on "org")

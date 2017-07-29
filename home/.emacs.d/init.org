@@ -558,7 +558,7 @@
 ** Theme
    #+BEGIN_SRC emacs-lisp
      (defvar emacs-theme)
-     (setq emacs-theme 'zenburn)
+     (setq emacs-theme 'monokai)
      (load-theme emacs-theme t)
    #+END_SRC
 *** Fonts
