@@ -657,7 +657,9 @@
         ;; configure regexp engine.
         (setq ivy-re-builders-alist
               ;; allow input not in order
-              '((t   . ivy--regex-plus))))
+              '((ivy-switch-buffer . ivy--regex-fuzzy)
+                (counsel-find-file . ivy--regex-fuzzy)
+                (t   . ivy--regex-plus))))
       (use-package ivy-hydra)
       (setq ivy-switch-buffer-faces-alist
             '((emacs-lisp-mode . swiper-match-face-1)
@@ -680,11 +682,9 @@
 *** Swiper
     #+BEGIN_SRC emacs-lisp
       (use-package swiper
-        :init (progn
-                (ivy-mode 1)
-                (setq ivy-use-virtual-buffers t))
         :bind (("C-s" . swiper)
-               ("C-r" . swiper)))
+               ("C-r" . swiper)
+               ("C-7" . swiper-mc)))
     #+END_SRC
 *** Avy
     #+BEGIN_SRC emacs-lisp
