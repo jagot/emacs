@@ -294,6 +294,9 @@
      (use-package tramp)
 
      (projectile-global-mode)
+     (setq projectile-mode-line
+           '(:eval (format " Projectile[%s]"
+                     (projectile-project-name))))
 
      (setq vc-follow-symlinks nil)
      (setq find-file-visit-truename t)
