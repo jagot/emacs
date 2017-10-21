@@ -1374,9 +1374,36 @@
           bibtex-autokey-year-title-separator ""
           bibtex-autokey-titleword-length 5
           bibtex-autokey-titleword-separator "")
-    (setq bibliography-directory (expand-file-name "~/references"))
-    (setq bibliography-file (concat bibliography-directory "/references.bib"))
+    (defvar bibliography-directory)
+    (defvar bibliography-file)
+    (defvar bibliography-notes-file)
+    (setq bibliography-directory (expand-file-name "~/references")
+          bibliography-file (concat bibliography-directory "/references-3.bib")
+          bibliography-notes-file (concat bibliography-directory "/notes.org"))
   #+END_SRC
+
+** Org-ref
+   #+BEGIN_SRC emacs-lisp
+     (setq reftex-default-bibliography (list bibliography-file))
+
+     ;; see org-ref for use of these variables
+     (setq org-ref-bibliography-notes bibliography-notes-file
+           org-ref-default-bibliography (list bibliography-file)
+           org-ref-pdf-directory bibliography-directory
+           org-ref-completion-library 'org-ref-ivy-cite)
+
+     (setq bibtex-completion-bibliography bibliography-file
+           bibtex-completion-library-path bibliography-directory
+           bibtex-completion-notes-path bibliography-directory)
+
+     ;; open pdf with system pdf viewer (works on mac)
+     (setq bibtex-completion-pdf-open-function
+       (lambda (fpath)
+         (start-process "open" "*open*" "open" fpath)))
+
+     (use-package org-ref)
+   #+END_SRC
+
 
 ** Citation commands
 
@@ -1406,54 +1433,6 @@
             (format "\\textcite[%s][%s]{%s}"
                     (cadr (split-string desc ";"))
                     (car (split-string desc ";"))  path))))))
-   #+END_SRC
-
-** Ebib
-   #+BEGIN_SRC emacs-lisp
-     (use-package ebib
-       :bind ("C-c e" . ebib)
-       :config (progn
-                 (setq ebib-preload-bib-files '(bibliography-file))
-                 (org-add-link-type "ebib" 'ebib-open-org-link)))
-   #+END_SRC
-** Helm Bibtex
-  #+BEGIN_SRC emacs-lisp
-    (use-package helm-bibtex
-      :config (progn
-              (defun my-helm-bibtex-format-citation-cite (keys)
-                (s-join ", "
-                        (--map (format "cite:%s" it) keys)))
-              (add-to-list 'helm-bibtex-format-citation-functions
-                           '(org-mode . my-helm-bibtex-format-citation-cite)))
-      :bind ("C-c b" . helm-bibtex))
-    (setq helm-bibtex-bibliography bibliography-file)
-    (setq helm-bibtex-library-path bibliography-directory)
-    (setq helm-bibtex-pdf-symbol "P")
-    (setq helm-bibtex-pdf-open-function
-          (lambda (fpath) (shell-command-to-string
-                           (concat opener " " fpath " &"))))
-  #+END_SRC
-** Doi2Bibtex
-   Borrowed from [[http://blog.anghyflawn.net/2014/04/22/emacs-give-a-doi-get-a-bibtex-entry/][Pavel Iosad]]. Should maybe implement something like
-   [[https://gist.github.com/mardukbp/6576418][this]] instead.
-   #+BEGIN_SRC emacs-lisp
-     (defun get-bibtex-from-doi (doi)
-       "Get a BibTeX entry from the DOI"
-       (interactive "MDOI: ")
-       (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
-         (with-current-buffer
-             (url-retrieve-synchronously
-              (format "http://dx.doi.org/%s"
-                      (replace-regexp-in-string "http://dx.doi.org/" "" doi)))
-           (switch-to-buffer (current-buffer))
-           (goto-char (point-max))
-           (setq bibtex-entry
-                 (buffer-substring
-                  (string-match "@" (buffer-string))
-                  (point)))
-           (kill-buffer (current-buffer))))
-       (insert (decode-coding-string bibtex-entry 'utf-8))
-       (bibtex-fill-entry))
    #+END_SRC
 
 * Calendar
