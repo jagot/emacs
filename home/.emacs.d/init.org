@@ -1207,6 +1207,11 @@
      (use-package pkgbuild-mode
        :mode "/PKGBUILD$")
    #+END_SRC
+** Word count mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package wc-mode)
+     (setq wc-modeline-format "WC[%W%w/%tw|%C%c/%tc]")
+   #+END_SRC
 
 * Org
 ** Org configuration
