@@ -121,6 +121,8 @@
 (depends-on "rvm")
 (depends-on "s")
 (depends-on "sass-mode")
+(depends-on "scad-mode")
+(depends-on "scad-preview")
 (depends-on "scss-mode")
 (depends-on "seq")
 (depends-on "shut-up")
