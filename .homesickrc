@@ -1,0 +1,13 @@
+# -*- ruby -*-
+
+require 'mkmf'
+
+if RUBY_PLATFORM.include? 'darwin'
+  %x( brew install cask )
+elsif not find_executable('pacaur').nil?
+  %( pacaur -S cask )
+end
+
+Dir.chdir(File.expand_path("~/.emacs.d")) do
+  %x( cask install )
+end
