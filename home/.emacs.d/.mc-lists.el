@@ -17,10 +17,12 @@
         c-electric-delete-forward
         c-electric-lt-gt
         c-electric-paren
+        c-electric-pound
         c-electric-semi&comma
         c-electric-slash
         c-electric-star
         comment-region
+        counsel-unicode-char
         ediff-mark-for-hiding-at-pos
         end-of-buffer
         end-of-defun
@@ -107,5 +109,7 @@
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay
+        swiper
+        swiper-mc
         yaml-electric-backspace
         ))

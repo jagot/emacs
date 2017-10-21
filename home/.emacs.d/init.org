@@ -903,7 +903,8 @@
                                  (">=" . ?≥)
                                  ("&&" . ?∧)
                                  ("||" . ?∨)
-                                 ("->" . ?↦)))))
+                                 ("->" . ?↦)
+                                 ("=>" . ?⤇)))))
        :bind (("C-c C-c" . julia-shell-run-region)
               ("C-c C-s" . julia-shell-save-and-go)))
      (defun julia-master ()
@@ -931,7 +932,6 @@
                 :init
                 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)))
     #+END_SRC
-
 *** Hy
     #+BEGIN_SRC emacs-lisp
       (use-package hy-mode
@@ -940,6 +940,14 @@
         (add-hook 'hy-mode-hook
                   (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
     #+END_SRC
+
+*** Scheme
+    #+BEGIN_SRC emacs-lisp
+      (use-package geiser
+        :config
+        (setq geiser-active-implementations '(chicken guile racket)))
+    #+END_SRC
+
 
 ** Hex colors
    Borrowed from [[http://www.emacswiki.org/emacs/HexColour][Emacs wiki]].
