@@ -197,14 +197,20 @@
           (if (s-blank? env-term)
               "xterm" env-term)))
 
+      (defun iterm2 (&rest args)
+        (osascript-run-str
+         (concat
+          "tell app \"iTerm\"\n"
+          "create window with default profile command \"/usr/local/bin/zsh -c '"
+          "eval `/usr/libexec/path_helper -s`"
+          (mapconcat 'identity args " ")
+          "'\"\n"
+          "end tell")))
+
       (defun ext-terminal (wd &rest args)
         (if osx?
-            (osascript-run-str
-             (concat
-              "tell app \"Terminal\" to do script \""
-              " cd " wd " && "
-              (mapconcat 'identity args " ")
-              " && exit\""))
+            (iterm2 "cd" wd "&&"
+                    (mapconcat 'identity args " "))
           (progn
             (apply #'call-process
                    (get-env-terminal)
