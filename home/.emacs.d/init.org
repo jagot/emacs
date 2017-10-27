@@ -562,7 +562,7 @@
        :init
        (progn
          (setq linum-format "%3d ")
-         (global-linum-mode t)))
+         (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))))
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
