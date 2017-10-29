@@ -39,6 +39,7 @@
 (depends-on "ctable")
 (depends-on "cuda-mode")
 (depends-on "dash")
+(depends-on "dash-functional")
 (depends-on "define-word")
 (depends-on "diminish")
 (depends-on "dired-k")
