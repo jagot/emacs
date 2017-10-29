@@ -315,6 +315,11 @@
      (global-prettify-symbols-mode 1)
 
      (setf epa-pinentry-mode 'loopback)
+
+     ;; Helps with colors of certain webpages (e.g. Google), when viewed in
+     ;; eww (from
+     ;; https://emacs.stackexchange.com/questions/2955/how-to-customize-background-color-for-some-web-pages-opened-with-eww)
+     (setq shr-color-visible-luminance-min 80)
    #+END_SRC
 ** Mode line
    #+BEGIN_SRC emacs-lisp
