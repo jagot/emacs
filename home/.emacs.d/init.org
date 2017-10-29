@@ -1379,6 +1379,8 @@
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-x p" 'org-toggle-latex-fragment)
+     (add-to-list 'org-latex-default-packages-alist '("" "maths" t) t)
+     (add-to-list 'org-latex-default-packages-alist '("" "physics" t) t)
    #+END_SRC
 ** Org download
    #+BEGIN_SRC emacs-lisp
