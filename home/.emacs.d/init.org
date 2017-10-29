@@ -567,7 +567,7 @@
 ** Theme
    #+BEGIN_SRC emacs-lisp
      (defvar emacs-theme)
-     (setq emacs-theme 'monokai)
+     (setq emacs-theme 'gruvbox-dark-medium)
      (load-theme emacs-theme t)
    #+END_SRC
 *** Fonts

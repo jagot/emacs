@@ -66,6 +66,7 @@
 (depends-on "go-mode")
 (depends-on "google-contacts")
 (depends-on "google-maps")
+(depends-on "gruvbox-theme")
 (depends-on "haml-mode")
 (depends-on "helm")
 (depends-on "helm-ag")
