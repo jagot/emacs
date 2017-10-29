@@ -1385,6 +1385,92 @@
      (use-package org-download)
    #+END_SRC
 
+* Library
+** BibTeX
+   #+BEGIN_SRC emacs-lisp
+     (setq bibtex-autokey-name-case-convert-function 'capitalize
+           bibtex-autokey-year-length 4
+           bibtex-autokey-year-title-separator ""
+           bibtex-autokey-titleword-length 5
+           bibtex-autokey-titleword-separator "")
+     (defvar bibliography-directory)
+     (defvar bibliography-file)
+     (defvar bibliography-notes-file)
+     (setq bibliography-directory (expand-file-name "~/references")
+           bibliography-file (concat bibliography-directory "/references-3.bib")
+           bibliography-notes-file (concat bibliography-directory "/notes.org"))
+   #+END_SRC
+
+*** Org-ref
+    #+BEGIN_SRC emacs-lisp
+      (setq reftex-default-bibliography (list bibliography-file))
+
+      ;; see org-ref for use of these variables
+      (setq org-ref-bibliography-notes bibliography-notes-file
+            org-ref-default-bibliography (list bibliography-file)
+            org-ref-pdf-directory (concat bibliography-directory "/pdfs")
+            org-ref-completion-library 'org-ref-ivy-cite)
+
+      (use-package org-ref)
+    #+END_SRC
+
+*** Ivy-bibtex
+    #+BEGIN_SRC emacs-lisp
+      (use-package ivy-bibtex
+        :init
+        (setq bibtex-completion-bibliography bibliography-file
+              bibtex-completion-library-path (concat bibliography-directory "/pdfs")
+              bibtex-completion-notes-path (concat bibliography-directory "/notes"))
+        :bind
+        (("C-c b" . ivy-bibtex)))
+    #+END_SRC
+
+*** Citation commands
+
+    #+BEGIN_SRC emacs-lisp
+      (org-add-link-type
+       "citep" 'ebib
+       (lambda (path desc format)
+         (cond
+          ((eq format 'html)
+           (format "(<cite>%s</cite>)" path))
+          ((eq format 'latex)
+           (if (or (not desc) (equal 0 (search "citep:" desc)))
+               (format "\\parencite{%s}" path)
+             (format "\\parencite[%s][%s]{%s}"
+                     (cadr (split-string desc ";"))
+                     (car (split-string desc ";"))  path))))))
+
+      (org-add-link-type
+       "citet" 'ebib
+       (lambda (path desc format)
+         (cond
+          ((eq format 'html)
+           (format "(<cite>%s</cite>)" path))
+          ((eq format 'latex)
+           (if (or (not desc) (equal 0 (search "citet:" desc)))
+               (format "\\textcite{%s}" path)
+             (format "\\textcite[%s][%s]{%s}"
+                     (cadr (split-string desc ";"))
+                     (car (split-string desc ";"))  path))))))
+    #+END_SRC
+** Pdf-tools
+   #+BEGIN_SRC emacs-lisp
+     (use-package pdf-tools
+       :init (progn
+               (setq pdf-view-midnight-colors
+                     (cons (face-attribute 'default :foreground)
+                           (face-attribute 'default :background)))
+               (if osx?
+                   (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
+               (pdf-tools-install)))
+   #+END_SRC
+
+** Interleave
+   #+BEGIN_SRC emacs-lisp
+     (use-package interleave)
+   #+END_SRC
+
 * Music
   #+BEGIN_SRC emacs-lisp
     (use-package simple-mpc
@@ -1394,75 +1480,7 @@
       :bind ("C-<f8>" . mingus))
   #+END_SRC
 
-* BibTeX
-  #+BEGIN_SRC emacs-lisp
-    (setq bibtex-autokey-name-case-convert-function 'capitalize
-          bibtex-autokey-year-length 4
-          bibtex-autokey-year-title-separator ""
-          bibtex-autokey-titleword-length 5
-          bibtex-autokey-titleword-separator "")
-    (defvar bibliography-directory)
-    (defvar bibliography-file)
-    (defvar bibliography-notes-file)
-    (setq bibliography-directory (expand-file-name "~/references")
-          bibliography-file (concat bibliography-directory "/references-3.bib")
-          bibliography-notes-file (concat bibliography-directory "/notes.org"))
-  #+END_SRC
-
-** Org-ref
-   #+BEGIN_SRC emacs-lisp
-     (setq reftex-default-bibliography (list bibliography-file))
-
-     ;; see org-ref for use of these variables
-     (setq org-ref-bibliography-notes bibliography-notes-file
-           org-ref-default-bibliography (list bibliography-file)
-           org-ref-pdf-directory bibliography-directory
-           org-ref-completion-library 'org-ref-ivy-cite)
-
-     (setq bibtex-completion-bibliography bibliography-file
-           bibtex-completion-library-path bibliography-directory
-           bibtex-completion-notes-path bibliography-directory)
-
-     ;; open pdf with system pdf viewer (works on mac)
-     (setq bibtex-completion-pdf-open-function
-       (lambda (fpath)
-         (start-process "open" "*open*" "open" fpath)))
-
-     (use-package org-ref)
-   #+END_SRC
-
-
-** Citation commands
-
-   #+BEGIN_SRC emacs-lisp
-     (org-add-link-type
-      "citep" 'ebib
-      (lambda (path desc format)
-        (cond
-         ((eq format 'html)
-          (format "(<cite>%s</cite>)" path))
-         ((eq format 'latex)
-          (if (or (not desc) (equal 0 (search "citep:" desc)))
-              (format "\\parencite{%s}" path)
-            (format "\\parencite[%s][%s]{%s}"
-                    (cadr (split-string desc ";"))
-                    (car (split-string desc ";"))  path))))))
-
-     (org-add-link-type
-      "citet" 'ebib
-      (lambda (path desc format)
-        (cond
-         ((eq format 'html)
-          (format "(<cite>%s</cite>)" path))
-         ((eq format 'latex)
-          (if (or (not desc) (equal 0 (search "citet:" desc)))
-              (format "\\textcite{%s}" path)
-            (format "\\textcite[%s][%s]{%s}"
-                    (cadr (split-string desc ";"))
-                    (car (split-string desc ";"))  path))))))
-   #+END_SRC
-
-* Calendar
+* COMMENT Calendar
   #+BEGIN_SRC emacs-lisp
     (use-package calfw
       :config
