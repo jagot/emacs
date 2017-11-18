@@ -1472,6 +1472,21 @@
                    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
    #+END_SRC
+** Textedit links
+   #+BEGIN_SRC emacs-lisp
+     (defun textedit-open (path)
+       (let* ((components (s-split ":" path))
+              (file-name (s-chop-prefix "//" (first components)))
+              (row (string-to-number (second components)))
+              (col (string-to-number (fourth components))))
+         (find-file-other-window file-name)
+         (goto-char (point-min))
+         (forward-line (1- row))
+         (forward-char (1- col))))
+
+     (org-add-link-type "textedit" 'textedit-open)
+   #+END_SRC
+
 
 ** Interleave
    #+BEGIN_SRC emacs-lisp
