@@ -1468,6 +1468,9 @@
                (setq pdf-view-midnight-colors
                      (cons (face-attribute 'default :foreground)
                            (face-attribute 'default :background)))
+               (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
+               (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
+               (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
                (if osx?
                    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
