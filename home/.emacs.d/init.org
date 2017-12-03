@@ -344,6 +344,9 @@
          (bind-key "C-j" 'newline)
          (bind-key "C-z" 'undo)
 
+         (bind-key "<f5>" 'revert-buffer)
+         (bind-key "C-c <f5>" 'auto-revert-mode)
+
          (bind-key "C-x C-b" 'ibuffer)
 
          ;; (bind-key "M-q") '(lambda () (interactive (fill-paragraph 60)))
