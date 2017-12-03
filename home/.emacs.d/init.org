@@ -1202,6 +1202,12 @@
      (add-hook 'LaTeX-mode-hook
                (lambda ()
                  (bind-key "C-c c" 'latex-start-latexmk LaTeX-mode-map)))
+
+     (use-package auctex-latexmk
+       :config
+       (progn
+         (auctex-latexmk-setup)
+         (setq auctex-latexmk-inherit-TeX-PDF-mode t)))
    #+END_SRC
 ** Ediff
    #+BEGIN_SRC emacs-lisp
@@ -1321,7 +1327,8 @@
         (shell . t)
         (ruby . t)
         (clojure . t)
-        (octave . t)))
+        (octave . t)
+        (latex . t)))
      (setq org-confirm-babel-evaluate nil)
      (use-package ob-clojure
        :defer t

@@ -12,6 +12,7 @@
 (depends-on "arduino-mode")
 (depends-on "async")
 (depends-on "auctex")
+(depends-on "auctex-latexmk")
 (depends-on "avy")
 (depends-on "bibretrieve")
 (depends-on "bind-key")
