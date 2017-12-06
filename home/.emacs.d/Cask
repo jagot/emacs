@@ -131,6 +131,7 @@
 (depends-on "queue")
 (depends-on "racer")
 (depends-on "rainbow-delimiters")
+(depends-on "rainbow-mode")
 (depends-on "rake")
 (depends-on "realgud")
 (depends-on "request")
