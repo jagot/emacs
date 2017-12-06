@@ -1278,16 +1278,17 @@
 ** Org functions
    Borrowed from [[http://wenshanren.org/?p=334][Ren Wenshan]].
    #+BEGIN_SRC emacs-lisp
+     (setq src-code-types
+           '("emacs-lisp" "python" "julia" "C" "sh" "java" "js" "clojure" "C++" "css"
+             "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+             "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+             "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+             "scheme" "sqlite"))
+
      (defun org-insert-src-block (src-code-type)
        "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
        (interactive
-        (let ((src-code-types
-               '("emacs-lisp" "python" "julia" "C" "sh" "java" "js" "clojure" "C++" "css"
-                 "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
-                 "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
-                 "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-                 "scheme" "sqlite")))
-          (list (ido-completing-read "Source code type: " src-code-types))))
+        (list (ido-completing-read "Source code type: " src-code-types)))
        (progn
          (newline-and-indent)
          (insert (format "#+BEGIN_SRC %s\n" src-code-type))
@@ -1296,6 +1297,16 @@
          (forward-line -2)
          (org-edit-src-code)))
      (bind-key "C-c s" 'org-insert-src-block org-mode-map)
+
+     (defun org-insert-session-header (src-code-type)
+       "Insert a session header for the current Org file."
+       (interactive
+        (list (ido-completing-read "Source code type: " src-code-types)))
+       (progn
+         (newline-and-indent)
+         (insert (format "#+PROPERTY: header-args:%s :session *%s-%s*\n"
+                         src-code-type src-code-type (f-base buffer-file-name)))))
+     (bind-key "C-c C-s" 'org-insert-session-header org-mode-map)
    #+END_SRC
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
