@@ -1507,7 +1507,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package interleave)
    #+END_SRC
-
 * Music
   #+BEGIN_SRC emacs-lisp
     (use-package simple-mpc
@@ -1515,6 +1514,19 @@
 
     (use-package mingus
       :bind ("C-<f8>" . mingus))
+  #+END_SRC
+
+* Zonity
+  #+BEGIN_SRC emacs-lisp
+    (use-package zone-matrix)
+    (use-package zone-rainbow)
+    (use-package zone-matrix-settings
+      :config
+      (zone-matrix-settings))
+    (setq zone-programs [zone-rainbow
+                         zone-matrix])
+
+    (zone-when-idle (* 3 60))
   #+END_SRC
 
 * COMMENT Calendar
