@@ -1,3 +1,6 @@
 [submodule "lyqi"]
 	path = home/.emacs.d/lyqi
 	url = https://github.com/nsceaux/lyqi.git
+[submodule "home/.emacs.d/coverage"]
+	path = home/.emacs.d/coverage
+	url = git@github.com:google/coverage.git

@@ -799,6 +799,21 @@
          ))
    #+END_SRC
 
+** Coverage
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path (expand-file-name "coverage" user-emacs-directory))
+     (require 'coverage)
+
+     (defun cov-toggle (arg)
+       (interactive "p")
+       (if (= arg 4)
+           (cov-hide)
+         (cov-show)))
+
+     (bind-key "C-x c" 'cov-toggle)
+   #+END_SRC
+
+
 ** C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
@@ -941,6 +956,19 @@
                              (append '((company-math-symbols-unicode))
                                      company-backends))))
    #+END_SRC
+   
+*** Julia coverage
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'julia-mode-hook
+                (lambda ()
+                  (setq-local cov-source-for-file-func
+                              (lambda (filename)
+                                (let* ((cov-file (first (f-glob "lcov.info" (f-dirname filename)))))
+                                  (if cov-file
+                                      `(lcov . ,cov-file)
+                                    nil))))))
+    #+END_SRC
+
 
 ** Lisps
    #+BEGIN_SRC emacs-lisp
