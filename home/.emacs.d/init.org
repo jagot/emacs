@@ -33,52 +33,126 @@
    #+END_SRC
 
 ** Packages
-   [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][./Cask]]), [[https://github.com/jwiegley/use-package][use-package]]
-   for lazy-loading of packages.
+*** COMMENT Cask
+    [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][./Cask]]), [[https://github.com/jwiegley/use-package][use-package]]
+    for lazy-loading of packages.
+    #+BEGIN_SRC emacs-lisp
+      ;; (require 'cask "~/.cask/cask.el")
+      (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+      (cask-initialize)
+      (require 'use-package)
+      (use-package pallet
+	:init (pallet-mode))
+      (use-package dash)
+      (use-package s)
+    #+END_SRC
+
+*** Straight
+    #+BEGIN_SRC emacs-lisp
+      (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+	    (bootstrap-version 3))
+	(unless (file-exists-p bootstrap-file)
+	  (with-current-buffer
+	      (url-retrieve-synchronously
+	       "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	       'silent 'inhibit-cookies)
+	    (goto-char (point-max))
+	    (eval-print-last-sexp)))
+	(load bootstrap-file nil 'nomessage))
+
+	(straight-use-package 'use-package)
+	(setq straight-use-package-by-default t)
+    #+END_SRC
+** DashNS
    #+BEGIN_SRC emacs-lisp
-     (require 'cask "~/.cask/cask.el")
-     (cask-initialize)
-     (require 'use-package)
-     (use-package pallet
-       :init (pallet-mode))
      (use-package dash)
      (use-package s)
    #+END_SRC
+** Bind-keys
+   #+BEGIN_SRC emacs-lisp
+     (use-package bind-key)
+   #+END_SRC
+** Exec path
+   #+BEGIN_SRC emacs-lisp
+     (use-package exec-path-from-shell)
+   #+END_SRC
+
 
 ** Org mode
    #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :bind (("C-c e" . LaTeX-environment)))
+     (require 'subr-x)
+     (straight-use-package 'git)
+
+     (defun org-git-version ()
+       "The Git version of org-mode.
+     Inserted by installing org-mode or when a release is made."
+       (require 'git)
+       (let ((git-repo (expand-file-name
+			"straight/repos/org/" user-emacs-directory)))
+	 (string-trim
+	  (git-run "describe"
+		   "--match=release\*"
+		   "--abbrev=6"
+		   "HEAD"))))
+
+     (defun org-release ()
+       "The release version of org-mode.
+     Inserted by installing org-mode or when a release is made."
+       (require 'git)
+       (let ((git-repo (expand-file-name
+			"straight/repos/org/" user-emacs-directory)))
+	 (string-trim
+	  (string-remove-prefix
+	   "release_"
+	   (git-run "describe"
+		    "--match=release\*"
+		    "--abbrev=0"
+		    "HEAD")))))
+
+     (provide 'org-version)
+
+     (straight-use-package 'org-plus-contrib)
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+      (use-package org
+        :bind (("C-c e" . LaTeX-environment)))
    #+END_SRC
 
 ** Org tangle configuration
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
-     (use-package ob-tangle)
+      (use-package ob-tangle
+	:straight nil)
 
-     (setq init-file (file-truename (concat user-emacs-directory "init.org")))
-     (setq init-file-el (file-truename (concat user-emacs-directory "init.el")))
-     (setq init-file-bc (file-truename (concat init-file-el "c")))
+      (setq init-file (file-truename (concat user-emacs-directory "init.org")))
+      (setq init-file-el (file-truename (concat user-emacs-directory "init.el")))
+      (setq init-file-bc (file-truename (concat init-file-el "c")))
 
-     (defun tangle-init ()
-       "Tangle the code-blocks of this file, and subsequently
-              byte-compile the result."
-       (progn
-         (org-babel-tangle-file init-file)
-         (byte-compile-file init-file-el)))
-     (add-hook 'after-save-hook (lambda ()
-                                  (when (member (buffer-file-name)
-                                                (list (file-truename init-file)
-                                                      (expand-file-name init-file)))
-                                    (tangle-init))))
-
-     (when (or
-            (and
-             (file-exists-p init-file-bc)
-             (file-newer-than-file-p init-file init-file-bc))
-            (not (file-exists-p init-file-bc)))
-       (tangle-init))
+      (defun tangle-init ()
+	"Tangle the code-blocks of this file, and subsequently
+	       byte-compile the result."
+	(progn
+	  (org-babel-tangle-file init-file)
+	  (byte-compile-file init-file-el)))
    #+END_SRC
+
+*** Auto-tangling
+    #+BEGIN_SRC emacs-lisp
+       (add-hook 'after-save-hook (lambda ()
+				    (when (member (buffer-file-name)
+						  (list (file-truename init-file)
+							(expand-file-name init-file)))
+				      (tangle-init))))
+
+       (when (or
+	      (and
+	       (file-exists-p init-file-bc)
+	       (file-newer-than-file-p init-file init-file-bc))
+	      (not (file-exists-p init-file-bc)))
+	 (tangle-init))
+    #+END_SRC
+
 ** Encoding
    #+BEGIN_SRC emacs-lisp
      (setq locale-coding-system 'utf-8)
@@ -100,12 +174,13 @@
      (use-package smartparens
        :init
        (progn
-         (smartparens-global-mode)
-         (sp-local-pair 'hy-mode "'" nil :actions nil)
-         (show-smartparens-global-mode t))
+	 (smartparens-global-mode)
+	 (sp-local-pair 'hy-mode "'" nil :actions nil)
+	 (show-smartparens-global-mode t))
        :bind (("C-M-S-p" . sp-add-to-previous-sexp)
-              ("C-M-S-n" . sp-add-to-next-sexp)))
-     (use-package smartparens-config)
+	      ("C-M-S-n" . sp-add-to-next-sexp)))
+     (use-package smartparens-config
+       :straight nil)
    #+END_SRC
 
 ** Spelling
@@ -278,6 +353,16 @@
                              (call-interactively 'define-word-at-point)))))
    #+END_SRC
 
+** View Large Files
+   #+BEGIN_SRC emacs-lisp
+     (use-package vlf)
+     (use-package vlf-setup
+       :straight nil
+       :config
+       (custom-set-variables
+        '(vlf-application 'dont-ask)))
+   #+END_SRC
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
@@ -299,11 +384,6 @@
 
      (use-package tramp)
 
-     (projectile-global-mode)
-     (setq projectile-mode-line
-           '(:eval (format " Projectile[%s]"
-                     (projectile-project-name))))
-
      (setq vc-follow-symlinks nil)
      (setq find-file-visit-truename t)
 
@@ -321,6 +401,26 @@
      ;; https://emacs.stackexchange.com/questions/2955/how-to-customize-background-color-for-some-web-pages-opened-with-eww)
      (setq shr-color-visible-luminance-min 80)
    #+END_SRC
+** Projectile
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile)
+     (projectile-global-mode)
+     (setq projectile-mode-line
+           '(:eval (format " Projectile[%s]"
+                     (projectile-project-name))))
+   #+END_SRC
+** Dashboard
+   #+BEGIN_SRC emacs-lisp
+     (use-package dashboard
+       :config
+       (progn
+         (dashboard-setup-startup-hook)
+         (setq dashboard-items '((recents  . 5)
+                                 (projects . 5)
+                                 (agenda . 5))
+               dashboard-startup-banner 'logo)))
+   #+END_SRC
+
 ** Mode line
    #+BEGIN_SRC emacs-lisp
      (use-package smart-mode-line
@@ -372,6 +472,7 @@
 *** Super/subscripts
     #+BEGIN_SRC emacs-lisp
       (use-package iso-transl
+        :straight nil
         :config
         (iso-transl-define-keys
          `(("^0" . ,(vector (decode-char 'ucs #x2070)))
@@ -574,9 +675,20 @@
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
-     (defvar emacs-theme)
-     (setq emacs-theme 'gruvbox-dark-medium)
-     (load-theme emacs-theme t)
+     (defvar emacs-dark-theme)
+     (defvar emacs-light-theme)
+     (use-package gruvbox-theme)
+     (setq emacs-dark-theme 'gruvbox-dark-medium)
+     (setq emacs-light-theme 'gruvbox-light-medium)
+     (load-theme emacs-dark-theme t)
+     (load-theme emacs-light-theme t)
+
+     (defun set-theme (theme)
+       (mapcar 'disable-theme custom-enabled-themes)
+       (enable-theme theme)
+       (sml/apply-theme 'respectful))
+
+     (set-theme emacs-dark-theme)
    #+END_SRC
 *** Fonts
      #+BEGIN_SRC emacs-lisp
@@ -609,13 +721,11 @@
         "Enable f-lux' darkroom-friendly colours."
         (interactive)
         (if (not in-darkroom)
-          (progn
-            (disable-theme emacs-theme)
-            (set-face-background 'hl-line hl-light-colour)
+            (progn
+              (set-theme emacs-light-theme)
             (setq in-darkroom 't))
           (progn
-            (enable-theme emacs-theme)
-            (set-face-background 'hl-line hl-dark-colour)
+            (set-theme emacs-dark-theme)
             (setq in-darkroom nil))))
       (bind-key "C-c d" 'toggle-darkroom)
     #+END_SRC
@@ -656,7 +766,7 @@
 ** Ivy/Counsel
 *** Ivy
     #+BEGIN_SRC emacs-lisp
-      (use-package ivy :ensure t
+      (use-package ivy
         :diminish (ivy-mode . "")
         :bind
         (:map ivy-mode-map
@@ -675,8 +785,8 @@
         (setq ivy-re-builders-alist
               ;; allow input not in order
               '((ivy-switch-buffer . ivy--regex-fuzzy)
-                (counsel-find-file . ivy--regex-fuzzy)
-                (counsel-M-x . ivy--regex-fuzzy)
+                (counsel-find-file . ivy--regex-plus)
+                (counsel-M-x . ivy--regex-plus)
                 (t   . ivy--regex-plus))))
       (use-package ivy-hydra)
       (setq ivy-switch-buffer-faces-alist
@@ -696,6 +806,10 @@
          ("C-c o" . counsel-outline)
          ("C-x 8 C-m" . counsel-unicode-char)
          ("C-:" . counsel-company)))
+
+      (use-package counsel-projectile
+        :config
+        (setq counsel-projectile-mode t))
     #+END_SRC
 
 *** Swiper
@@ -759,7 +873,7 @@
      (bind-key "<backtab>" 'calc-roll-up calc-mode-map)
    #+END_SRC
 
-* Helm
+* COMMENT Helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-config
       :bind ("C-c h" . helm-mini))
@@ -818,6 +932,7 @@
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+     (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
      (add-hook 'c-mode-common-hook
                (lambda ()
                  (company-mode)
@@ -922,7 +1037,9 @@
 
 ** ESS
    #+BEGIN_SRC emacs-lisp
-     (use-package ess-site)
+     (use-package ess)
+     (use-package ess-site
+       :straight nil)
    #+END_SRC
 
 ** Julia
@@ -1179,11 +1296,37 @@
                           (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O0 -g\")\n")
                           (insert "  add_definitions(\"-DDEBUG\")\n")
                           (insert "endif()\n\n")))))))
+
+     (use-package cmake-font-lock
+       :config
+       (progn
+         (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
+         (add-hook 'cmake-mode-hook 'cmake-font-lock-activate)))
+
+     (use-package cmake-ide
+       :config
+       (cmake-ide-setup))
+
+     (defun cmake-ide/c-c++-hook ()
+       (with-eval-after-load 'projectile
+         (setq cmake-ide-project-dir (projectile-project-root))
+         (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
+       (cmake-ide-load-db))
+     (add-hook 'c++-mode-hook #'cmake-ide/c-c++-hook)
+
+     (bind-key "C-c t c" 'cmake-ide-compile)
+     (bind-key "C-c t t" (lambda ()
+                           (interactive
+                            (compile
+                             (format "%s/tests/fsl-tests"
+                                      (cmake-ide--get-build-dir))))))
    #+END_SRC
-** LaTeX
+** COMMENT LaTeX
    #+BEGIN_SRC emacs-lisp
      (use-package tex-site
+       :straight nil
        :defer t)
+     (use-package auctex)
 
      (add-to-list 'auto-mode-alist '("\\.tikz$" . LaTeX-mode))
 
@@ -1243,6 +1386,7 @@
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
       (use-package lyqi
+        :straight nil
         :mode (("\\.ly$" . lyqi-mode)
                ("\\.ily$" . lyqi-mode))
         :init
@@ -1280,8 +1424,10 @@
      (add-hook 'org-mode-hook (lambda ()
                                 (linum-mode -1)))
 
-     (use-package org-mouse)
-     (use-package ox-beamer)
+     (use-package org-mouse
+       :straight nil)
+     (use-package ox-beamer
+       :straight nil)
    #+END_SRC
 ** Org keymap
    #+BEGIN_SRC emacs-lisp
@@ -1297,7 +1443,8 @@
 
 ** Org agenda
    #+BEGIN_SRC emacs-lisp
-     (use-package org-depend)
+     (use-package org-depend
+       :straight nil)
      (setq org-agenda-files '("~/org/todo.org" "~/org/notes.org"
                               "~/org/research.org" "~/org/teaching.org"
                               "~/org/lss.org"))
@@ -1352,9 +1499,19 @@
         (latex . t)))
      (setq org-confirm-babel-evaluate nil)
      (use-package ob-clojure
+       :straight nil
        :defer t
        :config (setq org-babel-clojure-backend 'cider))
-     (setq org-babel-julia-write-object-command "ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o);ob_julia_str(f::AbstractString,o)=open(f,\"w\") do file;write(file,string(o));end;ob_julia_str(\"%s\",%s)")
+     (setq org-babel-julia-write-object-command
+           (s-join ";"
+                   '("ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o)"
+                     "ob_julia_str(f::AbstractString,o::String)=open(f,\"w\") do file"
+                     "  write(file, o)"
+                     "end"
+                     "ob_julia_str(f::AbstractString,o)=open(f,\"w\") do file"
+                     "  show(file, \"text/plain\", o)"
+                     "end"
+                     "ob_julia_str(\"%s\",%s)")))
      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
    #+END_SRC
 ** Org export
@@ -1373,7 +1530,8 @@
 
 ** Org LaTeX export
    #+BEGIN_SRC emacs-lisp
-     (use-package ox-latex)
+     (use-package ox-latex
+       :straight nil)
      (setq org-latex-listings 'minted)
 
      ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
@@ -1386,7 +1544,7 @@
      ;; but adapted to use latexmk 4.20 or higher.
      (defun my-auto-tex-cmd (backend)
        "When exporting from .org with latex, automatically run latex,
-     pdflatex, or xelatex as appropriate, using latexmk."
+          pdflatex, or xelatex as appropriate, using latexmk."
        (let ((texcmd)))
        ;; default command: pdflatex
        (setq texcmd "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f")
@@ -1403,8 +1561,10 @@
        (setq org-latex-pdf-process (list texcmd)))
      (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
 
-     (use-package ox-bibtex)
-     (use-package ox-md)
+     (use-package ox-bibtex
+       :straight nil)
+     (use-package ox-md
+       :straight nil)
 
      (bind-key "C-c c" 'latex-start-latexmk org-mode-map)
    #+END_SRC
@@ -1473,7 +1633,6 @@
     #+END_SRC
 
 *** Citation commands
-
     #+BEGIN_SRC emacs-lisp
       (org-add-link-type
        "citep" 'ebib
@@ -1505,15 +1664,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package pdf-tools
        :init (progn
-               (setq pdf-view-midnight-colors
-                     (cons (face-attribute 'default :foreground)
-                           (face-attribute 'default :background)))
                (add-hook 'pdf-view-mode-hook 'pdf-view-midnight-minor-mode)
                (add-hook 'pdf-view-mode-hook 'pdf-view-auto-slice-minor-mode)
                (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
+               (add-hook 'pdf-view-mode-hook (lambda ()
+                                               (setq pdf-view-midnight-colors
+                                                     (cons (face-attribute 'default :foreground)
+                                                           (face-attribute 'default :background)))))
                (if osx?
-                   (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
+                   (setq pdf-tools-handle-upgrades nil
+                         pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
+     (require 'pdf-tools-extension)
    #+END_SRC
 ** Textedit links
    #+BEGIN_SRC emacs-lisp
@@ -1542,19 +1704,6 @@
 
     (use-package mingus
       :bind ("C-<f8>" . mingus))
-  #+END_SRC
-
-* Zonity
-  #+BEGIN_SRC emacs-lisp
-    (use-package zone-matrix)
-    (use-package zone-rainbow)
-    (use-package zone-matrix-settings
-      :config
-      (zone-matrix-settings))
-    (setq zone-programs [zone-rainbow
-                         zone-matrix])
-
-    (zone-when-idle (* 3 60))
   #+END_SRC
 
 * COMMENT Calendar

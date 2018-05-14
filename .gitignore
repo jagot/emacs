@@ -4,6 +4,7 @@
 .cask/
 auto-save-list/
 ac-comphist.dat
+straight/
 
 init.el
 init.html

@@ -22,7 +22,9 @@
         c-electric-slash
         c-electric-star
         comment-region
+        company-complete
         counsel-unicode-char
+        dired-mark
         ediff-mark-for-hiding-at-pos
         end-of-buffer
         end-of-defun
@@ -40,6 +42,7 @@
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
+        ibuffer-mark-for-delete
         indent-for-tab-command
         insert-char
         julia-latexsub-or-indent
@@ -61,6 +64,7 @@
         org-delete-char
         org-end-of-line
         org-export-dispatch
+        org-fill-paragraph
         org-force-self-insert
         org-kill-line
         org-preview-latex-fragment
@@ -70,12 +74,14 @@
         org-shiftright
         org-shifttab
         org-toggle-latex-fragment
+        org-transpose-words
         org-yank
         orgtbl-hijacker-command-109
         orgtbl-self-insert-command
         outshine-self-insert-command
         overwrite-mode
         reindent-then-newline-and-indent
+        sgml-slash
         sh-assignment
         sp--self-insert-command
         sp-add-to-previous-sexp
@@ -106,6 +112,7 @@
         mac-mwheel-scroll
         matlab-shell-save-and-go
         mouse-drag-mode-line
+        org-edit-special
         org-export-dispatch
         org-mouse-down-mouse
         sp-remove-active-pair-overlay
