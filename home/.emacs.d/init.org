@@ -1095,6 +1095,7 @@
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
+     (add-to-list 'auto-mode-alist '("\\.kicad_mod\\'" . lisp-mode))
      (add-hook 'inferior-lisp-mode-hook (lambda () (rainbow-delimiters-mode 0)))
      (add-hook 'lisp-mode-common-hook
                (lambda ()
@@ -1414,6 +1415,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package wc-mode)
      (setq wc-modeline-format "WC[%W%w/%tw|%C%c/%tc]")
+   #+END_SRC
+
+** Docker
+   #+BEGIN_SRC emacs-lisp
+     (use-package dockerfile-mode)
+     (use-package docker)
+   #+END_SRC
+
+** Groovy/Jenkins
+   #+BEGIN_SRC emacs-lisp
+     (use-package groovy-mode
+       :mode (("Jenkinsfile\\'" . groovy-mode)))
    #+END_SRC
 
 * Org
