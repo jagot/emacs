@@ -33,20 +33,6 @@
    #+END_SRC
 
 ** Packages
-*** COMMENT Cask
-    [[https://github.com/cask/cask][Cask]] is used for external dependencies (see [[file:Cask][./Cask]]), [[https://github.com/jwiegley/use-package][use-package]]
-    for lazy-loading of packages.
-    #+BEGIN_SRC emacs-lisp
-      ;; (require 'cask "~/.cask/cask.el")
-      (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
-      (cask-initialize)
-      (require 'use-package)
-      (use-package pallet
-	:init (pallet-mode))
-      (use-package dash)
-      (use-package s)
-    #+END_SRC
-
 *** Straight
     #+BEGIN_SRC emacs-lisp
       (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
@@ -881,14 +867,6 @@
      (bind-key "<backtab>" 'calc-roll-up calc-mode-map)
    #+END_SRC
 
-* COMMENT Helm
-  #+BEGIN_SRC emacs-lisp
-    (use-package helm-config
-      :bind ("C-c h" . helm-mini))
-    (use-package helm-ag
-      :bind ("C-c C-a" . helm-do-ag))
-  #+END_SRC
-
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp
@@ -923,8 +901,8 @@
 
 ** Coverage
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'load-path (expand-file-name "coverage" user-emacs-directory))
-     (require 'coverage)
+     (use-package coverage
+       :straight (coverage :type git :host github :repo "google/coverage"))
 
      (defun cov-toggle (arg)
        (interactive "p")
@@ -1159,7 +1137,7 @@
        (when (and opam-share (file-directory-p opam-share))
          ;; Register Merlin
          (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-         (require 'ocp-indent)
+         (use-package ocp-indent)
          (autoload 'merlin-mode "merlin" nil t nil)
          ;; Automatically start it in OCaml buffers
          (add-hook 'tuareg-mode-hook 'merlin-mode t)
@@ -1179,6 +1157,7 @@
 
 ** Ruby
    #+BEGIN_SRC emacs-lisp
+     (use-package rvm)
      (use-package ruby-mode
        :mode "\\.rb\\'"
        :config (progn
@@ -1262,7 +1241,7 @@
 * Modes
   Misc modes
   #+BEGIN_SRC emacs-lisp
-    (use-package matlab
+    (use-package matlab-mode
       :mode (("\\.m\\'" . matlab-mode)))
 
     (autoload 'gedcom-mode "gedcom")
@@ -1696,7 +1675,8 @@
                    (setq pdf-tools-handle-upgrades nil
                          pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
-     (require 'pdf-tools-extension)
+     (use-package pdf-tools-extension
+       :straight nil)
    #+END_SRC
 ** Textedit links
    #+BEGIN_SRC emacs-lisp
@@ -1727,30 +1707,3 @@
       :bind ("C-<f8>" . mingus))
   #+END_SRC
 
-* COMMENT Calendar
-  #+BEGIN_SRC emacs-lisp
-    (use-package calfw
-      :config
-      (progn
-        (use-package calfw-ical)
-        (use-package calfw-org)
-        (setq cfw:fchar-junction ?╬
-              cfw:fchar-vertical-line ?║
-              cfw:fchar-horizontal-line ?═
-              cfw:fchar-left-junction ?╠
-              cfw:fchar-right-junction ?╣
-              cfw:fchar-top-junction ?╦
-              cfw:fchar-top-left-corner ?╔
-              cfw:fchar-top-right-corner ?╗)
-        (setq calendar-week-start-day 1)
-        (setq calendar-sources (list
-                                (cfw:org-create-source "Blue")))
-        (let ((calendar-file (concat user-emacs-directory "calfw-conf.el")))
-          (if (f-exists? calendar-file)
-              (load calendar-file)))
-        (defun my-open-calendar ()
-          (interactive)
-          (cfw:open-calendar-buffer
-           :contents-sources calendar-sources)))
-      :bind (("C-x q" . my-open-calendar)))
-  #+END_SRC
