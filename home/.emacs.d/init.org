@@ -431,7 +431,10 @@
      (use-package smart-mode-line
        :init (progn
                (sml/setup)
-               (sml/apply-theme 'respectful)))
+               (sml/apply-theme 'respectful)
+               (add-to-list 'sml/replacer-regexp-list '("^~/work/projects/quantum" ":WPQ:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^~/work/projects" ":WP:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^~/work/" ":W:") t)))
      (setq display-time-day-and-date 1)
      (setq display-time-24hr-format 1)
      (display-time-mode 1)
