@@ -1706,4 +1706,9 @@
     (use-package mingus
       :bind ("C-<f8>" . mingus))
   #+END_SRC
-
+* Site
+  #+BEGIN_SRC emacs-lisp
+    (let ((site-el (f-join user-emacs-directory "site.el")))
+      (if (f-exists? site-el)
+          (load-file site-el)))
+  #+END_SRC

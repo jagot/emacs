@@ -11,6 +11,8 @@ init.html
 init.pdf
 init.tex
 
+site.el
+
 calfw-conf.el
 
 projectile-bookmarks.eld
