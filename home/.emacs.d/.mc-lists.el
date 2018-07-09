@@ -66,6 +66,7 @@
         org-export-dispatch
         org-fill-paragraph
         org-force-self-insert
+        org-insert-src-block
         org-kill-line
         org-preview-latex-fragment
         org-return
@@ -86,6 +87,7 @@
         sp--self-insert-command
         sp-add-to-previous-sexp
         sp-wrap-cancel
+        tex-handle-newline
         transpose-words
         wdired-capitalize-word
         wdired-downcase-word
@@ -98,6 +100,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ace-window
         backward-sentence
         balance-windows
         ess-load-file
