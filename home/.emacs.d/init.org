@@ -1747,6 +1747,64 @@
     (use-package mingus
       :bind ("C-<f8>" . mingus))
   #+END_SRC
+* Mail
+** Password management
+   #+BEGIN_SRC emacs-lisp
+     (use-package password-store)
+     (use-package auth-source
+       :init
+       (progn
+         ;;(setq auth-source-debug t)
+         (setq auth-source-do-cache t)))
+
+     (use-package auth-source-pass
+       :after auth-source
+       :init
+       (progn
+         (auth-source-pass-enable)))
+     (use-package pass)
+   #+END_SRC
+** SMTP
+   #+BEGIN_SRC emacs-lisp
+     (use-package smtpmail)
+     ;; (setq smtpmail-debug-info t)
+
+     (setq
+      send-mail-function 'message-smtpmail-send-it
+      message-send-mail-function 'message-smtpmail-send-it)
+   #+END_SRC
+** Mu4e
+   Mu4e contexts defined in =site.el=, not checked in.
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'load-path
+                  (if osx?
+                      "/usr/local/share/emacs/site-lisp/mu/mu4e"
+                    "/usr/share/emacs/site-lisp/mu/mu4e"))
+     (require 'mu4e)
+     (require 'org-mu4e)
+     (setq mail-user-agent 'mu4e-user-agent)
+     (setq mu4e-change-filenames-when-moving t)
+
+     ;; (use-package mu4e-conversation
+     ;;   :straight (mu4e-conversation :type git :host gitlab :repo "ambrevar/mu4e-conversation")
+     ;;   :config
+     ;;   (global-mu4e-conversation-mode))
+
+     (setq mu4e-completing-read-function 'completing-read
+           message-kill-buffer-on-exit t
+           mu4e-context-policy 'pick-first
+           mu4e-confirm-quit nil
+           mu4e-compose-format-flowed t
+           mu4e-compose-in-new-frame t
+           mu4e-headers-date-format "%Y-%m-%d %H:%M"
+           mu4e-view-show-addresses 't
+           mu4e-get-mail-command "mbsync -a"
+           org-mu4e-convert-to-html t
+           mu4e-use-fancy-chars t
+           mu4e-attachment-dir "~/Downloads"
+           mu4e-view-show-images t)
+   #+END_SRC
+
 * Site
   #+BEGIN_SRC emacs-lisp
     (let ((site-el (f-join user-emacs-directory "site.el")))
