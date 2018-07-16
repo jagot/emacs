@@ -1803,8 +1803,41 @@
            mu4e-use-fancy-chars t
            mu4e-attachment-dir "~/Downloads"
            mu4e-view-show-images t)
-   #+END_SRC
 
+     ;; This hook is used to trigger opening the password storage before
+     ;; attempting to download any mail
+     (add-hook 'mu4e-update-pre-hook
+               (lambda ()
+                 (auth-source-pass-entries)))
+   #+END_SRC
+** Org-mime
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-mime)
+
+     (defun org-mime-org-buffer-htmlize ()
+       "Create an email buffer containing the current org-mode file
+       exported to html and encoded in both html and in org formats as
+       mime alternatives."
+       (interactive)
+       (org-mime-send-buffer 'html)
+       (message-goto-to))
+   #+END_SRC
+** Mu4e + Org-mime
+   #+BEGIN_SRC emacs-lisp
+     (defun mu4e-compose-org-mail ()
+       (interactive)
+       (mu4e-compose-new)
+       (org-mu4e-compose-org-mode))
+
+     (defun htmlize-and-send ()
+       "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+       (interactive)
+       (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+         (org-mime-htmlize)
+         (message-send-and-exit)))
+
+     (add-hook 'org-ctrl-c-ctrl-c-hook 'htmlize-and-send t)
+   #+END_SRC
 * Site
   #+BEGIN_SRC emacs-lisp
     (let ((site-el (f-join user-emacs-directory "site.el")))
