@@ -1738,6 +1738,11 @@
 ** Interleave
    #+BEGIN_SRC emacs-lisp
      (use-package interleave)
+     (setq bibtex-completion-notes-template-multiple-files
+           "#+TITLE: Notes on: ${author-or-editor} (${year}): ${title}
+
+     #+INTERLEAVE_PDF: ~/references/pdfs/${=key=}.pdf
+     ")
    #+END_SRC
 * Music
   #+BEGIN_SRC emacs-lisp
