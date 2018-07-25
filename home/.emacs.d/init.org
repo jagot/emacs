@@ -1069,6 +1069,8 @@
                  (setq-local company-backends
                              (append '((company-math-symbols-unicode))
                                      company-backends))))
+
+     (setq ess-smart-S-assign-key nil)
    #+END_SRC
    
 *** Julia coverage
