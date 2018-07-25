@@ -838,7 +838,7 @@
         :init
         (progn
           (dired-launch-enable)
-          (setq dired-launch-default-launcher '(opener))
+          (setq dired-launch-default-launcher `(,opener))
           (setf dired-launch-extensions-map '())))
     #+END_SRC
 
