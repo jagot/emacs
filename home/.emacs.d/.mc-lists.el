@@ -21,9 +21,11 @@
         c-electric-semi&comma
         c-electric-slash
         c-electric-star
+        comment-dwim
         comment-region
         company-complete
         counsel-unicode-char
+        dired-flag-file-deletion
         dired-mark
         ediff-mark-for-hiding-at-pos
         end-of-buffer
@@ -36,13 +38,16 @@
         ess-smart-S-assign
         ess-smart-comma
         ess-yank
+        eval-print-last-sexp
         f90-electric-insert
         f90-indent-new-line
         fill-paragraph
         forward-sexp
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
+        ibuffer-do-kill-lines
         ibuffer-mark-for-delete
+        ibuffer-mark-forward
         indent-for-tab-command
         insert-char
         julia-latexsub-or-indent
@@ -118,6 +123,7 @@
         org-edit-special
         org-export-dispatch
         org-mouse-down-mouse
+        org-open-at-mouse
         sp-remove-active-pair-overlay
         swiper
         swiper-mc
