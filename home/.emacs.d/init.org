@@ -1070,6 +1070,8 @@
                              (append '((company-math-symbols-unicode))
                                      company-backends))))
 
+     (defalias 'ess-smart-S-assign #'self-insert-command)
+
      (setq ess-smart-S-assign-key nil)
    #+END_SRC
    
