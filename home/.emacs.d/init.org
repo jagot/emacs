@@ -1528,14 +1528,11 @@
        :config (setq org-babel-clojure-backend 'cider))
      (setq org-babel-julia-write-object-command
            (s-join ";"
-                   '("ob_julia_str{T<:Array}(f::AbstractString,o::T)=writecsv(f,o)"
-                     "ob_julia_str(f::AbstractString,o::String)=open(f,\"w\") do file"
-                     "  write(file, o)"
-                     "end"
-                     "ob_julia_str(f::AbstractString,o)=open(f,\"w\") do file"
+                   '("ob_julia_str(f::AbstractString,o)=open(f,\"w\") do file"
                      "  show(file, \"text/plain\", o)"
                      "end"
-                     "ob_julia_str(\"%s\",%s)")))
+                     "ob_julia_str(\"%s\",%s)"))
+           )
      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
    #+END_SRC
 ** Org export
