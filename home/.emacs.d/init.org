@@ -81,26 +81,26 @@
      Inserted by installing org-mode or when a release is made."
        (require 'git)
        (let ((git-repo (expand-file-name
-			"straight/repos/org/" user-emacs-directory)))
-	 (string-trim
-	  (git-run "describe"
-		   "--match=release\*"
-		   "--abbrev=6"
-		   "HEAD"))))
+                        "straight/repos/org/" user-emacs-directory)))
+         (string-trim
+          (git-run "describe"
+                   "--match=release\*"
+                   "--abbrev=6"
+                   "HEAD"))))
 
      (defun org-release ()
        "The release version of org-mode.
      Inserted by installing org-mode or when a release is made."
        (require 'git)
        (let ((git-repo (expand-file-name
-			"straight/repos/org/" user-emacs-directory)))
-	 (string-trim
-	  (string-remove-prefix
-	   "release_"
-	   (git-run "describe"
-		    "--match=release\*"
-		    "--abbrev=0"
-		    "HEAD")))))
+                        "straight/repos/org/" user-emacs-directory)))
+         (string-trim
+          (string-remove-prefix
+           "release_"
+           (git-run "describe"
+                    "--match=release\*"
+                    "--abbrev=0"
+                    "HEAD")))))
 
      (provide 'org-version)
 
@@ -116,34 +116,34 @@
    Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
    #+BEGIN_SRC emacs-lisp
       (use-package ob-tangle
-	:straight nil)
+        :straight nil)
 
       (setq init-file (file-truename (concat user-emacs-directory "init.org")))
       (setq init-file-el (file-truename (concat user-emacs-directory "init.el")))
       (setq init-file-bc (file-truename (concat init-file-el "c")))
 
       (defun tangle-init ()
-	"Tangle the code-blocks of this file, and subsequently
-	       byte-compile the result."
-	(progn
-	  (org-babel-tangle-file init-file)
-	  (byte-compile-file init-file-el)))
+        "Tangle the code-blocks of this file, and subsequently
+               byte-compile the result."
+        (progn
+          (org-babel-tangle-file init-file)
+          (byte-compile-file init-file-el)))
    #+END_SRC
 
 *** Auto-tangling
     #+BEGIN_SRC emacs-lisp
        (add-hook 'after-save-hook (lambda ()
-				    (when (member (buffer-file-name)
-						  (list (file-truename init-file)
-							(expand-file-name init-file)))
-				      (tangle-init))))
+                                    (when (member (buffer-file-name)
+                                                  (list (file-truename init-file)
+                                                        (expand-file-name init-file)))
+                                      (tangle-init))))
 
        (when (or
-	      (and
-	       (file-exists-p init-file-bc)
-	       (file-newer-than-file-p init-file init-file-bc))
-	      (not (file-exists-p init-file-bc)))
-	 (tangle-init))
+              (and
+               (file-exists-p init-file-bc)
+               (file-newer-than-file-p init-file init-file-bc))
+              (not (file-exists-p init-file-bc)))
+         (tangle-init))
     #+END_SRC
 
 ** Encoding
@@ -167,11 +167,11 @@
      (use-package smartparens
        :init
        (progn
-	 (smartparens-global-mode)
-	 (sp-local-pair 'hy-mode "'" nil :actions nil)
-	 (show-smartparens-global-mode t))
+         (smartparens-global-mode)
+         (sp-local-pair 'hy-mode "'" nil :actions nil)
+         (show-smartparens-global-mode t))
        :bind (("C-M-S-p" . sp-add-to-previous-sexp)
-	      ("C-M-S-n" . sp-add-to-next-sexp)))
+              ("C-M-S-n" . sp-add-to-next-sexp)))
      (use-package smartparens-config
        :straight nil)
    #+END_SRC
@@ -192,22 +192,22 @@
      (use-package yasnippet
        :init
        (progn
-	 (yas-global-mode 1)
-	 (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-	   (when (featurep 'popup)
-	     (popup-menu*
-	      (mapcar
-	       (lambda (choice)
-		 (popup-make-item
-		  (or (and display-fn (funcall display-fn choice))
-		      choice)
-		  :value choice))
-	       choices)
-	      :prompt prompt
-	      ;; start isearch mode immediately
-	      :isearch t
-	      )))
-	 (setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))))
+         (yas-global-mode 1)
+         (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+           (when (featurep 'popup)
+             (popup-menu*
+              (mapcar
+               (lambda (choice)
+                 (popup-make-item
+                  (or (and display-fn (funcall display-fn choice))
+                      choice)
+                  :value choice))
+               choices)
+              :prompt prompt
+              ;; start isearch mode immediately
+              :isearch t
+              )))
+         (setq yas-prompt-functions '(yas-popup-isearch-prompt yas-ido-prompt yas-no-prompt))))
    #+END_SRC
 
 ** Terminal
@@ -261,31 +261,31 @@
     command there.
     #+BEGIN_SRC emacs-lisp
       (defun get-env-terminal ()
-	(let ((env-term (exec-path-from-shell-getenv "TERMINAL")))
-	  (if (s-blank? env-term)
-	      "xterm" env-term)))
+        (let ((env-term (exec-path-from-shell-getenv "TERMINAL")))
+          (if (s-blank? env-term)
+              "xterm" env-term)))
 
       (defun iterm2 (&rest args)
-	(osascript-run-str
-	 (concat
-	  "tell app \"iTerm\"\n"
-	  "create window with default profile command \"/usr/local/bin/zsh -c '"
-	  "eval `/usr/libexec/path_helper -s`"
-	  (mapconcat 'identity args " ")
-	  "'\"\n"
-	  "end tell")))
+        (osascript-run-str
+         (concat
+          "tell app \"iTerm\"\n"
+          "create window with default profile command \"/usr/local/bin/zsh -c '"
+          "eval `/usr/libexec/path_helper -s`"
+          (mapconcat 'identity args " ")
+          "'\"\n"
+          "end tell")))
 
       (defun ext-terminal (wd &rest args)
-	(if osx?
-	    (iterm2 "cd" wd "&&"
-		    (mapconcat 'identity args " "))
-	  (progn
-	    (apply #'call-process
-		   (get-env-terminal)
-		   nil 0 nil "-e" (list "/bin/zsh" "-c" (mapconcat 'identity args " "))))))
+        (if osx?
+            (iterm2 "cd" wd "&&"
+                    (mapconcat 'identity args " "))
+          (progn
+            (apply #'call-process
+                   (get-env-terminal)
+                   nil 0 nil "-e" (list "/bin/zsh" "-c" (mapconcat 'identity args " "))))))
 
       (defun ext-cmd-wrap-string (s)
-	(concat "\\\"" s "\\\""))
+        (concat "\\\"" s "\\\""))
     #+END_SRC
 
 ** Web server
@@ -305,22 +305,22 @@
      URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'"
        (interactive)
        (let ((file-list
-	      (if (string-equal major-mode "dired-mode")
-		  (dired-get-marked-files)
-		(list (buffer-file-name)))))
-	 (when (if (<= (length file-list) 5)
-		   t
-		 (y-or-n-p "Open more than 5 files? "))
-	   (mapc
-	    (lambda (file-path)
-	      (call-process opener nil 0 nil file-path))
-	    file-list))))
+              (if (string-equal major-mode "dired-mode")
+                  (dired-get-marked-files)
+                (list (buffer-file-name)))))
+         (when (if (<= (length file-list) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files? "))
+           (mapc
+            (lambda (file-path)
+              (call-process opener nil 0 nil file-path))
+            file-list))))
      (bind-key "C-M-o" 'open-in-external-app dired-mode-map)
 
      (when osx? (setq insert-directory-program "/usr/local/bin/gls"))
      (eval-after-load "dired-aux"
        '(add-to-list 'dired-compress-file-suffixes
-		     '("\\.zip\\'" ".zip" "unzip")))
+                     '("\\.zip\\'" ".zip" "unzip")))
    #+END_SRC
 
 *** PATH variable
@@ -1075,7 +1075,7 @@
 
      (setq ess-smart-S-assign-key nil)
    #+END_SRC
-   
+
 *** Julia coverage
     #+BEGIN_SRC emacs-lisp
       (add-hook 'julia-mode-hook
