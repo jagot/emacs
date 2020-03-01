@@ -45,3 +45,4 @@ ltxpng/
 /home/.emacs.d/transient/
 /home/.emacs.d/var/
 games/
+/home/.emacs.d/.lsp-session*

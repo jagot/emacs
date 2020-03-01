@@ -1228,23 +1228,39 @@
      (use-package bundler)
    #+END_SRC
 
+** Language Server Protocol
+   #+BEGIN_SRC emacs-lisp
+     ;; Ref: https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
+
+     (use-package lsp-mode
+       :commands lsp
+       :requires lsp-clients
+       :config
+       (setq lsp-prefer-flymake nil))
+
+     (use-package lsp-ui
+       :requires lsp-mode flycheck
+       :config
+       (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+     (use-package company-lsp
+       :requires company
+       :config
+       (push 'company-lsp company-backends)
+
+       ;; Disable client-side cache because the LSP server does a better job.
+       (setq company-transformers nil
+             company-lsp-async t
+             company-lsp-cache-candidates nil))
+   #+END_SRC
+
 ** Rust
    #+BEGIN_SRC emacs-lisp
-     (use-package racer
-       :init
-       (add-hook 'racer-mode-hook #'eldoc-mode)
-       (add-hook 'racer-mode-hook #'company-mode))
-
      (use-package rust-mode
        :bind (:map rust-mode-map
-                   ("C-c c" . compile)
+                   ("C-c c" . rust-run)
                    ("TAB" . company-indent-or-complete-common))
-       :init
-       (add-hook 'rust-mode-hook #'racer-mode)
-       (add-hook 'rust-mode-hook
-                 (lambda ()
-                   (set (make-local-variable 'compile-command)
-                        "cargo run"))))
+       :hook (rust-mode . lsp))
    #+END_SRC
 
 ** Web development
@@ -1486,6 +1502,10 @@
 ** YAML
    #+BEGIN_SRC emacs-lisp
      (use-package yaml-mode)
+   #+END_SRC
+** TOML
+   #+BEGIN_SRC emacs-lisp
+     (use-package toml-mode)
    #+END_SRC
 
 * Org
