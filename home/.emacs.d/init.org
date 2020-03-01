@@ -1263,6 +1263,20 @@
        :hook (rust-mode . lsp))
    #+END_SRC
 
+** Separedit
+   #+BEGIN_SRC emacs-lisp
+     (use-package separedit
+       :straight (separedit
+                  :type git :host github :repo "twlz0ne/separedit.el")
+       :bind (:map prog-mode-map
+                   ("C-c '" . separedit)
+                   :map ess-mode-map
+                   ("C-c '" . separedit))
+       :config
+       (setq separedit-default-mode 'markdown-mode))
+   #+END_SRC
+
+
 ** Web development
 *** Typescript
     #+BEGIN_SRC emacs-lisp
