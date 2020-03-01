@@ -67,8 +67,55 @@
 
 ** Transparency
    #+BEGIN_SRC emacs-lisp
-     (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
-     (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+     (defun find-matching-line (pattern lines)
+       (first (-filter
+               (lambda (l) (s-match pattern l))
+               (s-lines lines))))
+
+     (defun get-root-window-id ()
+       (let* ((line (find-matching-line
+                     "^_NET_SUPPORTING_WM_CHECK:"
+                     (shell-command-to-string "xprop -root -notype"))))
+         (nth 6 (s-split-words line))))
+
+     (defun get-window-manager ()
+       (let* ((root-window-id (get-root-window-id))
+              (line (find-matching-line
+                     "^_NET_WM_NAME"
+                     (shell-command-to-string
+                      (concat "xprop -id " root-window-id " -notype")))))
+         (s-chop-suffix "\"" (s-chop-prefix "\"" (nth 2 (s-split " " line))))))
+
+     (defvar frame-alpha 95)
+
+     (defun set-emacs-transparency (alpha)
+       (setq frame-alpha alpha)
+       (set-frame-parameter (selected-frame) 'alpha `(,frame-alpha . ,frame-alpha))
+       (add-to-list 'default-frame-alist `(alpha . (,frame-alpha . ,frame-alpha))))
+
+     (set-emacs-transparency 95)
+
+     (defun kwin-blur-emacs (id)
+       (interactive)
+       (shell-command
+        (concat "xprop -f _KDE_NET_WM_BLUR_BEHIND_REGION 32c -set _KDE_NET_WM_BLUR_BEHIND_REGION 0 -id " id ";")))
+
+     (defun get-emacs-window-ids ()
+       (-filter 's-numeric?
+                (s-lines (shell-command-to-string "xdotool search --class emacs"))))
+
+     (defun try-blur-emacs (alpha)
+       (let* ((wm (get-window-manager))
+              (blur-cmd
+               (cond ((s-equals? wm "KWin") 'kwin-blur-emacs)
+                     (t nil))))
+         (if blur-cmd
+             (progn
+               (mapcar (lambda (id) (funcall blur-cmd id)) (get-emacs-window-ids))
+               (set-emacs-transparency alpha)))))
+
+     (when (eq (window-system) 'x)
+       (try-blur-emacs 80))
    #+END_SRC
 
 ** Org mode
