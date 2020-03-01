@@ -35,19 +35,21 @@
 ** Packages
 *** Straight
     #+BEGIN_SRC emacs-lisp
-      (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-	    (bootstrap-version 3))
-	(unless (file-exists-p bootstrap-file)
-	  (with-current-buffer
-	      (url-retrieve-synchronously
-	       "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	       'silent 'inhibit-cookies)
-	    (goto-char (point-max))
-	    (eval-print-last-sexp)))
-	(load bootstrap-file nil 'nomessage))
+      (defvar bootstrap-version)
+      (let ((bootstrap-file
+             (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+            (bootstrap-version 5))
+        (unless (file-exists-p bootstrap-file)
+          (with-current-buffer
+              (url-retrieve-synchronously
+               "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+               'silent 'inhibit-cookies)
+            (goto-char (point-max))
+            (eval-print-last-sexp)))
+        (load bootstrap-file nil 'nomessage))
 
-	(straight-use-package 'use-package)
-	(setq straight-use-package-by-default t)
+      (straight-use-package 'use-package)
+      (setq straight-use-package-by-default t)
     #+END_SRC
 ** DashNS
    #+BEGIN_SRC emacs-lisp
@@ -913,7 +915,6 @@
      (bind-key "C-x c" 'cov-toggle)
    #+END_SRC
 
-
 ** C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
@@ -1087,7 +1088,6 @@
                                     nil))))))
     #+END_SRC
 
-
 ** Lisps
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.al\\'" . lisp-mode))
@@ -1124,7 +1124,6 @@
         :config
         (setq geiser-active-implementations '(chicken guile racket)))
     #+END_SRC
-
 
 ** Rainbow colors
    #+BEGIN_SRC emacs-lisp
@@ -1175,10 +1174,10 @@
      (use-package rvm)
      (use-package ruby-mode
        :mode "\\.rb\\'"
-       :config (progn
+       :config
+       (rvm-use-default))
                (use-package inf-ruby
-                 :init (inf-ruby-minor-mode)
-                 (rvm-use-default))))
+       :hook (ruby-mode . inf-ruby-minor-mode))
      (use-package bundler)
    #+END_SRC
 
@@ -1334,7 +1333,12 @@
      (use-package tex-site
        :straight nil
        :defer t)
-     (use-package auctex)
+     (use-package tex
+       :straight auctex
+       :defer t
+       :config
+       (setq TeX-auto-save t)
+       (setq TeX-parse-self t))
 
      (add-to-list 'auto-mode-alist '("\\.tikz$" . LaTeX-mode))
 
@@ -1471,9 +1475,12 @@
    #+BEGIN_SRC emacs-lisp
      (use-package org-depend
        :straight nil)
-     (setq org-agenda-files '("~/org/todo.org" "~/org/notes.org"
+     (setq org-agenda-files
+           (if (f-directory? "~/org")
+               '("~/org/todo.org" "~/org/notes.org"
                               "~/org/research.org" "~/org/teaching.org"
-                              "~/org/lss.org"))
+                 "~/org/lss.org")
+             '()))
    #+END_SRC
 
 ** Org functions
@@ -1598,7 +1605,7 @@
      (use-package outshine
        :init
        (progn
-         (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+         (add-hook 'outline-minor-mode-hook 'outshine-mode)
          (add-hook 'c-mode-common-hook 'outline-minor-mode)
          (add-hook 'sh-mode-common-hook 'outline-minor-mode)
          (add-hook 'julia-mode-hook 'outline-minor-mode)))
