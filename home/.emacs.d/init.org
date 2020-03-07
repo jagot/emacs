@@ -963,6 +963,13 @@
      (bind-key "<backtab>" 'calc-roll-up calc-mode-map)
    #+END_SRC
 
+*** CalcTeX
+    #+BEGIN_SRC emacs-lisp
+      (use-package calctex
+        :straight (calctex
+                   :type git :host github :repo "johnbcoughlin/calctex"))
+    #+END_SRC
+
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp
