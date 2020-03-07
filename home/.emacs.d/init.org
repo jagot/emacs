@@ -1486,12 +1486,6 @@
      (add-hook 'LaTeX-mode-hook
                (lambda ()
                  (bind-key "C-c c" 'latex-start-latexmk LaTeX-mode-map)))
-
-     (use-package auctex-latexmk
-       :config
-       (progn
-         (auctex-latexmk-setup)
-         (setq auctex-latexmk-inherit-TeX-PDF-mode t)))
    #+END_SRC
 ** Ediff
    #+BEGIN_SRC emacs-lisp
@@ -1698,20 +1692,23 @@
      (defun my-auto-tex-cmd (backend)
        "When exporting from .org with latex, automatically run latex,
           pdflatex, or xelatex as appropriate, using latexmk."
-       (let ((texcmd)))
-       ;; default command: pdflatex
-       (setq texcmd "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f")
-       ;; oldstyle latex via dvi
-       (if (string-match "LATEX_CMD: dvilatex" (buffer-string))
-           (setq texcmd "latexmk -dvi -pdfps %f"))
-       ;; xelatex -> .pdf
-       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-           (setq texcmd "latexmk -pdflatex='xelatex -shell-escape' -pdf %f"))
-       ;; lualatex -> .pdf
-       (if (string-match "LATEX_CMD: lualatex" (buffer-string))
-           (setq texcmd "latexmk -pdflatex='lualatex -shell-escape' -pdf %f"))
-       ;; LaTeX compilation command
-       (setq org-latex-pdf-process (list texcmd)))
+       (setq org-latex-pdf-process
+             (cond
+              ;; oldstyle latex via dvi
+              ((string-match "LATEX_CMD: dvilatex" (buffer-string))
+               "latexmk -dvi -pdfps %f")
+              ;; xelatex -> .pdf
+              ((string-match "LATEX_CMD: xelatex" (buffer-string))
+               "latexmk -pdflatex='xelatex -shell-escape' -pdf %f")
+              ;; lualatex-dev -> .pdf
+              ((string-match "LATEX_CMD: lualatex-dev" (buffer-string))
+               "latexmk -pdflatex='lualatex-dev -shell-escape' -pdf %f")
+              ;; lualatex -> .pdf
+              ((string-match "LATEX_CMD: lualatex" (buffer-string))
+               "latexmk -pdflatex='lualatex -shell-escape' -pdf %f")
+              ;; default command: pdflatex
+              (t "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f"))))
+
      (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
 
      (use-package ox-bibtex
