@@ -56,6 +56,22 @@
      (use-package dash)
      (use-package s)
    #+END_SRC
+** Append to list
+   Stolen from https://stackoverflow.com/a/24357106
+   #+BEGIN_SRC emacs-lisp
+     (defun append-to-list! (list-var elements)
+       "Append ELEMENTS to the end of LIST-VAR.
+
+     The return value is the new value of LIST-VAR."
+       (unless (consp elements)
+         (error "ELEMENTS must be a list"))
+       (let ((list (symbol-value list-var)))
+         (if list
+             (setcdr (last list) elements)
+           (set list-var elements)))
+       (symbol-value list-var))
+   #+END_SRC
+
 ** Bind-keys
    #+BEGIN_SRC emacs-lisp
      (use-package bind-key)
@@ -746,6 +762,40 @@
        (set-fontset-font t 'japanese-jisx0208
                          (font-spec :family "Kozuka Gothic Pr6N"))
      #+END_SRC
+**** Fira Code
+     #+BEGIN_SRC emacs-lisp
+       (defvar fira-code?)
+       (when osx?
+         (progn
+           (set-default-font "Fira Code Retina-15")
+           (setq mac-auto-operator-composition-characters "!\"#$%&'*+,-./:;<=>?@^_`|~")
+           (mac-auto-operator-composition-mode)
+           (setq fira-code? t)))
+     #+END_SRC
+**** Prettify symbols
+     #+BEGIN_SRC emacs-lisp
+       (defvar standard-prettify-symbols-alist)
+       (setq standard-prettify-symbols-alist
+             '(("&&" . ?∧)
+               ("||" . ?∨)))
+       (setq if-not-fira-code-prettify-symbols-alist
+             '(("!=" . ?≠)
+               ("<=" . ?≤)
+               (">=" . ?≥)))
+
+       (defun prettify-if-not-fira (in-any-case if-not-fira)
+         (let ((symbols-alist (if (not fira-code?)
+                                  (-snoc standard-prettify-symbols-alist
+                                         if-not-fira-code-prettify-symbols-alist)
+                                standard-prettify-symbols-alist)))
+           (if in-any-case
+               (append-to-list! 'symbols-alist in-any-case))
+           (if (not fira-code?)
+               (append-to-list! 'symbols-alist if-not-fira))
+           symbols-alist))
+     #+END_SRC
+
+
 *** Highlight current line
     #+BEGIN_SRC emacs-lisp
       (global-hl-line-mode 1)
@@ -973,12 +1023,7 @@
                  (company-mode)
                  (bind-key "C-c c" 'compile)
                  (setq prettify-symbols-alist
-                       '(("!=" . ?≠)
-                         ("<=" . ?≤)
-                         (">=" . ?≥)
-                         ("&&" . ?∧)
-                         ("||" . ?∨)
-                         ("M_PI" . ?π)))))
+                       (prettify-if-not-fira '(("M_PI" . ?π)) '()))))
      (defun start-debugger ()
        (interactive)
        (if (null cppcm-src-dir)
@@ -1089,13 +1134,7 @@
        :init (add-hook 'julia-mode-hook
                        (lambda ()
                          (setq prettify-symbols-alist
-                               '(("!=" . ?≠)
-                                 ("<=" . ?≤)
-                                 (">=" . ?≥)
-                                 ("&&" . ?∧)
-                                 ("||" . ?∨)
-                                 ("->" . ?↦)
-                                 ("=>" . ?⤇)))
+                               (prettify-if-not-fira '() '(("->" . ?↦) ("=>" . ?⤇))))
                          (setq-local company-backends
                                      (append '((company-math-symbols-unicode))
                                              company-backends))
