@@ -406,6 +406,8 @@
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
+     (setq confirm-kill-emacs 'y-or-n-p)
+
      (menu-bar-mode -1)
      (tool-bar-mode -1)
      (scroll-bar-mode -1)
@@ -781,7 +783,6 @@
               ("C-c C-<" . mc/mark-all-like-this)))
    #+END_SRC
 ** Magit
-
    #+BEGIN_SRC emacs-lisp
      (use-package magit
        :bind (("C-c m" . magit-status))
@@ -1121,6 +1122,8 @@
      (defalias 'ess-smart-S-assign #'self-insert-command)
 
      (setq ess-smart-S-assign-key nil)
+
+     (setq julia-max-block-lookback 20000)
    #+END_SRC
 
 *** Julia coverage
@@ -1333,7 +1336,6 @@
       (use-package haml-mode)
     #+END_SRC
 
-
 * Modes
   Misc modes
   #+BEGIN_SRC emacs-lisp
@@ -1410,6 +1412,7 @@
      (use-package tex-site
        :straight nil
        :defer t)
+
      (use-package tex
        :straight auctex
        :defer t
@@ -1754,7 +1757,8 @@
      (defvar bibliography-notes-file)
      (setq bibliography-directory (expand-file-name "~/references")
            bibliography-file (concat bibliography-directory "/references-3.bib")
-           bibliography-notes-file (concat bibliography-directory "/notes.org"))
+           bibliography-notes-file (concat bibliography-directory "/notes.org")
+           doi-utils-make-notes-function nil)
    #+END_SRC
 
 *** Org-ref
@@ -1832,6 +1836,8 @@
                    (setq pdf-tools-handle-upgrades nil
                          pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
+     (when osx?
+       (setq pdf-view-use-scaling t))
      (use-package pdf-tools-extension
        :straight nil)
    #+END_SRC

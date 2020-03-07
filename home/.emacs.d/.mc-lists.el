@@ -25,6 +25,7 @@
         comment-region
         company-complete
         counsel-unicode-char
+        count-words-region
         dired-flag-file-deletion
         dired-mark
         ediff-mark-for-hiding-at-pos
@@ -42,7 +43,9 @@
         f90-electric-insert
         f90-indent-new-line
         fill-paragraph
+        fortran-electric-line-number
         forward-sexp
+        haml-electric-backspace
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
         ibuffer-do-kill-lines
@@ -56,8 +59,13 @@
         lyqi:insert-closing-delimiter
         lyqi:insert-delimiter
         lyqi:insert-opening-delimiter
+        magit-status
         magit-unstage-item
+        markdown-cycle
+        markdown-enter-key
         markdown-exdent-or-delete
+        markdown-outdent-or-delete
+        markdown-shifttab
         matlab-backward-sexp
         matlab-electric-comment
         matlab-end-of-defun
@@ -73,6 +81,7 @@
         org-force-self-insert
         org-insert-src-block
         org-kill-line
+        org-meta-return
         org-preview-latex-fragment
         org-return
         org-return-indent
@@ -84,11 +93,14 @@
         org-yank
         orgtbl-hijacker-command-109
         orgtbl-self-insert-command
+        outshine-kbd-TAB
         outshine-self-insert-command
         overwrite-mode
+        picture-self-insert
         reindent-then-newline-and-indent
         sgml-slash
         sh-assignment
+        skeleton-pair-insert-maybe
         sp--self-insert-command
         sp-add-to-previous-sexp
         sp-wrap-cancel
