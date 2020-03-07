@@ -844,12 +844,8 @@
        :init
        (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 
-     (use-package magithub
-       :after magit
-       :config (progn
-                 (magithub-feature-autoinject t)
-                 (setq magithub-api-timeout 5)))
-   #+END_SRC
+     (use-package forge
+       :after magit)
    #+END_SRC
 ** Ace-window
    #+BEGIN_SRC emacs-lisp
