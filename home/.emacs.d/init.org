@@ -440,8 +440,6 @@
 
      (setq-default indent-tabs-mode nil)
 
-     (use-package tramp)
-
      (setq vc-follow-symlinks nil)
      (setq find-file-visit-truename t)
 
@@ -467,6 +465,17 @@
            '(:eval (format " Projectile[%s]"
                      (projectile-project-name))))
    #+END_SRC
+** Tramp
+   #+BEGIN_SRC emacs-lisp
+     (use-package tramp
+       :config
+       (customize-set-variable
+        'tramp-ssh-controlmaster-options
+        (concat
+         "-o ControlPath=~/.ssh/socket-%%r@%%h:%%p "
+         "-o ControlMaster=auto -o ControlPersist=yes")))
+   #+END_SRC
+
 ** Dashboard
    #+BEGIN_SRC emacs-lisp
      (use-package dashboard
