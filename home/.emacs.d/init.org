@@ -1762,7 +1762,7 @@
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
-     (bind-key "C-x p" 'org-toggle-latex-fragment)
+     (bind-key "C-x p" 'org-latex-preview)
      (setq org-latex-create-formula-image-program 'dvisvgm)
      (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.4))
      (add-to-list 'org-latex-default-packages-alist '("" "maths" t) t)
@@ -1805,9 +1805,9 @@
 
 ** Org bullets
    #+BEGIN_SRC emacs-lisp
-     (use-package org-bullets
+     (use-package org-superstar
        :config
-       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+       (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
    #+END_SRC
 
 * Library
