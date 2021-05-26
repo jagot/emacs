@@ -758,7 +758,7 @@
        (enable-theme theme)
        (sml/apply-theme 'respectful))
 
-     (set-theme emacs-dark-theme)
+     (set-theme emacs-light-theme)
    #+END_SRC
 *** Fonts
      #+BEGIN_SRC emacs-lisp
@@ -823,7 +823,7 @@
     conjunction with f-lux' darkroom mode.
     #+BEGIN_SRC emacs-lisp
       (defvar in-darkroom)
-      (setq in-darkroom nil)
+      (setq in-darkroom 't)
 
       (defun toggle-darkroom ()
         "Enable f-lux' darkroom-friendly colours."
