@@ -762,10 +762,13 @@
    #+END_SRC
 *** Fonts
      #+BEGIN_SRC emacs-lisp
-       (set-default-font "Consolas-13")
-       (set-fontset-font t 'greek "Consolas")
-       (set-fontset-font t 'cyrillic "Consolas")
-       ;; (set-fontset-font t (cons #x2070 #x209F) "Consolas")
+       (set-frame-font "JuliaMono-14" nil t)
+       (set-fontset-font t 'greek "JuliaMono")
+       (set-fontset-font t 'cyrillic "JuliaMono")
+       (set-fontset-font t 'mathematical "JuliaMono")
+       (set-fontset-font t 'symbol "JuliaMono")
+       ;; (set-fontset-font t (cons #x2070 #x209F) "JuliaMono")
+       (set-fontset-font t #x22c5 "JuliaMono")
        (set-fontset-font t 'hangul
                          (font-spec :family "Nanum Gothic"))
        (set-fontset-font t 'japanese-jisx0208
@@ -776,10 +779,11 @@
        (defvar fira-code?)
        (when osx?
          (progn
-           (set-default-font "Fira Code Retina-15")
+           ;; (set-frame-font "Fira Code Retina-15" nil t)
            (setq mac-auto-operator-composition-characters "!\"#$%&'*+,-./:;<=>?@^_`|~")
            (mac-auto-operator-composition-mode)
-           (setq fira-code? t)))
+           ;; (setq fira-code? t)
+           ))
      #+END_SRC
 **** Prettify symbols
      #+BEGIN_SRC emacs-lisp
