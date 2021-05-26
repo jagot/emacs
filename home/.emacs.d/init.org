@@ -1738,6 +1738,15 @@
        :straight nil)
 
      (bind-key "C-c c" 'latex-start-latexmk org-mode-map)
+
+     ; https://stackoverflow.com/a/19332031/1079038
+     (add-to-list 'org-export-smart-quotes-alist
+                  '("en"
+                    (primary-opening   :utf-8 "“" :html "&ldquo;" :latex "\\enquote{"  :texinfo "``")
+                    (primary-closing   :utf-8 "”" :html "&rdquo;" :latex "}"           :texinfo "''")
+                    (secondary-opening :utf-8 "‘" :html "&lsquo;" :latex "\\enquote*{" :texinfo "`")
+                    (secondary-closing :utf-8 "’" :html "&rsquo;" :latex "}"           :texinfo "'")
+                    (apostrophe        :utf-8 "’" :html "&rsquo;")))
    #+END_SRC
 ** Out{org/shine}
 
