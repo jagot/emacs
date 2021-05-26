@@ -1574,6 +1574,11 @@
      (use-package toml-mode)
    #+END_SRC
 
+** nhexl-mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package nhexl-mode)
+   #+END_SRC
+
 * Org
 ** Org configuration
    #+BEGIN_SRC emacs-lisp
