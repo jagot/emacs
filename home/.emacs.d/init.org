@@ -84,9 +84,9 @@
 ** Transparency
    #+BEGIN_SRC emacs-lisp
      (defun find-matching-line (pattern lines)
-       (first (-filter
-               (lambda (l) (s-match pattern l))
-               (s-lines lines))))
+       (car (-filter
+             (lambda (l) (s-match pattern l))
+             (s-lines lines))))
 
      (defun get-root-window-id ()
        (let* ((line (find-matching-line
