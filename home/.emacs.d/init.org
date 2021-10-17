@@ -23,9 +23,9 @@
      (load custom-file)
      (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-     (defvar osx?)
-     (setq osx? (not (eq nil (memq window-system '(mac ns)))))
-     (when osx?
+     (defvar jagot-osx?)
+     (setq jagot-osx? (not (eq nil (memq window-system '(mac ns)))))
+     (when jagot-osx?
        (progn
          (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
            (normal-top-level-add-subdirs-to-load-path))
@@ -51,9 +51,10 @@
       (straight-use-package 'use-package)
       (setq straight-use-package-by-default t)
     #+END_SRC
-** DashNS
+** DashNSNF
    #+BEGIN_SRC emacs-lisp
      (use-package dash)
+     (use-package f)
      (use-package s)
    #+END_SRC
 ** Append to list
@@ -127,7 +128,7 @@
                      (t nil))))
          (if blur-cmd
              (progn
-               (mapcar (lambda (id) (funcall blur-cmd id)) (get-emacs-window-ids))
+               (mapc (lambda (id) (funcall blur-cmd id)) (get-emacs-window-ids))
                (set-emacs-transparency alpha)))))
 
      (when (eq (window-system) 'x)
@@ -167,7 +168,8 @@
 
      (provide 'org-version)
 
-     (straight-use-package 'org-plus-contrib)
+     (straight-use-package 'org)
+     (straight-use-package 'org-contrib)
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
@@ -259,7 +261,7 @@
          (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
            (when (featurep 'popup)
              (popup-menu*
-              (mapcar
+              (mapc
                (lambda (choice)
                  (popup-make-item
                   (or (and display-fn (funcall display-fn choice))
@@ -310,7 +312,7 @@
                                       (interactive)
                                       (remote-term "home" "ssh" "home")))
      (add-hook 'term-mode-hook (lambda()
-                                 (setq yas-dont-activate t)))
+                                 (setq yas-dont-activate-functions t)))
 
      (defun ag-eshell (string)
        "Search with ag using the current eshell directory and a given string.
@@ -339,8 +341,8 @@
           "end tell")))
 
       (defun ext-terminal (wd &rest args)
-        (if osx?
-            (iterm2 "cd" wd "&&"
+        (if jagot-osx?
+            (iterm2 "echo && cd" wd "&&"
                     (mapconcat 'identity args " "))
           (progn
             (apply #'call-process
@@ -351,6 +353,16 @@
         (concat "\\\"" s "\\\""))
     #+END_SRC
 
+*** xterm-color
+    #+BEGIN_SRC emacs-lisp
+      (use-package xterm-color)
+
+      ;; (setq comint-output-filter-functions
+      ;;       (remove 'ansi-color-process-output comint-output-filter-functions))
+      ;; (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
+    #+END_SRC
+
+
 ** Web server
    #+BEGIN_SRC emacs-lisp
      (use-package web-server)
@@ -358,10 +370,10 @@
 
 ** External programs
    #+BEGIN_SRC emacs-lisp
-     (defvar opener)
-     (setq opener "xdg-open")
-     (when osx? (setq opener "open"))
-     (when (executable-find "mimeopen") (setq opener "mimeopen"))
+     (defvar jagot-opener)
+     (setq jagot-opener "xdg-open")
+     (when jagot-osx? (setq jagot-opener "open"))
+     (when (executable-find "mimeopen") (setq jagot-opener "mimeopen"))
 
      (defun open-in-external-app ()
        "Inspired by
@@ -376,11 +388,11 @@
                  (y-or-n-p "Open more than 5 files? "))
            (mapc
             (lambda (file-path)
-              (call-process opener nil 0 nil file-path))
+              (call-process jagot-opener nil 0 nil file-path))
             file-list))))
      (bind-key "C-M-o" 'open-in-external-app dired-mode-map)
 
-     (when osx? (setq insert-directory-program "/usr/local/bin/gls"))
+     (when jagot-osx? (setq insert-directory-program "/usr/local/bin/gls"))
      (eval-after-load "dired-aux"
        '(add-to-list 'dired-compress-file-suffixes
                      '("\\.zip\\'" ".zip" "unzip")))
@@ -419,6 +431,7 @@
         '(vlf-application 'dont-ask)))
    #+END_SRC
 
+
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
@@ -433,7 +446,7 @@
 
      (setq truncate-partial-width-windows nil)
      (mouse-wheel-mode t)
-     (setq x-select-enable-clipboard t)
+     (setq select-enable-clipboard t)
      (setq-default auto-revert-interval 1)
      (setq show-trailing-whitespace nil)
      (put 'narrow-to-region 'disabled nil)
@@ -450,7 +463,7 @@
 
      (global-prettify-symbols-mode 1)
 
-     (setf epa-pinentry-mode 'loopback)
+     (setf epg-pinentry-mode 'loopback)
 
      ;; Helps with colors of certain webpages (e.g. Google), when viewed in
      ;; eww (from
@@ -460,7 +473,7 @@
 ** Projectile
    #+BEGIN_SRC emacs-lisp
      (use-package projectile)
-     (projectile-global-mode)
+     (projectile-mode)
      (setq projectile-mode-line
            '(:eval (format " Projectile[%s]"
                      (projectile-project-name))))
@@ -697,11 +710,11 @@
 
 ** OS X-specific configuration
    #+BEGIN_SRC emacs-lisp
-     (when osx?
+     (when jagot-osx?
        (progn
          (setq mac-option-modifier nil
                mac-command-modifier 'meta
-               x-select-enable-clipboard t
+               select-enable-clipboard t
                ns-use-native-fullscreen nil
                alert-default-style 'growl
                insert-directory-program "gls")
@@ -754,7 +767,7 @@
      (load-theme emacs-light-theme t)
 
      (defun set-theme (theme)
-       (mapcar 'disable-theme custom-enabled-themes)
+       (mapc 'disable-theme custom-enabled-themes)
        (enable-theme theme)
        (sml/apply-theme 'respectful))
 
@@ -777,7 +790,7 @@
 **** Fira Code
      #+BEGIN_SRC emacs-lisp
        (defvar fira-code?)
-       (when osx?
+       (when jagot-osx?
          (progn
            ;; (set-frame-font "Fira Code Retina-15" nil t)
            (setq mac-auto-operator-composition-characters "!\"#$%&'*+,-./:;<=>?@^_`|~")
@@ -859,6 +872,8 @@
 
      (use-package forge
        :after magit)
+
+     (use-package magit-section)
    #+END_SRC
 ** Ace-window
    #+BEGIN_SRC emacs-lisp
@@ -947,7 +962,7 @@
         :init
         (progn
           (dired-launch-enable)
-          (setq dired-launch-default-launcher `(,opener))
+          (setq dired-launch-default-launcher `(,jagot-opener))
           (setf dired-launch-extensions-map '())))
     #+END_SRC
 
@@ -992,7 +1007,7 @@
        (progn
          (setq company-tooltip-limit 20
                company-idle-delay 0.5
-               company-show-numbers t
+               company-show-quick-access t
                company-tooltip-align-annotations t)
          (global-company-mode))
        :bind (("<C-tab>" . company-complete)))
@@ -1029,17 +1044,47 @@
      (bind-key "C-x c" 'cov-toggle)
    #+END_SRC
 
+** Language Server Protocol
+   #+BEGIN_SRC emacs-lisp
+     ;; Ref: https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
+
+     (use-package lsp-mode
+       :commands lsp
+       :requires lsp-clients
+       :defines lsp-prefer-flymake
+       :config
+       (setq lsp-prefer-flymake nil))
+
+     (use-package lsp-ui
+       :requires lsp-mode flycheck
+       :config
+       (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+     (use-package company-lsp
+       :requires company
+       :config
+       (push 'company-lsp company-backends)
+
+       ;; Disable client-side cache because the LSP server does a better job.
+       (setq company-transformers nil
+             company-lsp-async t
+             company-lsp-cache-candidates nil))
+   #+END_SRC
+
 ** C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+     (use-package modern-cpp-font-lock)
      (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
+     (add-hook 'c++-mode-hook #'lsp)
      (add-hook 'c-mode-common-hook
                (lambda ()
                  (company-mode)
                  (bind-key "C-c c" 'compile)
-                 (setq prettify-symbols-alist
-                       (prettify-if-not-fira '(("M_PI" . ?π)) '()))))
+                 ;; (setq prettify-symbols-alist
+                 ;;       (prettify-if-not-fira '(("M_PI" . ?π)) '()))
+                 ))
      (defun start-debugger ()
        (interactive)
        (if (null cppcm-src-dir)
@@ -1054,6 +1099,11 @@
                   :type git :host github :repo "realgud/realgud-lldb"
                   :files ("realgud-lldb.el"
                           "lldb")))
+
+     (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+     (when jagot-osx?
+       (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
+
    #+END_SRC
 
 *** Cmake
@@ -1143,23 +1193,35 @@
        :straight nil)
    #+END_SRC
 
+*** ESS help mode colors
+    #+BEGIN_SRC emacs-lisp
+      (defun display-ansi-colors ()
+        (interactive)
+        (let ((inhibit-read-only t))
+          (ansi-color-apply-on-region (point-min) (point-max))))
+
+      (add-hook 'ess-help-mode-hook (lambda () (display-ansi-colors)))
+    #+END_SRC
+
 ** Julia
    #+BEGIN_SRC emacs-lisp
-     (use-package julia-shell)
      (use-package julia-mode
        :init (add-hook 'julia-mode-hook
                        (lambda ()
-                         (setq prettify-symbols-alist
-                               (prettify-if-not-fira '() '(("->" . ?↦) ("=>" . ?⤇))))
+                         ;; (setq prettify-symbols-alist
+                         ;;       (prettify-if-not-fira '() '(("->" . ?↦) ("=>" . ?⤇))))
                          (setq-local company-backends
                                      (append '((company-math-symbols-unicode))
                                              company-backends))
                          (company-mode-on)))
-       :bind (("C-c C-c" . julia-shell-run-region)
-              ("C-c C-s" . julia-shell-save-and-go)))
+       ;; :bind (("C-c C-c" . julia-shell-run-region)
+       ;;        ("C-c C-s" . julia-shell-save-and-go))
+       )
+
+     (setq inferior-julia-args "--color=yes")
 
      (defun julia-wrapper (env-var)
-       (let ((inferior-julia-program-name (exec-path-from-shell-getenv env-var)))
+       (let ((inferior-julia-program (exec-path-from-shell-getenv env-var)))
          (julia)))
      (defun julia-master ()
        (interactive)
@@ -1174,9 +1236,9 @@
                              (append '((company-math-symbols-unicode))
                                      company-backends))))
 
-     (defalias 'ess-smart-S-assign #'self-insert-command)
+     ;; (defalias 'ess-smart-S-assign #'self-insert-command)
 
-     (setq ess-smart-S-assign-key nil)
+     ;; (setq ess-smart-S-assign-key nil)
 
      (setq julia-max-block-lookback 20000)
    #+END_SRC
@@ -1187,7 +1249,9 @@
                 (lambda ()
                   (setq-local cov-source-for-file-func
                               (lambda (filename)
-                                (let* ((cov-file (first (f-glob "lcov.info" (f-dirname filename)))))
+                                (let* ((cov-file (first (append
+                                                         (f-glob "lcov.info" (f-dirname filename))
+                                                         (f-glob "lcov.info" (projectile-project-root))))))
                                   (if cov-file
                                       `(lcov . ,cov-file)
                                     nil))))))
@@ -1227,7 +1291,10 @@
     #+BEGIN_SRC emacs-lisp
       (use-package geiser
         :config
-        (setq geiser-active-implementations '(chicken guile racket)))
+        (setq geiser-active-implementations '(guile chicken racket))
+        ;; :bind (:map geiser-mode-map
+        ;;             ("C-c C-l" . geiser-load-current-buffer))
+        )
     #+END_SRC
 
 ** Rainbow colors
@@ -1243,7 +1310,8 @@
 
 ** OCaml
    #+BEGIN_SRC emacs-lisp
-     (use-package tuareg)
+     (use-package tuareg
+       :defines merlin-command)
      (use-package utop
        :init
        (progn
@@ -1272,6 +1340,7 @@
 ** Python
    #+BEGIN_SRC emacs-lisp
      (setq python-shell-interpreter "ipython")
+     (add-hook 'python-mode-hook #'lsp)
    #+END_SRC
 
 ** Ruby
@@ -1281,35 +1350,9 @@
        :mode "\\.rb\\'"
        :config
        (rvm-use-default))
-               (use-package inf-ruby
+     (use-package inf-ruby
        :hook (ruby-mode . inf-ruby-minor-mode))
      (use-package bundler)
-   #+END_SRC
-
-** Language Server Protocol
-   #+BEGIN_SRC emacs-lisp
-     ;; Ref: https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
-
-     (use-package lsp-mode
-       :commands lsp
-       :requires lsp-clients
-       :config
-       (setq lsp-prefer-flymake nil))
-
-     (use-package lsp-ui
-       :requires lsp-mode flycheck
-       :config
-       (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-     (use-package company-lsp
-       :requires company
-       :config
-       (push 'company-lsp company-backends)
-
-       ;; Disable client-side cache because the LSP server does a better job.
-       (setq company-transformers nil
-             company-lsp-async t
-             company-lsp-cache-candidates nil))
    #+END_SRC
 
 ** Rust
@@ -1377,6 +1420,8 @@
       (use-package projectile-rails
         :config
         (add-hook 'projectile-mode-hook 'projectile-rails-on))
+      (use-package inflections)
+      (use-package rake)
     #+END_SRC
 *** Restclient
     #+BEGIN_SRC emacs-lisp
@@ -1466,6 +1511,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package tex-site
        :straight nil
+       :defines LaTeX-mode-map
        :defer t)
 
      (use-package tex
@@ -1487,7 +1533,7 @@
                        "'"))
               (tex-name-pre (concat (file-name-sans-extension buffer-file-name)
                                     ".tex"))
-              (tex-name (if osx? (ext-cmd-wrap-string tex-name-pre)
+              (tex-name (if jagot-osx? (ext-cmd-wrap-string tex-name-pre)
                           tex-name-pre)))
          (if (= arg 4)
              (ext-terminal (ext-cmd-wrap-string default-directory)
@@ -1763,7 +1809,7 @@
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-x p" 'org-latex-preview)
-     (setq org-latex-create-formula-image-program 'dvisvgm)
+     (setq org-preview-latex-default-process 'dvisvgm)
      (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.4))
      (add-to-list 'org-latex-default-packages-alist '("" "maths" t) t)
      (add-to-list 'org-latex-default-packages-alist '("" "physics" t) t)
@@ -1840,12 +1886,14 @@
             bibtex-autokey-titleword-length 5)
 
       ;; see org-ref for use of these variables
-      (setq org-ref-bibliography-notes bibliography-notes-file
-            org-ref-default-bibliography (list bibliography-file)
-            org-ref-pdf-directory (concat bibliography-directory "/pdfs")
+      (setq bibtex-completion-notes-path bibliography-notes-file
+            bibtex-completion-bibliography (list bibliography-file)
+            bibtex-completion-library-path (concat bibliography-directory "/pdfs")
             org-ref-completion-library 'org-ref-ivy-cite)
 
       (use-package org-ref)
+      ;; (use-package org-ref-cite)
+      (use-package bibtex-completion)
     #+END_SRC
 
 *** Ivy-bibtex
@@ -1861,27 +1909,27 @@
 
 *** Citation commands
     #+BEGIN_SRC emacs-lisp
-      (org-add-link-type
+      (org-link-set-parameters
        "citep" 'ebib
        (lambda (path desc format)
          (cond
           ((eq format 'html)
            (format "(<cite>%s</cite>)" path))
           ((eq format 'latex)
-           (if (or (not desc) (equal 0 (search "citep:" desc)))
+           (if (or (not desc) (equal 0 (cl-search "citep:" desc)))
                (format "\\parencite{%s}" path)
              (format "\\parencite[%s][%s]{%s}"
                      (cadr (split-string desc ";"))
                      (car (split-string desc ";"))  path))))))
 
-      (org-add-link-type
+      (org-link-set-parameters
        "citet" 'ebib
        (lambda (path desc format)
          (cond
           ((eq format 'html)
            (format "(<cite>%s</cite>)" path))
           ((eq format 'latex)
-           (if (or (not desc) (equal 0 (search "citet:" desc)))
+           (if (or (not desc) (equal 0 (cl-search "citet:" desc)))
                (format "\\textcite{%s}" path)
              (format "\\textcite[%s][%s]{%s}"
                      (cadr (split-string desc ";"))
@@ -1898,11 +1946,10 @@
                                                (setq pdf-view-midnight-colors
                                                      (cons (face-attribute 'default :foreground)
                                                            (face-attribute 'default :background)))))
-               (if osx?
-                   (setq pdf-tools-handle-upgrades nil
-                         pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
+               (if jagot-osx?
+                   (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
                (pdf-tools-install)))
-     (when osx?
+     (when jagot-osx?
        (setq pdf-view-use-scaling t))
      (use-package pdf-tools-extension
        :straight nil)
@@ -1919,7 +1966,7 @@
          (forward-line (1- row))
          (forward-char (1- col))))
 
-     (org-add-link-type "textedit" 'textedit-open)
+     (org-link-set-parameters "textedit" 'textedit-open)
    #+END_SRC
 
 
@@ -1970,7 +2017,7 @@
    Mu4e contexts defined in =site.el=, not checked in.
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'load-path
-                  (if osx?
+                  (if jagot-osx?
                       "/usr/local/share/emacs/site-lisp/mu/mu4e"
                     "/usr/share/emacs/site-lisp/mu/mu4e"))
      (require 'mu4e)
