@@ -998,6 +998,24 @@
                    :type git :host github :repo "johnbcoughlin/calctex"))
     #+END_SRC
 
+** Web server
+#+BEGIN_SRC emacs-lisp
+  (use-package websocket)
+  (straight-use-package '(simple-httpd :type git :host github :repo "skeeto/emacs-web-server" :local-repo "simple-httpd"))
+  (use-package zmq)
+#+END_SRC
+
+** Roam
+   #+BEGIN_SRC emacs-lisp
+     (use-package emacsql)
+     (use-package emacsql-sqlite)
+
+     (setq org-roam-v2-ack t)
+     (use-package org-roam)
+     (setq org-roam-directory (file-truename "~/org-roam"))
+     (org-roam-db-autosync-mode)
+   #+END_SRC
+
 * Programming
 ** Company
    #+BEGIN_SRC emacs-lisp
