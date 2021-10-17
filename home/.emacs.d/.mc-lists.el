@@ -24,10 +24,12 @@
         comment-dwim
         comment-region
         company-complete
+        counsel-M-x
         counsel-unicode-char
         count-words-region
         dired-flag-file-deletion
         dired-mark
+        dired-next-line
         ediff-mark-for-hiding-at-pos
         end-of-buffer
         end-of-defun
@@ -53,6 +55,7 @@
         ibuffer-mark-forward
         indent-for-tab-command
         insert-char
+        ivy-avy
         julia-latexsub-or-indent
         kill-region
         lyqi:indent-line
@@ -110,6 +113,7 @@
         wdired-downcase-word
         wdired-next-line
         wdired-previous-line
+        wdired-upcase-word
         whitespace-cleanup
         yaml-electric-dash-and-dot
         yas-expand
@@ -120,6 +124,7 @@
         ace-window
         backward-sentence
         balance-windows
+        counsel-find-file
         ess-load-file
         hydra-mc/mc/edit-lines-and-exit
         hydra-mc/mc/mark-all-like-this-and-exit
@@ -132,6 +137,7 @@
         mac-mwheel-scroll
         matlab-shell-save-and-go
         mouse-drag-mode-line
+        mouse-set-region
         org-edit-special
         org-export-dispatch
         org-mouse-down-mouse

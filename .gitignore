@@ -46,3 +46,4 @@ ltxpng/
 /home/.emacs.d/var/
 games/
 /home/.emacs.d/.lsp-session*
+*.sqlite
