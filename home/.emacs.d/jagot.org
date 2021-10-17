@@ -1836,7 +1836,10 @@
 
 *** Org-ref
     #+BEGIN_SRC emacs-lisp
+      (use-package citeproc)
       (use-package org-ref
+       :straight
+         (:host github :repo "jkitchin/org-ref" :branch "org-ref-3")
         :init
         (setq org-ref-completion-library 'org-ref-ivy-cite))
       ;; (use-package org-ref-cite)
@@ -1857,7 +1860,7 @@
 *** Citation commands
     #+BEGIN_SRC emacs-lisp
       (org-link-set-parameters
-       "citep" 'ebib
+       "citep" :export
        (lambda (path desc format)
          (cond
           ((eq format 'html)
@@ -1870,7 +1873,7 @@
                      (car (split-string desc ";"))  path))))))
 
       (org-link-set-parameters
-       "citet" 'ebib
+       "citet" :export
        (lambda (path desc format)
          (cond
           ((eq format 'html)
