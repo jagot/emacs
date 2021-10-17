@@ -1842,17 +1842,12 @@
          (:host github :repo "jkitchin/org-ref" :branch "org-ref-3")
         :init
         (setq org-ref-completion-library 'org-ref-ivy-cite))
-      ;; (use-package org-ref-cite)
       (use-package bibtex-completion)
     #+END_SRC
 
 *** Ivy-bibtex
     #+BEGIN_SRC emacs-lisp
       (use-package ivy-bibtex
-        :init
-        (setq bibtex-completion-bibliography bibliography-file
-              bibtex-completion-library-path (concat bibliography-directory "/pdfs")
-              bibtex-completion-notes-path (concat bibliography-directory "/notes"))
         :bind
         (("C-c b" . ivy-bibtex)))
     #+END_SRC
