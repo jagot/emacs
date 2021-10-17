@@ -177,40 +177,6 @@
         :bind (("C-c e" . LaTeX-environment)))
    #+END_SRC
 
-** Org tangle configuration
-   Borrowed from [[https://github.com/larstvei/dot-emacs][Lars Tveito]].
-   #+BEGIN_SRC emacs-lisp
-      (use-package ob-tangle
-        :straight nil)
-
-      (setq init-file (file-truename (concat user-emacs-directory "init.org")))
-      (setq init-file-el (file-truename (concat user-emacs-directory "init.el")))
-      (setq init-file-bc (file-truename (concat init-file-el "c")))
-
-      (defun tangle-init ()
-        "Tangle the code-blocks of this file, and subsequently
-               byte-compile the result."
-        (progn
-          (org-babel-tangle-file init-file)
-          (byte-compile-file init-file-el)))
-   #+END_SRC
-
-*** Auto-tangling
-    #+BEGIN_SRC emacs-lisp
-       (add-hook 'after-save-hook (lambda ()
-                                    (when (member (buffer-file-name)
-                                                  (list (file-truename init-file)
-                                                        (expand-file-name init-file)))
-                                      (tangle-init))))
-
-       (when (or
-              (and
-               (file-exists-p init-file-bc)
-               (file-newer-than-file-p init-file init-file-bc))
-              (not (file-exists-p init-file-bc)))
-         (tangle-init))
-    #+END_SRC
-
 ** Encoding
    #+BEGIN_SRC emacs-lisp
      (setq locale-coding-system 'utf-8)
@@ -331,6 +297,7 @@
               "xterm" env-term)))
 
       (defun iterm2 (&rest args)
+        (princ args)
         (osascript-run-str
          (concat
           "tell app \"iTerm\"\n"
@@ -532,6 +499,8 @@
 
          (bind-key "C-x C-b" 'ibuffer)
 
+         (bind-key "C-l" (lambda () (interactive (insert " "))))
+
          ;; (bind-key "M-q") '(lambda () (interactive (fill-paragraph 60)))
 
          (bind-keys*
@@ -590,93 +559,6 @@
    Hydras taken from hydra-examples.el in the official distribution.
    #+BEGIN_SRC emacs-lisp
      (use-package hydra)
-
-     (defun hydra-vi/pre ()
-       (set-cursor-color "#e52b50"))
-
-     (defun hydra-vi/post ()
-       (set-cursor-color "#ffffff"))
-
-     (bind-key
-      "C-z"
-      (defhydra hydra-vi (:pre hydra-vi/pre :post hydra-vi/post :color amaranth)
-        "vi"
-        ("l" forward-char)
-        ("h" backward-char)
-        ("j" next-line)
-        ("k" previous-line)
-        ("m" set-mark-command "mark")
-        ("a" move-beginning-of-line "beg")
-        ("e" move-end-of-line "end")
-        ("d" delete-region "del" :color blue)
-        ("y" kill-ring-save "yank" :color blue)
-        ("q" nil "quit")))
-
-     (bind-key
-      "C-x SPC"
-      (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
-                                           :color pink
-                                           :post (deactivate-mark))
-        "
-       ^_k_^     _d_elete    _s_tring
-     _h_   _l_   _o_k        _y_ank
-       ^_j_^     _n_ew-copy  _r_eset
-     ^^^^        _e_xchange  _u_ndo
-     ^^^^        ^ ^         _p_aste
-     "
-        ("h" backward-char nil)
-        ("l" forward-char nil)
-        ("k" previous-line nil)
-        ("j" next-line nil)
-        ("e" hydra-ex-point-mark nil)
-        ("n" copy-rectangle-as-kill nil)
-        ("d" delete-rectangle nil)
-        ("r" (if (region-active-p)
-                 (deactivate-mark)
-               (rectangle-mark-mode 1)) nil)
-        ("y" yank-rectangle nil)
-        ("u" undo nil)
-        ("s" string-rectangle nil)
-        ("p" kill-rectangle nil)
-        ("o" nil nil)))
-
-     (global-set-key
-      (kbd "S-RET")
-      (defhydra hydra-mc (:columns 3)
-        "Multiple cursors"
-        ("n" mc/mark-next-like-this "Mark next" :color red)
-        ("p" mc/mark-previous-like-this "Mark previous" :color red)
-        ("a" mc/mark-all-like-this "Mark all" :color blue)
-
-        ("N" mc/skip-to-next-like-this "Skip next" :color red)
-        ("P" mc/skip-to-previous-like-this "Skip previous" :color red)
-        ("l" mc/edit-lines "Edit lines" :color blue)
-
-        ("M-n" mc/unmark-next-like-this "Unmark next" :color red)
-        ("M-p" mc/unmark-previous-like-this "Unmark previous" :color red)
-        ("q" nil "quit" :color blue)))
-
-     (defhydra hydra-projectile (:color blue
-                                 :columns 4)
-       "Projectile"
-       ("a" projectile-ag "ag")
-       ("b" projectile-switch-to-buffer "switch to buffer")
-       ("c" projectile-invalidate-cache "cache clear")
-       ("d" projectile-find-dir "dir")
-       ("s-f" projectile-find-file "file")
-       ("ff" projectile-find-file-dwim "file dwim")
-       ("fd" projectile-find-file-in-directory "file curr dir")
-       ("g" ggtags-update-tags "update gtags")
-       ("i" projectile-ibuffer "Ibuffer")
-       ("K" projectile-kill-buffers "Kill all buffers")
-       ("o" projectile-multi-occur "multi-occur")
-       ("p" projectile-switch-project "switch")
-       ("r" projectile-recentf "recent file")
-       ("x" projectile-remove-known-project "remove known")
-       ("X" projectile-cleanup-known-projects "cleanup non-existing")
-       ("z" projectile-cache-current-file "cache current")
-       ("q" nil "cancel"))
-     (bind-key "C-S-p" 'hydra-projectile/body)
    #+END_SRC
 ** Modalka
    #+BEGIN_SRC emacs-lisp
@@ -765,6 +647,7 @@
      (setq emacs-light-theme 'gruvbox-light-medium)
      (load-theme emacs-dark-theme t)
      (load-theme emacs-light-theme t)
+     (load-theme 'leuven t)
 
      (defun set-theme (theme)
        (mapc 'disable-theme custom-enabled-themes)
@@ -798,7 +681,7 @@
            ;; (setq fira-code? t)
            ))
      #+END_SRC
-**** Prettify symbols
+**** COMMENT Prettify symbols
      #+BEGIN_SRC emacs-lisp
        (defvar standard-prettify-symbols-alist)
        (setq standard-prettify-symbols-alist
@@ -991,7 +874,7 @@
      (bind-key "<backtab>" 'calc-roll-up calc-mode-map)
    #+END_SRC
 
-*** CalcTeX
+*** COMMENT CalcTeX
     #+BEGIN_SRC emacs-lisp
       (use-package calctex
         :straight (calctex
@@ -1014,6 +897,20 @@
      (use-package org-roam)
      (setq org-roam-directory (file-truename "~/org-roam"))
      (org-roam-db-autosync-mode)
+
+     (use-package org-roam-ui
+       :straight
+         (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+         :after org-roam
+     ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+     ;;         a hookable mode anymore, you're advised to pick something yourself
+     ;;         if you don't care about startup time, use
+     ;;  :hook (after-init . org-roam-ui-mode)
+         :config
+         (setq org-roam-ui-sync-theme t
+               org-roam-ui-follow t
+               org-roam-ui-update-on-save t
+               org-roam-ui-open-on-start t))
    #+END_SRC
 
 * Programming
@@ -1204,6 +1101,10 @@
                ("\\.cuh\\'" . cuda-mode)))
     #+END_SRC
 
+** COMMENT Jupyter
+   #+BEGIN_SRC emacs-lisp
+     (use-package jupyter)
+   #+END_SRC
 ** ESS
    #+BEGIN_SRC emacs-lisp
      (use-package ess)
@@ -1643,6 +1544,28 @@
      (use-package nhexl-mode)
    #+END_SRC
 
+** COMMENT Impatient mode
+   https://stackoverflow.com/a/36189456/1079038
+   #+BEGIN_SRC emacs-lisp
+     (use-package impatient-mode)
+
+     (defun markdown-html (buffer)
+       (princ (with-current-buffer buffer
+         (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+       (current-buffer)))
+   #+END_SRC
+
+* COMMENT Jupyter
+  https://github.com/dzop/emacs-jupyter/issues/160#issuecomment-520138197
+  https://discourse.julialang.org/t/jupyter-integration-with-emacs/21496/5
+  https://github.com/dzop/emacs-jupyter
+  #+BEGIN_SRC emacs-lisp
+    (use-package jupyter
+      :after ob
+      :demand t
+      :requires (zmq simple-httpd))
+  #+END_SRC
+
 * Org
 ** Org configuration
    #+BEGIN_SRC emacs-lisp
@@ -1731,7 +1654,9 @@
         (ruby . t)
         (clojure . t)
         (octave . t)
-        (latex . t)))
+        (latex . t)
+        ;; (jupyter . t)
+        ))
      (setq org-confirm-babel-evaluate nil)
      (use-package ob-clojure
        :straight nil
@@ -1874,14 +1799,26 @@
        (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
    #+END_SRC
 
+** Org states
+   #+BEGIN_SRC emacs-lisp
+     ;; (setq org-todo-keyword-faces
+     ;;       `(("TODO" . ,(aref ansi-color-names-vector 1))
+     ;;         ("ONGOING" . ,(aref ansi-color-names-vector 3))
+     ;;         ("DONE" . ,(aref ansi-color-names-vector 2))))
+   #+END_SRC
+
+
 * Library
 ** BibTeX
    #+BEGIN_SRC emacs-lisp
      (setq bibtex-autokey-name-case-convert-function 'capitalize
            bibtex-autokey-year-length 4
-           bibtex-autokey-year-title-separator ""
            bibtex-autokey-titleword-length 5
-           bibtex-autokey-titleword-separator "")
+           bibtex-autokey-name-year-separator ""
+           bibtex-autokey-year-title-separator "-"
+           bibtex-autokey-titleword-separator "-"
+           bibtex-autokey-titlewords 0
+           bibtex-autokey-titlewords-stretch 1)
      (defvar bibliography-directory)
      (defvar bibliography-file)
      (defvar bibliography-notes-file)
@@ -1889,27 +1826,19 @@
            bibliography-file (concat bibliography-directory "/references-3.bib")
            bibliography-notes-file (concat bibliography-directory "/notes.org")
            doi-utils-make-notes-function nil)
+           
+     (setq bibtex-completion-notes-path bibliography-notes-file
+           bibtex-completion-bibliography (list bibliography-file)
+           bibtex-completion-library-path (concat bibliography-directory "/pdfs"))
+
+     (setq reftex-default-bibliography (list bibliography-file))
    #+END_SRC
 
 *** Org-ref
     #+BEGIN_SRC emacs-lisp
-      (setq reftex-default-bibliography (list bibliography-file))
-
-      (setq bibtex-autokey-year-length 4
-            bibtex-autokey-name-year-separator ""
-            bibtex-autokey-year-title-separator "-"
-            bibtex-autokey-titleword-separator "-"
-            bibtex-autokey-titlewords 0
-            bibtex-autokey-titlewords-stretch 1
-            bibtex-autokey-titleword-length 5)
-
-      ;; see org-ref for use of these variables
-      (setq bibtex-completion-notes-path bibliography-notes-file
-            bibtex-completion-bibliography (list bibliography-file)
-            bibtex-completion-library-path (concat bibliography-directory "/pdfs")
-            org-ref-completion-library 'org-ref-ivy-cite)
-
-      (use-package org-ref)
+      (use-package org-ref
+        :init
+        (setq org-ref-completion-library 'org-ref-ivy-cite))
       ;; (use-package org-ref-cite)
       (use-package bibtex-completion)
     #+END_SRC
@@ -1976,15 +1905,15 @@
    #+BEGIN_SRC emacs-lisp
      (defun textedit-open (path)
        (let* ((components (s-split ":" path))
-              (file-name (s-chop-prefix "//" (first components)))
-              (row (string-to-number (second components)))
-              (col (string-to-number (fourth components))))
-         (find-file-other-window file-name)
-         (goto-char (point-min))
-         (forward-line (1- row))
-         (forward-char (1- col))))
+	      (file-name (s-chop-prefix "//" (first components)))
+	      (row (string-to-number (second components)))
+	      (col (string-to-number (fourth components))))
+	 (find-file-other-window file-name)
+	 (goto-char (point-min))
+	 (forward-line (1- row))
+	 (forward-char (1- col))))
 
-     (org-link-set-parameters "textedit" 'textedit-open)
+     (org-link-set-parameters "textedit" :follow 'textedit-open)
    #+END_SRC
 
 
@@ -2005,7 +1934,7 @@
     (use-package mingus
       :bind ("C-<f8>" . mingus))
   #+END_SRC
-* Mail
+* COMMENT Mail
 ** Password management
    #+BEGIN_SRC emacs-lisp
      (use-package password-store)

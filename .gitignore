@@ -6,7 +6,8 @@ auto-save-list/
 ac-comphist.dat
 straight/
 
-init.el
+jagot.el
+jagot.elc
 init.html
 init.pdf
 init.tex
