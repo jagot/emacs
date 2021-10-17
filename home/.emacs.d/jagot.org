@@ -1832,16 +1832,17 @@
            bibtex-completion-library-path (concat bibliography-directory "/pdfs"))
 
      (setq reftex-default-bibliography (list bibliography-file))
+
+     (use-package bibtex)
    #+END_SRC
 
 *** Org-ref
     #+BEGIN_SRC emacs-lisp
       (use-package citeproc)
-      (use-package org-ref
-       :straight
-         (:host github :repo "jkitchin/org-ref" :branch "org-ref-3")
-        :init
-        (setq org-ref-completion-library 'org-ref-ivy-cite))
+      (straight-use-package '(org-ref
+         :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3"
+       :includes org-ref-ivy))
+      (use-package org-ref-ivy)
       (use-package bibtex-completion)
     #+END_SRC
 
