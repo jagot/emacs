@@ -1286,6 +1286,11 @@
        :hook (rust-mode . lsp))
    #+END_SRC
 
+** Elixir
+   #+BEGIN_SRC emacs-lisp
+     (use-package elixir-mode)
+   #+END_SRC
+
 ** Separedit
    #+BEGIN_SRC emacs-lisp
      (use-package separedit
@@ -1586,6 +1591,9 @@
        :straight nil)
      (use-package ox-beamer
        :straight nil)
+     ;; https://tippenhauer.de/post/writing-presentations-in-org-mode-markup/
+     (add-to-list 'org-beamer-environments-extra
+      '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
    #+END_SRC
 ** Org keymap
    #+BEGIN_SRC emacs-lisp

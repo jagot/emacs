@@ -21,6 +21,7 @@
         c-electric-semi&comma
         c-electric-slash
         c-electric-star
+        commands-transient
         comment-dwim
         comment-region
         company-complete
@@ -87,6 +88,7 @@
         org-meta-return
         org-preview-latex-fragment
         org-return
+        org-return-and-maybe-indent
         org-return-indent
         org-self-insert-command
         org-shiftright
@@ -101,6 +103,7 @@
         overwrite-mode
         picture-self-insert
         reindent-then-newline-and-indent
+        replaced-region
         sgml-slash
         sh-assignment
         skeleton-pair-insert-maybe
