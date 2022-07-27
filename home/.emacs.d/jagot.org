@@ -32,26 +32,6 @@
          (require 'osx-osascript)))
    #+END_SRC
 
-** Packages
-*** Straight
-    #+BEGIN_SRC emacs-lisp
-      (defvar bootstrap-version)
-      (let ((bootstrap-file
-             (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-            (bootstrap-version 5))
-        (unless (file-exists-p bootstrap-file)
-          (with-current-buffer
-              (url-retrieve-synchronously
-               "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-               'silent 'inhibit-cookies)
-            (goto-char (point-max))
-            (eval-print-last-sexp)))
-        (load bootstrap-file nil 'nomessage))
-
-      (straight-use-package 'use-package)
-      (setq straight-use-package-by-default t
-            use-package-always-demand t)
-    #+END_SRC
 ** DashNSNF
    #+BEGIN_SRC emacs-lisp
      (use-package dash)
@@ -136,47 +116,6 @@
        (try-blur-emacs 80))
    #+END_SRC
 
-** Org mode
-   #+BEGIN_SRC emacs-lisp
-     (require 'subr-x)
-     (straight-use-package 'git)
-
-     (defun org-git-version ()
-       "The Git version of org-mode.
-     Inserted by installing org-mode or when a release is made."
-       (require 'git)
-       (let ((git-repo (expand-file-name
-                        "straight/repos/org/" user-emacs-directory)))
-         (string-trim
-          (git-run "describe"
-                   "--match=release\*"
-                   "--abbrev=6"
-                   "HEAD"))))
-
-     (defun org-release ()
-       "The release version of org-mode.
-     Inserted by installing org-mode or when a release is made."
-       (require 'git)
-       (let ((git-repo (expand-file-name
-                        "straight/repos/org/" user-emacs-directory)))
-         (string-trim
-          (string-remove-prefix
-           "release_"
-           (git-run "describe"
-                    "--match=release\*"
-                    "--abbrev=0"
-                    "HEAD")))))
-
-     (provide 'org-version)
-
-     (straight-use-package 'org)
-     (straight-use-package 'org-contrib)
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-      (use-package org
-        :bind (("C-c e" . LaTeX-environment)))
-   #+END_SRC
 
 ** Encoding
    #+BEGIN_SRC emacs-lisp
@@ -319,6 +258,8 @@
 
       (defun ext-cmd-wrap-string (s)
         (concat "\\\"" s "\\\""))
+
+      (bind-key "C-c t t" (lambda () (interactive) (ext-terminal (file-name-directory (buffer-file-name)) "/bin/zsh")) global-map)
     #+END_SRC
 
 *** xterm-color
@@ -658,6 +599,15 @@
 
      (set-theme emacs-light-theme)
    #+END_SRC
+*** Auto-dark
+     #+BEGIN_SRC emacs-lisp
+       (use-package auto-dark
+         :config
+         (setq auto-dark--allow-osascript t
+               auto-dark--dark-theme emacs-dark-theme
+               auto-dark--light-theme emacs-light-theme))
+     #+END_SRC
+
 *** Fonts
      #+BEGIN_SRC emacs-lisp
        (set-frame-font "JuliaMono-14" nil t)
@@ -884,7 +834,7 @@
                    :type git :host github :repo "johnbcoughlin/calctex"))
     #+END_SRC
 
-** Web server
+** COMMENT Web server
 #+BEGIN_SRC emacs-lisp
   (use-package websocket)
   (straight-use-package '(simple-httpd :type git :host github :repo "skeeto/emacs-web-server" :local-repo "simple-httpd"))
@@ -948,7 +898,7 @@
          ))
    #+END_SRC
 
-** Coverage
+** COMMENT Coverage
    #+BEGIN_SRC emacs-lisp
      (use-package coverage
        :straight (coverage :type git :host github :repo "google/coverage"))
@@ -962,7 +912,7 @@
      (bind-key "C-x c" 'cov-toggle)
    #+END_SRC
 
-** Language Server Protocol
+** COMMENT Language Server Protocol
    #+BEGIN_SRC emacs-lisp
      ;; Ref: https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
 
@@ -989,7 +939,7 @@
              company-lsp-cache-candidates nil))
    #+END_SRC
 
-** C/C++
+** COMMENT C/C++
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -1108,7 +1058,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package jupyter)
    #+END_SRC
-** ESS
+** COMMENT ESS
    #+BEGIN_SRC emacs-lisp
      (use-package ess)
      (use-package ess-site
@@ -1192,7 +1142,7 @@
                          ("<=" . ?≤)
                          (">=" . ?≥)))))
    #+END_SRC
-*** Clojure
+*** COMMENT Clojure
     #+BEGIN_SRC emacs-lisp
       (use-package clojure-mode
         :mode "\\.clj\\'"
@@ -1200,7 +1150,7 @@
                 :init
                 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)))
     #+END_SRC
-*** Hy
+*** COMMENT Hy
     #+BEGIN_SRC emacs-lisp
       (use-package hy-mode
         :mode "\\.hy\\'"
@@ -1209,7 +1159,7 @@
                   (lambda () (bind-key "C-c M-j" 'inferior-lisp))))
     #+END_SRC
 
-*** Scheme
+*** COMMENT Scheme
     #+BEGIN_SRC emacs-lisp
       (use-package geiser
         :config
@@ -1230,7 +1180,7 @@
          (add-hook 'emacs-lisp-mode-hook 'rainbow-mode)))
    #+END_SRC
 
-** OCaml
+** COMMENT OCaml
    #+BEGIN_SRC emacs-lisp
      (use-package tuareg
        :defines merlin-command)
@@ -1366,14 +1316,14 @@
 * Modes
   Misc modes
   #+BEGIN_SRC emacs-lisp
-    (use-package matlab-mode
-      :mode (("\\.m\\'" . matlab-mode)))
+    ;; (use-package matlab-mode
+    ;;   :mode (("\\.m\\'" . matlab-mode)))
 
     (autoload 'gedcom-mode "gedcom")
     (setq auto-mode-alist (cons '("\\.ged$" . gedcom-mode) auto-mode-alist))
   #+END_SRC
 
-** Cmake
+** COMMENT Cmake
    #+BEGIN_SRC emacs-lisp
      (use-package cmake-mode
        :mode (("CMakeLists\\.txt\\'" . cmake-mode)
@@ -1427,12 +1377,12 @@
        (cmake-ide-load-db))
      (add-hook 'c++-mode-hook #'cmake-ide/c-c++-hook)
 
-     (bind-key "C-c t c" 'cmake-ide-compile)
-     (bind-key "C-c t t" (lambda ()
-                           (interactive
-                            (compile
-                             (format "%s/tests/fsl-tests"
-                                      (cmake-ide--get-build-dir))))))
+     ;; (bind-key "C-c t c" 'cmake-ide-compile)
+     ;; (bind-key "C-c t t" (lambda ()
+     ;;                       (interactive
+     ;;                        (compile
+     ;;                         (format "%s/tests/fsl-tests"
+     ;;                                  (cmake-ide--get-build-dir))))))
    #+END_SRC
 ** LaTeX
    #+BEGIN_SRC emacs-lisp
@@ -1525,14 +1475,14 @@
      (setq wc-modeline-format "WC[%W%w/%tw|%C%c/%tc]")
    #+END_SRC
 
-** Docker
+** COMMENT Docker
    #+BEGIN_SRC emacs-lisp
      (use-package dockerfile-mode
        :mode (("Dockerfile" . dockerfile-mode)))
      (use-package docker)
    #+END_SRC
 
-** Groovy/Jenkins
+** COMMENT Groovy/Jenkins
    #+BEGIN_SRC emacs-lisp
      (use-package groovy-mode
        :mode (("Jenkinsfile\\'" . groovy-mode)))
@@ -1747,6 +1697,13 @@
                     (secondary-opening :utf-8 "‘" :html "&lsquo;" :latex "\\enquote*{" :texinfo "`")
                     (secondary-closing :utf-8 "’" :html "&rsquo;" :latex "}"           :texinfo "'")
                     (apostrophe        :utf-8 "’" :html "&rsquo;")))
+     (add-to-list 'org-export-smart-quotes-alist
+                  '("sv"
+                    (primary-opening   :utf-8 "”" :html "&rdquo;" :latex "\\enquote{"  :texinfo "''")
+                    (primary-closing   :utf-8 "”" :html "&rdquo;" :latex "}"           :texinfo "''")
+                    (secondary-opening :utf-8 "’" :html "&rsquo;" :latex "\\enquote*{" :texinfo "'")
+                    (secondary-closing :utf-8 "’" :html "&rsquo;" :latex "}"           :texinfo "'")
+                    (apostrophe        :utf-8 "’" :html "&rsquo;")))
    #+END_SRC
 ** Out{org/shine}
 
@@ -1847,21 +1804,31 @@
      (use-package bibtex)
    #+END_SRC
 
-*** Org-ref
-    #+BEGIN_SRC emacs-lisp
-      (use-package citeproc)
-      (straight-use-package '(org-ref
-         :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3"
-       :includes org-ref-ivy))
-      (use-package org-ref-ivy)
-      (use-package bibtex-completion)
-    #+END_SRC
-
 *** Ivy-bibtex
     #+BEGIN_SRC emacs-lisp
       (use-package ivy-bibtex
         :bind
         (("C-c b" . ivy-bibtex)))
+    #+END_SRC
+
+*** Org-ref
+    #+BEGIN_SRC emacs-lisp
+      (use-package citeproc)
+      (use-package bibtex-completion)
+      ;; (use-package org-ref
+      ;;    :after (:all ivy-bibtex bibtex org)
+      ;;    :demand t
+      ;;    :straight (org-ref :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3")
+      ;;    :init (require 'org-ref))
+      ;; (use-package org-ref-ivy :after org-ref :straight nil
+      ;;    :init (require 'org-ref-ivy))
+      ;; (straight-use-package '(org-ref-ivy
+      ;;    :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3"
+      ;;  :includes org-ref))
+      ;; (use-package 'org-ref)
+      (add-to-list 'load-path "/Users/jagot/.homesick/repos/emacs/home/.emacs.d/straight/repos/org-ref")
+      (require 'org-ref)
+      (require 'org-ref-ivy)
     #+END_SRC
 
 *** Citation commands
@@ -1936,7 +1903,7 @@
      #+INTERLEAVE_PDF: ~/references/pdfs/${=key=}.pdf
      ")
    #+END_SRC
-* Music
+* COMMENT Music
   #+BEGIN_SRC emacs-lisp
     (use-package simple-mpc
       :bind ("<f8>" . simple-mpc))

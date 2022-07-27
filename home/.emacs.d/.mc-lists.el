@@ -12,6 +12,7 @@
         backward-sexp
         beginning-of-buffer
         beginning-of-defun
+        bibtex-find-text
         c-electric-brace
         c-electric-colon
         c-electric-delete-forward
@@ -63,6 +64,8 @@
         lyqi:insert-closing-delimiter
         lyqi:insert-delimiter
         lyqi:insert-opening-delimiter
+        mac-previous-tab-or-toggle-tab-bar
+        magit-stage
         magit-status
         magit-unstage-item
         markdown-cycle
@@ -86,11 +89,13 @@
         org-insert-src-block
         org-kill-line
         org-meta-return
+        org-open-line
         org-preview-latex-fragment
         org-return
         org-return-and-maybe-indent
         org-return-indent
         org-self-insert-command
+        org-shiftmetadown
         org-shiftright
         org-shifttab
         org-toggle-latex-fragment
