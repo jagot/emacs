@@ -48,4 +48,5 @@ ltxpng/
 games/
 /home/.emacs.d/.lsp-session*
 *.sqlite
+*.sql
 /home/.emacs.d/org-roam.db

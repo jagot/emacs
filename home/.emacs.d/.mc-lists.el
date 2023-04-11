@@ -29,12 +29,16 @@
         counsel-M-x
         counsel-unicode-char
         count-words-region
+        dired-do-delete
+        dired-do-flagged-delete
         dired-flag-file-deletion
         dired-mark
         dired-next-line
+        dired-unmark
         ediff-mark-for-hiding-at-pos
         end-of-buffer
         end-of-defun
+        end-of-visual-line
         eruby-mode-electric-percent
         ess-electric-brace
         ess-goto-end-of-function-or-para
@@ -53,6 +57,7 @@
         hydra-mc/mc/skip-to-next-like-this
         hydra-mc/nil
         ibuffer-do-kill-lines
+        ibuffer-do-kill-on-deletion-marks
         ibuffer-mark-for-delete
         ibuffer-mark-forward
         indent-for-tab-command
@@ -117,6 +122,7 @@
         sp-wrap-cancel
         tex-handle-newline
         transpose-words
+        wdired--self-insert
         wdired-capitalize-word
         wdired-downcase-word
         wdired-next-line
