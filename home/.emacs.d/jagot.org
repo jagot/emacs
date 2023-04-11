@@ -549,37 +549,36 @@
          (setenv "LC_CTYPE" "en_US.UTF-8")
          (setenv "LANG" "en_US.UTF-8")))
    #+END_SRC
-** Linum mode
+** Line number mode
    #+BEGIN_SRC emacs-lisp
-     (defcustom linum-disabled-modes-list
+     (defcustom display-line-numbers-disabled-modes-list
        '(eshell-mode wl-summary-mode compilation-mode org-mode
                      image-mode dired-mode doc-view-mode)
-       "* List of modes disabled when global linum mode is on"
+       "* List of modes disabled when global display-line-numbers mode is on"
        :type '(repeat (sexp :tag "Major mode"))
-       :tag " Major modes where linum is disabled: "
-       :group 'linum
+       :tag " Major modes where display-line-numbers is disabled: "
+       :group 'display-line-numbers
        )
 
-     (defcustom linum-disable-starred-buffers 't
+     (defcustom display-line-numbers-disable-starred-buffers 't
        "* Disable buffers that have stars in them like *Gnu Emacs*"
        :type 'boolean
-       :group 'linum)
+       :group 'display-line-numbers)
 
-     (defun linum-on ()
-       "* When linum is running globally, disable line number in
-     modes defined in `linum-disabled-modes-list'. Changed by
-     linum-off. Also turns off numbering in starred modes like *scratch*"
+     (defun my-display-line-numbers-hook ()
+       "* When display-line-numbers is running globally, disable line number in
+     modes defined in `display-line-numbers-disabled-modes-list'. Changed by
+     display-line-numbers-off. Also turns off numbering in starred modes like *scratch*"
        (unless (or (minibufferp)
-                   (member major-mode linum-disabled-modes-list)
-                   (and linum-disable-starred-buffers (string-match "*" (buffer-name)))
+                   (member major-mode display-line-numbers-disabled-modes-list)
+                   (and display-line-numbers-disable-starred-buffers (string-match "*" (buffer-name)))
                    (> (buffer-size) 1000000))
-         (linum-mode 1)))
+         (display-line-numbers-mode 1)))
 
-     (use-package linum
-       :init
-       (progn
-         (setq linum-format "%3d ")
-         (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))))
+     (dolist (mode '(text-mode-hook
+                     prog-mode-hook
+                     conf-mode-hook))
+       (add-hook mode 'my-display-line-numbers-hook))
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
@@ -1534,8 +1533,6 @@
      (setq org-src-fontify-natively 't)
 
      (add-hook 'org-mode-hook 'org-display-inline-images)
-     (add-hook 'org-mode-hook (lambda ()
-                                (linum-mode -1)))
 
      (use-package org-mouse
        :straight nil)
