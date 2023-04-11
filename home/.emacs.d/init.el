@@ -19,6 +19,18 @@
   :bind (("C-c e" . LaTeX-environment)))
 (use-package org-contrib)
 
+;; Startup time
+(defun efs/display-startup-time ()
+  (message
+   "Emacs loaded in %s with %d garbage collections."
+   (format
+    "%.2f seconds"
+    (float-time
+     (time-subtract after-init-time before-init-time)))
+   gcs-done))
+
+(add-hook 'emacs-startup-hook #'efs/display-startup-time)
+
 ;; Stolen from https://github.com/angrybacon/dotemacs/blob/master/init.el
 (let ((default-directory user-emacs-directory)
       (file-name-handler-alist nil)
