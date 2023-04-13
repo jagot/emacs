@@ -13,6 +13,7 @@ init.pdf
 init.tex
 
 site.el
+early-init-site.el
 
 calfw-conf.el
 
