@@ -199,6 +199,9 @@
 ** Terminal
    Borrowed from [[http://www.emacswiki.org/emacs-ja/AnsiTermHints][Emacs wiki]].
    #+BEGIN_SRC emacs-lisp
+     (use-package term
+       :functions (term-mode term-char-mode))
+
      ;; Use this for remote so I can specify command line arguments
      (defun remote-term (new-buffer-name cmd &rest switches)
        (let ((term-ansi-buffer-name
@@ -458,7 +461,7 @@
 ** Mode line
    #+BEGIN_SRC emacs-lisp
      (use-package smart-mode-line
-       :init (progn
+       :config (progn
                (sml/setup)
                (sml/apply-theme 'respectful)
                (add-to-list 'sml/replacer-regexp-list '("^~/work/projects/quantum" ":WPQ:") t)
@@ -664,14 +667,18 @@
                          (font-spec :family "Nanum Gothic"))
        (set-fontset-font t 'japanese-jisx0208
                          (font-spec :family "Kozuka Gothic Pr6N"))
+
+       (set-face-attribute 'variable-pitch nil :font "STIX Two Math" :height 180)
+       (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
      #+END_SRC
 **** Fira Code
      #+BEGIN_SRC emacs-lisp
        (defvar fira-code?)
-       (when jagot-osx?
+       (when (and jagot-osx? (fboundp 'mac-auto-operator-composition-mode))
          (progn
            ;; (set-frame-font "Fira Code Retina-15" nil t)
-           (setq mac-auto-operator-composition-characters "!\"#$%&'*+,-./:;<=>?@^_`|~")
+           (custom-set-variables
+            '(mac-auto-operator-composition-characters "!\"#$%&'*+,-./:;<=>?@^_`|~"))
            (mac-auto-operator-composition-mode)
            ;; (setq fira-code? t)
            ))
@@ -809,12 +816,16 @@
          ("C-c g" . counsel-git)
          ("C-x l" . counsel-locate)
          ("C-c o" . counsel-outline)
-         ("C-x 8 C-m" . counsel-unicode-char)
-         ("C-:" . counsel-company)))
+         ("C-x 8 C-m" . counsel-unicode-char)))
 
       (use-package counsel-projectile
         :config
         (setq counsel-projectile-mode t))
+
+      (use-package counsel-fd
+        :bind
+        (("C-c C-f" . counsel-fd-file-jump)
+         ("C-c C-d" . counsel-fd-dired-jump)))
     #+END_SRC
 
 *** Swiper
