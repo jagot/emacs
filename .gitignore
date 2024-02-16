@@ -51,3 +51,7 @@ games/
 *.sqlite
 *.sql
 /home/.emacs.d/org-roam.db
+/home/.emacs.d/eln-cache/
+/home/.emacs.d/multisession/
+/home/.emacs.d/tree-sitter/
+/home/.emacs.d/request/

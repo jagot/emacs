@@ -351,6 +351,8 @@
      (scroll-bar-mode -1)
      (setq inhibit-startup-screen 't)
 
+     (pixel-scroll-precision-mode 1)
+
      (setq auto-window-vscroll nil)
 
      (setq truncate-partial-width-windows nil)
@@ -692,8 +694,15 @@
               ("C-<" . mc/mark-previous-like-this)
               ("C-c C-<" . mc/mark-all-like-this)))
    #+END_SRC
+** EmacSQL
+#+BEGIN_SRC emacs-lisp
+  (use-package emacsql)
+  (use-package emacsql-sqlite-builtin)
+#+END_SRC
+
 ** Magit
    #+BEGIN_SRC emacs-lisp
+     (use-package compat)
      (use-package project)
      (use-package magit
        :bind (("C-c m" . magit-status))
@@ -701,12 +710,13 @@
        (progn
          (setq magit-last-seen-setup-instructions "1.4.0")))
 
-     (use-package magit-gitflow
-       :init
-       (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+     ;; (use-package magit-gitflow
+     ;;   :init
+     ;;   (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 
      (use-package forge
-       :after magit)
+       :after magit
+       :custom (forge-database-connector 'sqlite-builtin))
 
      (use-package magit-section)
    #+END_SRC
