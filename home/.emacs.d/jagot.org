@@ -434,6 +434,7 @@
    #+BEGIN_SRC emacs-lisp
      (autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
      (use-package tramp
+       :straight nil
        :config
        (customize-set-variable
         'tramp-ssh-controlmaster-options
