@@ -23,11 +23,21 @@
      (load custom-file)
      (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+
      (defvar jagot-osx?)
      (setq jagot-osx? (not (eq nil (memq window-system '(mac ns)))))
+
+     (setq site-lisp-dir
+           (if jagot-osx?
+          (if (file-directory-p "/usr/local/share/emacs/site-lisp/")
+              "/usr/local/share/emacs/site-lisp/"
+            (if (file-directory-p "/opt/homebrew/share/emacs/site-lisp")
+                "/opt/homebrew/share/emacs/site-lisp"
+              "SITE-LISP-DIRECTORY-NOT-FOUND"))
+        "/usr/share/emacs/site-lisp"))
      (when jagot-osx?
        (progn
-         (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+         (let ((default-directory site-lisp-dir))
            (normal-top-level-add-subdirs-to-load-path))
          (require 'osx-osascript)))
    #+END_SRC
@@ -1945,10 +1955,7 @@
 ** Mu4e
    Mu4e contexts defined in =site.el=, not checked in.
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'load-path
-                  (if jagot-osx?
-                      "/usr/local/share/emacs/site-lisp/mu/mu4e"
-                    "/usr/share/emacs/site-lisp/mu/mu4e"))
+     (add-to-list 'load-path (concat site-lisp-dir "/mu/mu4e"))
      (require 'mu4e)
      (require 'org-mu4e)
      (setq mail-user-agent 'mu4e-user-agent)
