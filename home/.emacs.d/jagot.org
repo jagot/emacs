@@ -1091,7 +1091,7 @@
      (setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
                                                          (:session . "jl")
                                                          (:kernel . "julia-1.9")))
-    
+
 
    #+END_SRC
 ** COMMENT ESS
@@ -1374,53 +1374,31 @@
                           (insert "  set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -O0 -g\")\n")
                           (insert "  add_definitions(\"-DDEBUG\")\n")
                           (insert "endif()\n\n")))))))
-
-     (use-package cmake-font-lock
-       :config
-       (progn
-         (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
-         (add-hook 'cmake-mode-hook 'cmake-font-lock-activate)))
-
-     (use-package cmake-ide
-       :config
-       (cmake-ide-setup))
-
-     (defun cmake-ide/c-c++-hook ()
-       (with-eval-after-load 'projectile
-         (setq cmake-ide-project-dir (projectile-project-root))
-         (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
-       (cmake-ide-load-db))
-     (add-hook 'c++-mode-hook #'cmake-ide/c-c++-hook)
-
-     ;; (bind-key "C-c t c" 'cmake-ide-compile)
-     ;; (bind-key "C-c t t" (lambda ()
-     ;;                       (interactive
-     ;;                        (compile
-     ;;                         (format "%s/tests/fsl-tests"
-     ;;                                  (cmake-ide--get-build-dir))))))
    #+END_SRC
 ** LaTeX
    #+BEGIN_SRC emacs-lisp
      (use-package tex-site
-       :straight nil
-       :defines LaTeX-mode-map
-       :defer t)
-
-     (use-package tex
        :straight auctex
-       :defer t
+       :defines (LaTeX-mode-map LaTeX-mode-hook)
        :config
        (setq TeX-auto-save t)
        (setq TeX-parse-self t))
+
+     ;; (use-package tex
+     ;;   :straight auctex
+     ;;   :defer t
+     ;;   :config
+     ;;   (setq TeX-auto-save t)
+     ;;   (setq TeX-parse-self t))
 
      (add-to-list 'auto-mode-alist '("\\.tikz$" . LaTeX-mode))
 
      (defun latex-start-latexmk (arg)
        (interactive "p")
-       (let* ((latexcmd (s-match "LATEX_CMD: \\([a-z]+\\)latex" (buffer-string)))
+       (let* ((latexcmd (s-match "LATEX_CMD: \\([a-z]*\\)latex" (buffer-string)))
               (pdflatex
                (concat "-pdflatex='"
-                       (if latexcmd (concat (second latexcmd) "latex")
+                       (if latexcmd (concat (-second-item latexcmd) "latex")
                          "xelatex")
                        "'"))
               (tex-name-pre (concat (file-name-sans-extension buffer-file-name)
@@ -1436,6 +1414,7 @@
                        "latexmk" "-shell-escape" "--synctex=1" "-pvc"
                        pdflatex
                        tex-name)))
+
 
      (add-hook 'LaTeX-mode-hook
                (lambda ()
@@ -1555,6 +1534,8 @@
 
      (setq org-hide-leading-stars 't)
      (setq org-src-fontify-natively 't)
+     (setq org-highlight-latex-and-related '(native latex script entities))
+     (setq org-pretty-entities 't)
 
      (add-hook 'org-mode-hook 'org-display-inline-images)
 
@@ -1572,7 +1553,7 @@
                  ("a" . org-agenda)
                  ("C-a". (lambda ()
                            (interactive)
-                           (find-file (first (org-agenda-files)))))
+                           (find-file (-first-item (org-agenda-files)))))
                  ("l" . org-store-link)
                  ("C-l" . org-insert-link)
                  ("c" . org-capture))
@@ -1627,17 +1608,17 @@
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
       'org-babel-load-languages
-      '((python . t)
+      '(;; (python . t)
         (emacs-lisp . t)
         (calc . t)
         (julia . t)
-        (C . t)
-        (shell . t)
-        (ruby . t)
-        (clojure . t)
-        (octave . t)
-        (latex . t)
-        ;; (jupyter . t)
+        ;; (C . t)
+        ;; (shell . t)
+        ;; (ruby . t)
+        ;; (clojure . t)
+        ;; (octave . t)
+        ;; (latex . t)
+        (jupyter . t)
         ))
      (setq org-confirm-babel-evaluate nil)
    #+END_SRC
@@ -1659,13 +1640,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ox-latex
        :straight nil)
-     (setq org-latex-listings 'minted)
+     (setq org-latex-src-block-backend 'minted)
 
      ;; Default packages included in every tex file, pdflatex, xelatex or lualatex
      (setq org-export-latex-packages-alist
            '(("" "graphicx" t)
              ("" "longtable" nil)
              ("" "float" nil)))
+
+     (add-to-list 'org-latex-default-packages-alist '("" "maths" t) t)
+     (add-to-list 'org-latex-default-packages-alist '("" "physics" t) t)
+     ;; (add-to-list 'org-latex-default-packages-alist '("" "tikz" t) t)
+     ;; (add-to-list 'org-latex-default-packages-alist '("" "tikz-maths" t) t)
 
      ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
      ;; but adapted to use latexmk 4.20 or higher.
@@ -1689,7 +1675,7 @@
               ;; default command: pdflatex
               (t "latexmk -pdflatex='pdflatex -shell-escape' -pdf %f"))))
 
-     (add-hook 'org-export-before-processing-hook 'my-auto-tex-cmd)
+     (add-hook 'org-export-before-processing-functions 'my-auto-tex-cmd)
 
      (use-package ox-bibtex
        :straight nil)
@@ -1728,13 +1714,9 @@
    #+END_SRC
 ** Org preview LaTeX
    #+BEGIN_SRC emacs-lisp
-     (bind-key "C-x p" 'org-latex-preview)
+     ;; (bind-key "C-x p" 'org-latex-preview)
      (setq org-preview-latex-default-process 'dvisvgm)
      (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.4))
-     (add-to-list 'org-latex-default-packages-alist '("" "maths" t) t)
-     (add-to-list 'org-latex-default-packages-alist '("" "physics" t) t)
-     ;; (add-to-list 'org-latex-default-packages-alist '("" "tikz" t) t)
-     ;; (add-to-list 'org-latex-default-packages-alist '("" "tikz-maths" t) t)
      ;; (eval-after-load "preview"
      ;;   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
 
@@ -1816,27 +1798,24 @@
     #+BEGIN_SRC emacs-lisp
       (use-package ivy-bibtex
         :bind
-        (("C-c b" . ivy-bibtex)))
+        (("C-c b" . ivy-bibtex))
+        :config
+        (setq bibtex-completion-additional-search-fields '(tags))
+        (setq bibtex-completion-pdf-extension '(".pdf" ".djvu")))
     #+END_SRC
 
 *** Org-ref
     #+BEGIN_SRC emacs-lisp
       (use-package citeproc)
       (use-package bibtex-completion)
-      ;; (use-package org-ref
-      ;;    :after (:all ivy-bibtex bibtex org)
-      ;;    :demand t
-      ;;    :straight (org-ref :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3")
-      ;;    :init (require 'org-ref))
-      ;; (use-package org-ref-ivy :after org-ref :straight nil
-      ;;    :init (require 'org-ref-ivy))
-      ;; (straight-use-package '(org-ref-ivy
-      ;;    :type git :host github :repo "jkitchin/org-ref" :branch "org-ref-3"
-      ;;  :includes org-ref))
-      ;; (use-package 'org-ref)
-      (add-to-list 'load-path "/Users/jagot/.homesick/repos/emacs/home/.emacs.d/straight/repos/org-ref")
-      (require 'org-ref)
-      (require 'org-ref-ivy)
+
+      (use-package org-ref
+        :after (:all ivy-bibtex bibtex org)
+        :demand t)
+      (use-package org-ref-ivy :after org-ref :straight nil
+        :init (require 'org-ref-ivy))
+
+      (setq bibtex-completion-pdf-open-function 'jagot-open)
     #+END_SRC
 
 *** Citation commands
@@ -1901,8 +1880,7 @@
      (org-link-set-parameters "textedit" :follow 'textedit-open)
    #+END_SRC
 
-
-** Interleave
+** COMMENT Interleave
    #+BEGIN_SRC emacs-lisp
      (use-package interleave)
      (setq bibtex-completion-notes-template-multiple-files
