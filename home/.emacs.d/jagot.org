@@ -340,7 +340,6 @@
         '(vlf-application 'dont-ask)))
    #+END_SRC
 
-
 * Interface
 ** Misc
    #+BEGIN_SRC emacs-lisp
@@ -1782,7 +1781,6 @@
      ;;         ("DONE" . ,(aref ansi-color-names-vector 2))))
    #+END_SRC
 
-
 * Library
 ** BibTeX
    #+BEGIN_SRC emacs-lisp
@@ -1801,7 +1799,7 @@
            bibliography-file (concat bibliography-directory "/references-3.bib")
            bibliography-notes-file (concat bibliography-directory "/notes.org")
            doi-utils-make-notes-function nil)
-           
+
      (setq bibtex-completion-notes-path bibliography-notes-file
            bibtex-completion-bibliography (list bibliography-file)
            bibtex-completion-library-path (concat bibliography-directory "/pdfs"))
@@ -1889,13 +1887,13 @@
    #+BEGIN_SRC emacs-lisp
      (defun textedit-open (path)
        (let* ((components (s-split ":" path))
-	      (file-name (s-chop-prefix "//" (first components)))
-	      (row (string-to-number (second components)))
-	      (col (string-to-number (fourth components))))
-	 (find-file-other-window file-name)
-	 (goto-char (point-min))
-	 (forward-line (1- row))
-	 (forward-char (1- col))))
+              (file-name (s-chop-prefix "//" (first components)))
+              (row (string-to-number (second components)))
+              (col (string-to-number (fourth components))))
+         (find-file-other-window file-name)
+         (goto-char (point-min))
+         (forward-line (1- row))
+         (forward-char (1- col))))
 
      (org-link-set-parameters "textedit" :follow 'textedit-open)
    #+END_SRC
