@@ -9,6 +9,8 @@
         TeX-insert-backslash
         TeX-insert-dollar
         TeX-insert-sub-or-superscript
+        TeX-newline
+        abbrev-prefix-mark
         backward-sexp
         beginning-of-buffer
         beginning-of-defun
@@ -36,6 +38,7 @@
         dired-next-line
         dired-unmark
         ediff-mark-for-hiding-at-pos
+        emoji-search
         end-of-buffer
         end-of-defun
         end-of-visual-line
@@ -139,11 +142,14 @@
         backward-sentence
         balance-windows
         counsel-find-file
+        dired
+        dired-unmark-backward
         ess-load-file
         hydra-mc/mc/edit-lines-and-exit
         hydra-mc/mc/mark-all-like-this-and-exit
         hydra-mc/mc/mark-next-like-this
         hydra-mc/mc/mark-previous-like-this
+        ibuffer-update
         ido-dired
         ivy-switch-buffer
         lyqi:change-duration-1
@@ -156,6 +162,7 @@
         org-export-dispatch
         org-mouse-down-mouse
         org-open-at-mouse
+        pixel-scroll-precision
         sp-remove-active-pair-overlay
         swiper
         swiper-mc
