@@ -895,25 +895,54 @@
    #+END_SRC
 
 * Programming
-** Company
-   #+BEGIN_SRC emacs-lisp
-     (use-package company-math)
-     (use-package company
-       :config
-       (progn
-         (setq company-tooltip-limit 20
-               company-idle-delay 0.5
-               company-show-quick-access t
-               company-tooltip-align-annotations t)
-         (global-company-mode))
-       :bind (("<C-tab>" . company-complete)))
-     (use-package company-quickhelp
-       :init (progn
-               (company-quickhelp-mode 1)
-               (setq company-quickhelp-color-foreground (face-attribute 'default :foreground)
-                     company-quickhelp-color-background (face-attribute 'default :background))))
-   #+END_SRC
-** Flycheck
+** Tree-sitter
+#+BEGIN_SRC emacs-lisp
+  (use-package treesit-auto
+    :config
+    (global-treesit-auto-mode))
+
+  (setq treesit-language-source-alist
+     '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+       (c "https://github.com/tree-sitter/tree-sitter-c")
+       (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+       (css "https://github.com/tree-sitter/tree-sitter-css")
+       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+       (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+       (fortran "https://github.com/stadelmanma/tree-sitter-fortran")
+       (heex "https://github.com/phoenixframework/tree-sitter-heex")
+       (html "https://github.com/tree-sitter/tree-sitter-html")
+       (julia "https://github.com/tree-sitter/tree-sitter-julia")
+       (make "https://github.com/alemuller/tree-sitter-make")
+       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+       (python "https://github.com/tree-sitter/tree-sitter-python")
+       (toml "https://github.com/tree-sitter/tree-sitter-toml")
+       (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+       (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+       (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+  (defun reinstall-treesit-grammars ()
+    (interactive)
+    (mapc #'treesit-install-language-grammar '(bash c cpp elixir fortran heex html julia make markdown toml yaml)))
+#+END_SRC
+** Corfu
+#+BEGIN_SRC emacs-lisp
+  (use-package corfu
+    :straight (:files (:defaults "extensions/*.el"))
+    :init
+    (global-corfu-mode))
+
+  (use-package corfu-popupinfo
+      :straight nil
+      :config
+      (corfu-popupinfo-mode 1))
+
+  (use-package emacs
+    :init
+    (setq completion-cycle-threshold 3)
+    (setq tab-always-indent 'complete))
+#+END_SRC
+
+** COMMENT Flycheck
    [[https://github.com/flycheck/flycheck][Flycheck]]
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck
@@ -950,7 +979,6 @@
      (add-hook 'c++-mode-hook #'lsp)
      (add-hook 'c-mode-common-hook
                (lambda ()
-                 (company-mode)
                  (bind-key "C-c c" 'compile)
                  ;; (setq prettify-symbols-alist
                  ;;       (prettify-if-not-fira '(("M_PI" . ?π)) '()))
@@ -1085,43 +1113,23 @@
 
 ** Julia
    #+BEGIN_SRC emacs-lisp
-     (use-package julia-mode
-       :init (add-hook 'julia-mode-hook
-                       (lambda ()
-                         ;; (setq prettify-symbols-alist
-                         ;;       (prettify-if-not-fira '() '(("->" . ?↦) ("=>" . ?⤇))))
-                         (setq-local company-backends
-                                     (append '((company-math-symbols-unicode))
-                                             company-backends))
-                         (company-mode-on)))
-       ;; :bind (("C-c C-c" . julia-shell-run-region)
-       ;;        ("C-c C-s" . julia-shell-save-and-go))
-       )
-
-     (setq inferior-julia-args "--color=yes")
-
-     (defun julia-wrapper (env-var)
-       (let ((inferior-julia-program (exec-path-from-shell-getenv env-var)))
-         (julia)))
-     (defun julia-master ()
-       (interactive)
-       (julia-wrapper "JULIA_MASTER"))
-     (defun julia-nightly ()
-       (interactive)
-       (julia-wrapper "JULIA_NIGHTLY"))
-
-     (add-hook 'inferior-ess-mode-hook
-               (lambda ()
-                 (setq-local company-backends
-                             (append '((company-math-symbols-unicode))
-                                     company-backends))))
-
-     ;; (defalias 'ess-smart-S-assign #'self-insert-command)
-
-     ;; (setq ess-smart-S-assign-key nil)
+     (use-package julia-mode)
+     (use-package julia-ts-mode
+       :ensure t
+       :mode "\\.jl$"
+       :custom
+       (julia-ts-align-argument-list-to-first-sibling t)
+       (julia-ts-align-assignment-expressions-to-first-sibling t)
+       (julia-ts-align-parameter-list-to-first-sibling t))
 
      (setq julia-max-block-lookback 20000)
    #+END_SRC
+
+*** Eglot
+#+BEGIN_SRC emacs-lisp
+  (use-package eglot-jl)
+  (eglot-jl-init)
+#+END_SRC
 
 *** Julia coverage
     #+BEGIN_SRC emacs-lisp
@@ -1129,9 +1137,9 @@
                 (lambda ()
                   (setq-local cov-source-for-file-func
                               (lambda (filename)
-                                (let* ((cov-file (first (append
-                                                         (f-glob "lcov.info" (f-dirname filename))
-                                                         (f-glob "lcov.info" (projectile-project-root))))))
+                                (let* ((cov-file (-first-item (append
+                                                               (f-glob "lcov.info" (f-dirname filename))
+                                                               (f-glob "lcov.info" (projectile-project-root))))))
                                   (if cov-file
                                       `(lcov . ,cov-file)
                                     nil))))))
@@ -1242,9 +1250,20 @@
 ** Elixir
    #+BEGIN_SRC emacs-lisp
      (use-package elixir-mode)
+     (use-package elixir-ts-mode
+       :ensure t
+       :mode "\\.ex$")
+     (add-to-list 'eglot-server-programs `((elixir-mode elixir-ts-mode) ,(executable-find "elixir-ls")))
    #+END_SRC
 
-** Separedit
+** Fortran
+#+BEGIN_SRC emacs-lisp
+  (use-package f90-namelist-mode
+    :straight (f90-namelist-mode :type git :host github :repo "ZedThree/f90-namelist-mode"))
+#+END_SRC
+
+
+** COMMENT Separedit
    #+BEGIN_SRC emacs-lisp
      (use-package separedit
        :straight (separedit
@@ -1487,10 +1506,12 @@
 ** YAML
    #+BEGIN_SRC emacs-lisp
      (use-package yaml-mode)
+     (use-package yaml-ts-mode)
    #+END_SRC
 ** TOML
    #+BEGIN_SRC emacs-lisp
      (use-package toml-mode)
+     (use-package toml-ts-mode)
    #+END_SRC
 
 ** nhexl-mode
