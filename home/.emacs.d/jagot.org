@@ -73,7 +73,7 @@
      (use-package exec-path-from-shell)
    #+END_SRC
 
-** Transparency
+** COMMENT Transparency
    #+BEGIN_SRC emacs-lisp
      (defun find-matching-line (pattern lines)
        (car (-filter
@@ -126,7 +126,6 @@
        (try-blur-emacs 80))
    #+END_SRC
 
-
 ** Encoding
    #+BEGIN_SRC emacs-lisp
      (setq locale-coding-system 'utf-8)
@@ -162,12 +161,12 @@
      (setq-default ispell-program-name "aspell")
      (setq-default ispell-dictionary "en_GB-ize")
    #+END_SRC
-** Ag
+** COMMENT Ag
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :init (setq ag-highlight-search t))
    #+END_SRC
-** Yasnippet
+** COMMENT Yasnippet
    Borrowed from [[http://www.emacswiki.org/emacs/Yasnippet#toc5][Emacs wiki]].
    #+BEGIN_SRC emacs-lisp
      (use-package yasnippet
@@ -227,14 +226,6 @@
      (global-set-key (kbd "M-<f1>") (lambda ()
                                       (interactive)
                                       (remote-term "home" "ssh" "home")))
-     (add-hook 'term-mode-hook (lambda()
-                                 (setq yas-dont-activate-functions t)))
-
-     (defun ag-eshell (string)
-       "Search with ag using the current eshell directory and a given string.
-        To be used from within an eshell alias
-        (`alias ag 'ag-eshell $1'` within eshell)"
-        (ag/search string (eshell/pwd)))
    #+END_SRC
 
 *** External terminal
@@ -280,12 +271,6 @@
       ;;       (remove 'ansi-color-process-output comint-output-filter-functions))
       ;; (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)
     #+END_SRC
-
-
-** Web server
-   #+BEGIN_SRC emacs-lisp
-     (use-package web-server)
-   #+END_SRC
 
 ** External programs
    #+BEGIN_SRC emacs-lisp
@@ -390,7 +375,7 @@
      ;; https://emacs.stackexchange.com/questions/2955/how-to-customize-background-color-for-some-web-pages-opened-with-eww)
      (setq shr-color-visible-luminance-min 80)
    #+END_SRC
-** Projectile
+** COMMENT Projectile
    #+BEGIN_SRC emacs-lisp
      (use-package projectile)
      (projectile-mode)
@@ -410,7 +395,7 @@
          "-o ControlMaster=auto -o ControlPersist=yes")))
    #+END_SRC
 
-** Dashboard
+** COMMENT Dashboard
    #+BEGIN_SRC emacs-lisp
      (use-package dashboard
        :config
@@ -514,10 +499,10 @@
    #+BEGIN_SRC emacs-lisp
      (use-package hydra)
    #+END_SRC
-** Modalka
+** COMMENT Modalka
    #+BEGIN_SRC emacs-lisp
      (use-package modalka
-       :init
+       :config
        (progn
          (setq-default cursor-type 'box)
          (setq modalka-cursor-type 'hollow)
@@ -609,7 +594,7 @@
 
      (set-theme emacs-light-theme)
    #+END_SRC
-*** Auto-dark
+*** COMMENT Auto-dark
      #+BEGIN_SRC emacs-lisp
        (use-package auto-dark
          :config
@@ -729,7 +714,7 @@
 
      (use-package magit-section)
    #+END_SRC
-** Ace-window
+** COMMENT Ace-window
    #+BEGIN_SRC emacs-lisp
      (use-package ace-window
        :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
@@ -854,16 +839,13 @@
 
 ** COMMENT Web server
 #+BEGIN_SRC emacs-lisp
+  (use-package web-server)
   (use-package websocket)
   (straight-use-package '(simple-httpd :type git :host github :repo "skeeto/emacs-web-server" :local-repo "simple-httpd"))
-  (use-package zmq)
 #+END_SRC
 
-** Roam
+** COMMENT Roam
    #+BEGIN_SRC emacs-lisp
-     (use-package emacsql)
-     (use-package emacsql-sqlite)
-
      (setq org-roam-v2-ack t)
      (use-package org-roam)
      (setq org-roam-directory (file-truename "~/org-roam"))
@@ -930,34 +912,8 @@
      (bind-key "C-x c" 'cov-toggle)
    #+END_SRC
 
-** COMMENT Language Server Protocol
-   #+BEGIN_SRC emacs-lisp
-     ;; Ref: https://www.mortens.dev/blog/emacs-and-the-language-server-protocol/
-
-     (use-package lsp-mode
-       :commands lsp
-       :requires lsp-clients
-       :defines lsp-prefer-flymake
-       :config
-       (setq lsp-prefer-flymake nil))
-
-     (use-package lsp-ui
-       :requires lsp-mode flycheck
-       :config
-       (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-     (use-package company-lsp
-       :requires company
-       :config
-       (push 'company-lsp company-backends)
-
-       ;; Disable client-side cache because the LSP server does a better job.
-       (setq company-transformers nil
-             company-lsp-async t
-             company-lsp-cache-candidates nil))
-   #+END_SRC
-
 ** COMMENT C/C++
+*** COMMENT Code
    [[https://github.com/rocky/emacs-dbgr][emacs-dbgr]]
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -992,7 +948,7 @@
 
    #+END_SRC
 
-*** Cmake
+*** COMMENT Cmake
     [[https://github.com/redguardtoo/cpputils-cmake][cpputils-cmake]]
     #+BEGIN_SRC emacs-lisp
       (use-package cpputils-cmake
@@ -1005,7 +961,7 @@
           (setq cppcm-write-flymake-makefile nil)))
     #+END_SRC
 
-*** Header guards
+*** COMMENT Header guards
     #+BEGIN_SRC emacs-lisp
       (defun traverse-project (dir file)
         "Return the path of the current file relative to the project root."
@@ -1065,16 +1021,22 @@
       (add-hook 'c-mode-common-hook 'insert-header-guard)
     #+END_SRC
 
-*** Cuda
+*** COMMENT Cuda
     #+BEGIN_SRC emacs-lisp
       (use-package cuda-mode
         :mode (("\\.cu\\'" . cuda-mode)
                ("\\.cuh\\'" . cuda-mode)))
     #+END_SRC
 
-** COMMENT Jupyter
+** Jupyter
    #+BEGIN_SRC emacs-lisp
      (use-package jupyter)
+
+     (setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
+                                                         (:session . "jl")
+                                                         (:kernel . "julia-1.9")))
+    
+
    #+END_SRC
 ** COMMENT ESS
    #+BEGIN_SRC emacs-lisp
@@ -1154,7 +1116,6 @@
      (add-hook 'inferior-lisp-mode-hook (lambda () (rainbow-delimiters-mode 0)))
      (add-hook 'lisp-mode-common-hook
                (lambda ()
-                 (company-mode-on)
                  (setq prettify-symbols-alist
                        '(("lambda" . ?λ)
                          ("<=" . ?≤)
@@ -1221,19 +1182,16 @@
          (add-hook 'caml-mode-hook 'merlin-mode t)
          ;; Use opam switch to lookup ocamlmerlin binary
          (setq merlin-command 'opam)
-         (with-eval-after-load 'company
-           (add-to-list 'company-backends 'merlin-company-backend))
-         (add-hook 'merlin-mode-hook 'company-mode)
          (setq utop-command "opam config exec -- utop -emacs")))
    #+END_SRC
 
-** Python
+** COMMENT Python
    #+BEGIN_SRC emacs-lisp
      (setq python-shell-interpreter "ipython")
      (add-hook 'python-mode-hook #'lsp)
    #+END_SRC
 
-** Ruby
+** COMMENT Ruby
    #+BEGIN_SRC emacs-lisp
      (use-package rvm)
      (use-package ruby-mode
@@ -1245,12 +1203,11 @@
      (use-package bundler)
    #+END_SRC
 
-** Rust
+** COMMENT Rust
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
        :bind (:map rust-mode-map
-                   ("C-c c" . rust-run)
-                   ("TAB" . company-indent-or-complete-common))
+                   ("C-c c" . rust-run))
        :hook (rust-mode . lsp))
    #+END_SRC
 
@@ -1272,9 +1229,8 @@
        (setq separedit-default-mode 'markdown-mode))
    #+END_SRC
 
-
 ** Web development
-*** Typescript
+*** COMMENT Typescript
     #+BEGIN_SRC emacs-lisp
       (use-package typescript-mode
         :mode "\\.ts\\'"
@@ -1291,11 +1247,9 @@
                     (tide-setup)
                     (flycheck-mode +1)
                     (setq flycheck-check-syntax-automatically '(save mode-enabled))
-                    (eldoc-mode +1)
-                    (company-mode-on)
-                    (setq company-tooltip-align-annotations t))))
+                    (eldoc-mode +1))))
     #+END_SRC
-*** Web mode
+*** COMMENT Web mode
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode
         :mode ("\\.erb\\'" "\\.tsx\\'")
@@ -1307,10 +1261,9 @@
                       (tide-setup)
                       (flycheck-mode +1)
                       (setq flycheck-check-syntax-automatically '(save mode-enabled))
-                      (eldoc-mode +1)
-                      (company-mode-on)))))
+                      (eldoc-mode +1)))))
     #+END_SRC
-*** Rails
+*** COMMENT Rails
     #+BEGIN_SRC emacs-lisp
       (use-package projectile-rails
         :config
@@ -1318,21 +1271,18 @@
       (use-package inflections)
       (use-package rake)
     #+END_SRC
-*** Restclient
+*** COMMENT Restclient
     #+BEGIN_SRC emacs-lisp
       (use-package restclient
         :mode ("\\.rest\\'" . restclient-mode))
-      (use-package company-restclient
-        :config
-        (add-to-list 'company-backends 'company-restclient))
     #+END_SRC
-*** HAML
+*** COMMENT HAML
     #+BEGIN_SRC emacs-lisp
       (use-package haml-mode)
     #+END_SRC
 
 * Modes
-  Misc modes
+** COMMENT Misc modes
   #+BEGIN_SRC emacs-lisp
     ;; (use-package matlab-mode
     ;;   :mode (("\\.m\\'" . matlab-mode)))
@@ -1341,7 +1291,7 @@
     (setq auto-mode-alist (cons '("\\.ged$" . gedcom-mode) auto-mode-alist))
   #+END_SRC
 
-** COMMENT Cmake
+** Cmake
    #+BEGIN_SRC emacs-lisp
      (use-package cmake-mode
        :mode (("CMakeLists\\.txt\\'" . cmake-mode)
@@ -1463,7 +1413,7 @@
                  (define-key dired-mode-map (kbd "C-c u") 'ediff-push)
                  (define-key dired-mode-map (kbd "C-c o") 'ediff-pop)))
    #+END_SRC
-** Lilypond
+** COMMENT Lilypond
 *** Lyqi
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'load-path (expand-file-name "lyqi" user-emacs-directory))
@@ -1531,6 +1481,12 @@
        (current-buffer)))
    #+END_SRC
 
+** COMMENT Gnuplot
+   #+BEGIN_SRC emacs-lisp
+     (use-package gnuplot-mode)
+   #+END_SRC
+
+
 * COMMENT Jupyter
   https://github.com/dzop/emacs-jupyter/issues/160#issuecomment-520138197
   https://discourse.julialang.org/t/jupyter-integration-with-emacs/21496/5
@@ -1573,7 +1529,7 @@
                  ("c" . org-capture))
    #+END_SRC
 
-** Org agenda
+** COMMENT Org agenda
    #+BEGIN_SRC emacs-lisp
      (use-package org-depend
        :straight nil)
@@ -1635,18 +1591,6 @@
         ;; (jupyter . t)
         ))
      (setq org-confirm-babel-evaluate nil)
-     (use-package ob-clojure
-       :straight nil
-       :defer t
-       :config (setq org-babel-clojure-backend 'cider))
-     (setq org-babel-julia-write-object-command
-           (s-join ";"
-                   '("ob_julia_str(f::AbstractString,o)=open(f,\"w\") do file"
-                     "  show(file, \"text/plain\", o)"
-                     "end"
-                     "ob_julia_str(\"%s\",%s)"))
-           )
-     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
    #+END_SRC
 ** Org export
    #+BEGIN_SRC emacs-lisp
@@ -1771,7 +1715,7 @@
                           :image-converter
                           ("convert -density %D -trim -antialias %f -quality 100 %O"))))
    #+END_SRC
-** Org download
+** COMMENT Org download
    #+BEGIN_SRC emacs-lisp
      (use-package org-download)
    #+END_SRC
@@ -1874,7 +1818,7 @@
                      (cadr (split-string desc ";"))
                      (car (split-string desc ";"))  path))))))
     #+END_SRC
-** Pdf-tools
+** COMMENT Pdf-tools
    #+BEGIN_SRC emacs-lisp
      (use-package pdf-tools
        :init (progn
@@ -1893,13 +1837,13 @@
      (use-package pdf-tools-extension
        :straight nil)
    #+END_SRC
-** Textedit links
+** COMMENT Textedit links
    #+BEGIN_SRC emacs-lisp
      (defun textedit-open (path)
        (let* ((components (s-split ":" path))
-              (file-name (s-chop-prefix "//" (first components)))
-              (row (string-to-number (second components)))
-              (col (string-to-number (fourth components))))
+              (file-name (s-chop-prefix "//" (-first-item components)))
+              (row (string-to-number (-second-item components)))
+              (col (string-to-number (-fourth-item components))))
          (find-file-other-window file-name)
          (goto-char (point-min))
          (forward-line (1- row))
