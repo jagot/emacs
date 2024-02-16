@@ -307,6 +307,47 @@
       (exec-path-from-shell-initialize)
     #+END_SRC
 
+** Dired
+   #+BEGIN_SRC emacs-lisp
+     (require 'dired)
+     (require 'dired-x)
+     (bind-key "C-M-o" 'open-in-external-app dired-mode-map)
+
+     (setq dired-listing-switches "-alh")
+     (setq dired-dwim-target t)
+
+     (use-package dired-aux
+       :straight nil
+       :config
+       (add-to-list 'dired-compress-file-suffixes
+                    '("\\.zip\\'" ".zip" "unzip")))
+   #+END_SRC
+
+*** Peep-dired
+    #+BEGIN_SRC emacs-lisp
+      (use-package peep-dired
+        :defer t
+        :bind (:map dired-mode-map
+                    ("P" . peep-dired)))
+    #+END_SRC
+
+*** dired-launch
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired-launch
+        :config
+        (progn
+          (dired-launch-enable)
+          (setq dired-launch-default-launcher `(,jagot-opener))
+          (setf dired-launch-extensions-map '())))
+    #+END_SRC
+
+*** dired-k
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired-k
+        :bind (:map dired-mode-map
+                    ("M-k" . dired-k)))
+    #+END_SRC
+
 ** Crontab
    #+BEGIN_SRC emacs-lisp
      (defun crontab-e ()
@@ -781,37 +822,6 @@
       (use-package avy
         :bind (("M-s" . avy-goto-word-1)))
     #+END_SRC
-** Dired
-   #+BEGIN_SRC emacs-lisp
-     (setq dired-listing-switches "-alh")
-     (setq dired-dwim-target t)
-   #+END_SRC
-
-*** Peep-dired
-    #+BEGIN_SRC emacs-lisp
-      (use-package peep-dired
-        :defer t
-        :bind (:map dired-mode-map
-                    ("P" . peep-dired)))
-    #+END_SRC
-
-*** dired-launch
-    #+BEGIN_SRC emacs-lisp
-      (use-package dired-launch
-        :init
-        (progn
-          (dired-launch-enable)
-          (setq dired-launch-default-launcher `(,jagot-opener))
-          (setf dired-launch-extensions-map '())))
-    #+END_SRC
-
-*** dired-k
-    #+BEGIN_SRC emacs-lisp
-      (use-package dired-k
-        :bind (:map dired-mode-map
-                    ("M-k" . dired-k)))
-    #+END_SRC
-
 ** Visual regexp
    #+BEGIN_SRC emacs-lisp
      (use-package visual-regexp
