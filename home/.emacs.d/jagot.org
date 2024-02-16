@@ -260,7 +260,11 @@
       (defun ext-cmd-wrap-string (s)
         (concat "\\\"" s "\\\""))
 
-      (bind-key "C-c t t" (lambda () (interactive) (ext-terminal (file-name-directory (buffer-file-name)) "/bin/zsh")) global-map)
+      (bind-key "C-c t t"
+                (lambda () (interactive)
+                  (ext-terminal (ext-cmd-wrap-string (file-name-directory (buffer-file-name)))
+                                "/bin/zsh"))
+                global-map)
     #+END_SRC
 
 *** xterm-color
@@ -279,6 +283,9 @@
      (when jagot-osx? (setq jagot-opener "open"))
      (when (executable-find "mimeopen") (setq jagot-opener "mimeopen"))
 
+     (defun jagot-open (file-path)
+       (start-process "jagot-open" "*jagot-open*" jagot-opener file-path))
+
      (defun open-in-external-app ()
        "Inspired by
      URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'"
@@ -290,16 +297,9 @@
          (when (if (<= (length file-list) 5)
                    t
                  (y-or-n-p "Open more than 5 files? "))
-           (mapc
-            (lambda (file-path)
-              (call-process jagot-opener nil 0 nil file-path))
-            file-list))))
-     (bind-key "C-M-o" 'open-in-external-app dired-mode-map)
+           (mapc 'jagot-open file-list))))
 
      (when jagot-osx? (setq insert-directory-program "/usr/local/bin/gls"))
-     (eval-after-load "dired-aux"
-       '(add-to-list 'dired-compress-file-suffixes
-                     '("\\.zip\\'" ".zip" "unzip")))
    #+END_SRC
 
 *** PATH variable
