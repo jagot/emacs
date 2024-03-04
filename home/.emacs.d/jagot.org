@@ -1498,6 +1498,11 @@
      (use-package nhexl-mode)
    #+END_SRC
 
+** Nushell
+#+BEGIN_SRC emacs-lisp
+  (use-package nushell-mode)
+#+END_SRC
+
 ** COMMENT Impatient mode
    https://stackoverflow.com/a/36189456/1079038
    #+BEGIN_SRC emacs-lisp
