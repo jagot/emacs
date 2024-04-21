@@ -468,6 +468,7 @@
                (add-to-list 'sml/replacer-regexp-list '("^~/work/projects/quantum" ":WPQ:") t)
                (add-to-list 'sml/replacer-regexp-list '("^~/work/projects" ":WP:") t)
                (add-to-list 'sml/replacer-regexp-list '("^~/work/" ":W:") t)))
+               (add-to-list 'sml/replacer-regexp-list '("^~/.julia/dev" ":JD:") t)
      (setq display-time-day-and-date 1)
      (setq display-time-24hr-format 1)
      (display-time-mode 1)
