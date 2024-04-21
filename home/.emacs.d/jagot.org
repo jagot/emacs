@@ -151,6 +151,7 @@
    [[https://github.com/Fuco1/smartparens][smartparens]]
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens
+       :straight (smartparens :type git :host github :repo "Fuco1/smartparens")
        :init
        (progn
          (smartparens-global-mode)
