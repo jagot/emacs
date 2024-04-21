@@ -920,6 +920,7 @@
        (css "https://github.com/tree-sitter/tree-sitter-css")
        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
        (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+       (erlang "https://github.com/WhatsApp/tree-sitter-erlang/")
        (fortran "https://github.com/stadelmanma/tree-sitter-fortran")
        (heex "https://github.com/phoenixframework/tree-sitter-heex")
        (html "https://github.com/tree-sitter/tree-sitter-html")
@@ -934,7 +935,7 @@
 
   (defun reinstall-treesit-grammars ()
     (interactive)
-    (mapc #'treesit-install-language-grammar '(bash c cpp elixir fortran heex html julia make markdown toml yaml)))
+    (mapc #'treesit-install-language-grammar '(bash c cpp elixir erlang fortran heex html julia make markdown toml yaml)))
 #+END_SRC
 ** Corfu
 #+BEGIN_SRC emacs-lisp
@@ -1267,6 +1268,26 @@
        :mode "\\.ex$")
      (add-to-list 'eglot-server-programs `((elixir-mode elixir-ts-mode) ,(executable-find "elixir-ls")))
    #+END_SRC
+
+** Erlang
+#+BEGIN_SRC emacs-lisp
+  ;; See also https://github.com/sebastiw/edts
+
+  (setq erlang-root-dir (s-trim (shell-command-to-string "asdf where erlang")))
+  (if (f-directory? erlang-root-dir)
+      (progn
+       (let ((erlang-emacs-dir (-first-item (f-glob (f-join erlang-root-dir "lib" "tools-*" "emacs")))))
+         (if erlang-emacs-dir
+             (setq load-path (-uniq (cons erlang-emacs-dir load-path)))
+           (error (s-concat "Could not find Emacs tooling in Erlang install: " erlang-root-dir))))
+       (setq exec-path (-uniq (cons (f-join erlang-root-dir "bin") exec-path)))))
+  (use-package erlang-start
+    :straight nil)
+  (use-package erlang-ts-mode
+    :straight (erlang-ts-mode :type git :host github :repo "wingyplus/erlang-ts-mode")
+    :mode "\\.erl$")
+#+END_SRC
+
 
 ** Fortran
 #+BEGIN_SRC emacs-lisp
