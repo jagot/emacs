@@ -707,16 +707,29 @@
      =osascript -e 'tell application "System Events" to tell appearance preferences to return dark mode'=
      [[https://github.com/LionyxML/auto-dark-emacs/issues/13#issuecomment-1328011140]]
      #+BEGIN_SRC emacs-lisp
+       (defun list-buffers-with-mode (mode)
+         (-filter
+          (lambda (buf) (eq (buffer-local-value 'major-mode buf) mode))
+          (buffer-list)))
+
+       (defun revert-all-pdfs ()
+         (mapcar
+          (lambda (buf) (with-current-buffer buf (pdf-view-revert-buffer t t)))
+          (list-buffers-with-mode 'pdf-view-mode)))
+
+       (defun auto-dark-hook-fun ()
+         (progn
+           (set-fonts)
+           (revert-all-pdfs)))
+
        (use-package auto-dark
          :config
          (setq ;; auto-dark--allow-osascript t
           auto-dark-dark-theme emacs-dark-theme
           auto-dark-light-theme emacs-light-theme)
          (auto-dark-mode 1)
-         (add-hook 'auto-dark-dark-mode-hook
-                   (lambda () (set-fonts)))
-         (add-hook 'auto-dark-light-mode-hook
-                   (lambda () (set-fonts))))
+         (add-hook 'auto-dark-dark-mode-hook 'auto-dark-hook-fun)
+         (add-hook 'auto-dark-light-mode-hook 'auto-dark-hook-fun))
 
      #+END_SRC
 
