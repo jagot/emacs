@@ -1885,7 +1885,7 @@
                      (cadr (split-string desc ";"))
                      (car (split-string desc ";"))  path))))))
     #+END_SRC
-** COMMENT Pdf-tools
+** Pdf-tools
    #+BEGIN_SRC emacs-lisp
      (use-package pdf-tools
        :init (progn
@@ -1898,7 +1898,10 @@
                                                            (face-attribute 'default :background)))))
                (if jagot-osx?
                    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo"))
-               (pdf-tools-install)))
+               (pdf-tools-install))
+       :bind (:map pdf-view-mode-map
+                   ("C-s" . isearch-forward-regexp)
+                   ("C-r" . isearch-backward-regexp)))
      (when jagot-osx?
        (setq pdf-view-use-scaling t))
      (use-package pdf-tools-extension
